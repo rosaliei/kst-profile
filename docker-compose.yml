@@ -1,0 +1,7 @@
+services:
+  kst-profile:
+    build: .
+    container_name: kst-profile
+    ports:
+      - "8080:80"
+    restart: unless-stopped
