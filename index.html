@@ -296,16 +296,57 @@
   }
   .portfolio-card:hover .card-hint { opacity: 1; }
 
+  /* HAMBURGER */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column; justify-content: center; gap: 5px;
+    background: none; border: none; cursor: pointer;
+    padding: .4rem; border-radius: 6px;
+    transition: background .15s;
+  }
+  .nav-hamburger:hover { background: var(--bg3); }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--muted); border-radius: 2px;
+    transition: transform .25s, opacity .25s, background .15s;
+  }
+  .nav-hamburger:hover span { background: var(--text); }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
   /* RESPONSIVE */
-  @media (max-width: 640px) {
+  @media (max-width: 700px) {
+    nav { padding: 0 1rem; position: relative; flex-wrap: wrap; height: auto; min-height: 56px; }
+    .nav-hamburger { display: flex; }
+    .nav-links {
+      display: none;
+      flex-direction: column; gap: 0;
+      width: 100%;
+      background: rgba(13,17,23,0.98);
+      border-top: 1px solid var(--border);
+      padding: .5rem 0 .75rem;
+      order: 3;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links li { width: 100%; }
+    .nav-links a {
+      display: block; padding: .65rem 1rem;
+      font-size: .9rem; border-radius: 0;
+    }
+    .nav-links a:hover { background: var(--bg3); color: var(--text); }
+
     .timeline-item { flex-direction: column; gap: .5rem; }
     .timeline-left { flex: none; text-align: left; display: flex; gap: 1rem; align-items: center; }
     .timeline-line { display: none; }
-    nav { padding: 0 1rem; }
-    .nav-links { gap: .75rem; }
     section { padding: 3rem 1rem; }
     .hero { padding: 3rem 1rem 2.5rem; }
     .kubestronaut-banner { flex-direction: column; gap: 1rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .certs-grid { grid-template-columns: 1fr; }
+    .hero-contacts { gap: .5rem; }
+    .contact-chip { font-size: .78rem; padding: .35rem .75rem; }
   }
 </style>
 </head>
@@ -314,7 +355,10 @@
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#"><span>KS</span> · Kyaw Sithu</a>
-  <ul class="nav-links">
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -1277,6 +1321,22 @@ document.querySelectorAll('.portfolio-card, .community-card').forEach(card => {
 document.getElementById('modal-close').addEventListener('click', closeModal);
 overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Hamburger menu
+const navToggle = document.getElementById('nav-toggle');
+const navLinks = document.getElementById('nav-links');
+navToggle.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open', open);
+  navToggle.setAttribute('aria-expanded', open);
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  });
+});
 </script>
 
 </body>
