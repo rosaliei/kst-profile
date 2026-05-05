@@ -1,1038 +1,2264 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kyaw Sithu — Platform Engineer · Kubestronaut</title>
-<style>
-  :root {
-    --bg: #0d1117;
-    --bg2: #161b22;
-    --bg3: #21262d;
-    --border: #30363d;
-    --accent: #2f81f7;
-    --accent2: #3fb950;
-    --accent3: #d2a8ff;
-    --accent4: #ffa657;
-    --text: #e6edf3;
-    --muted: #8b949e;
-    --kubestronaut: #326ce5;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kyaw Sithu — Platform Engineer · Kubestronaut</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --bg2: #161b22;
+        --bg3: #21262d;
+        --border: #30363d;
+        --accent: #2f81f7;
+        --accent2: #3fb950;
+        --accent3: #d2a8ff;
+        --accent4: #ffa657;
+        --text: #e6edf3;
+        --muted: #8b949e;
+        --kubestronaut: #326ce5;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+      }
 
-  /* NAV */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(13,17,23,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
-  }
-  .nav-logo { font-weight: 700; font-size: 1rem; color: var(--text); text-decoration: none; }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; transition: color .2s; }
-  .nav-links a:hover { color: var(--text); }
+      /* NAV */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(13, 17, 23, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+      }
+      .nav-logo {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text);
+        text-decoration: none;
+      }
+      .nav-logo span {
+        color: var(--accent);
+      }
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
 
-  /* HERO */
-  .hero {
-    padding: 5rem 2rem 4rem;
-    max-width: 900px; margin: 0 auto;
-    display: flex; flex-direction: column; gap: 1.5rem;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: .5rem;
-    background: rgba(50,108,229,.15);
-    border: 1px solid rgba(50,108,229,.4);
-    color: #79b8ff;
-    padding: .35rem .9rem; border-radius: 999px;
-    font-size: .8rem; font-weight: 600; width: fit-content;
-  }
-  .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--kubestronaut); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
-  .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.5px; }
-  .hero h1 span { color: var(--accent); }
-  .hero-title { font-size: 1.15rem; color: var(--muted); font-weight: 400; }
-  .hero-summary {
-    color: #c9d1d9; font-size: .95rem; line-height: 1.75;
-    max-width: 700px;
-  }
-  .hero-contacts { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .5rem; }
-  .contact-chip {
-    display: flex; align-items: center; gap: .4rem;
-    background: var(--bg2); border: 1px solid var(--border);
-    color: var(--text); text-decoration: none;
-    padding: .4rem .9rem; border-radius: 8px; font-size: .82rem;
-    transition: border-color .2s, background .2s;
-  }
-  .contact-chip:hover { border-color: var(--accent); background: var(--bg3); }
-  .contact-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+      /* HERO */
+      .hero {
+        padding: 2rem 2rem 1.75rem;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(50, 108, 229, 0.15);
+        border: 1px solid rgba(50, 108, 229, 0.4);
+        color: #79b8ff;
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        width: fit-content;
+      }
+      .hero-badge .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--kubestronaut);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.3);
+        }
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .hero h1 span {
+        color: var(--accent);
+      }
+      .hero-title {
+        font-size: 1.15rem;
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .hero-summary {
+        color: #c9d1d9;
+        font-size: 0.95rem;
+        line-height: 1.75;
+        max-width: 700px;
+      }
+      .hero-contacts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+      .contact-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .contact-chip:hover {
+        border-color: var(--accent);
+        background: var(--bg3);
+      }
+      .contact-chip svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
 
-  /* SECTIONS */
-  section { padding: 4rem 2rem; border-top: 1px solid var(--border); }
-  .container { max-width: 900px; margin: 0 auto; }
-  .section-label {
-    font-size: .72rem; font-weight: 700; letter-spacing: .1em;
-    color: var(--muted); text-transform: uppercase; margin-bottom: .5rem;
-  }
-  h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; }
-  h2 span { color: var(--accent); }
+      /* SECTIONS */
+      section {
+        padding: 1.75rem 2rem;
+        border-top: 1px solid var(--border);
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .section-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.9rem;
+      }
+      h2 span {
+        color: var(--accent);
+      }
 
-  /* ACHIEVEMENT BANNER */
-  .kubestronaut-banner {
-    background: linear-gradient(135deg, rgba(50,108,229,.12) 0%, rgba(47,129,247,.08) 100%);
-    border: 1px solid rgba(50,108,229,.35);
-    border-radius: 16px; padding: 2rem;
-    display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
-    margin-bottom: 2rem;
-  }
-  .ks-icon { font-size: 3.5rem; flex-shrink: 0; }
-  .ks-info h3 { font-size: 1.3rem; font-weight: 700; color: #79b8ff; margin-bottom: .4rem; }
-  .ks-info p { color: #c9d1d9; font-size: .9rem; line-height: 1.6; }
-  .ks-info a { color: var(--accent); text-decoration: none; }
-  .ks-info a:hover { text-decoration: underline; }
-  .ks-badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
-  .cert-pill {
-    background: var(--bg3); border: 1px solid var(--border);
-    padding: .25rem .7rem; border-radius: 999px;
-    font-size: .75rem; color: var(--text); font-weight: 500;
-  }
-  .cert-pill.k8s { border-color: rgba(50,108,229,.5); color: #79b8ff; }
-  .cert-pill.istio { border-color: rgba(63,185,80,.4); color: #7ee787; }
-  .cert-pill.rh { border-color: rgba(255,166,87,.4); color: var(--accent4); }
+      /* ACHIEVEMENT BANNER */
+      .kubestronaut-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(50, 108, 229, 0.12) 0%,
+          rgba(47, 129, 247, 0.08) 100%
+        );
+        border: 1px solid rgba(50, 108, 229, 0.35);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .ks-info h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #79b8ff;
+        margin-bottom: 0.4rem;
+      }
+      .ks-info p {
+        color: #c9d1d9;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .ks-info a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .ks-info a:hover {
+        text-decoration: underline;
+      }
+      .cert-pill {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .cert-pill.k8s {
+        border-color: rgba(50, 108, 229, 0.5);
+        color: #79b8ff;
+      }
+      .cert-pill.istio {
+        border-color: rgba(63, 185, 80, 0.4);
+        color: #7ee787;
+      }
+      .cert-pill.rh {
+        border-color: rgba(255, 166, 87, 0.4);
+        color: var(--accent4);
+      }
 
-  /* SKILLS GRID */
-  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-  .skill-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.1rem 1.25rem;
-    transition: border-color .2s, transform .2s;
-  }
-  .skill-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .skill-card h4 { font-size: .85rem; font-weight: 600; color: var(--accent); margin-bottom: .5rem; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
-  .tag {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--muted); font-size: .73rem; padding: .15rem .55rem; border-radius: 6px;
-  }
+      /* SKILLS GRID */
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+      .skill-card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .skill-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .skill-card h4 {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+      .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+      .tag {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.73rem;
+        padding: 0.15rem 0.55rem;
+        border-radius: 6px;
+      }
 
-  /* EXPERIENCE TIMELINE */
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .timeline-item { display: flex; gap: 1.5rem; position: relative; }
-  .timeline-item + .timeline-item { margin-top: 2.5rem; }
-  .timeline-left { flex: 0 0 140px; text-align: right; }
-  .timeline-date { font-size: .75rem; color: var(--muted); font-weight: 500; margin-top: .2rem; }
-  .timeline-location { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
-  .timeline-line {
-    flex: 0 0 1px; background: var(--border); position: relative;
-    margin: 0 1rem;
-  }
-  .timeline-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); border: 2px solid var(--bg);
-    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
-    box-shadow: 0 0 0 3px rgba(47,129,247,.2);
-  }
-  .timeline-content { flex: 1; padding-bottom: 2rem; }
-  .timeline-content h3 { font-size: 1rem; font-weight: 700; }
-  .timeline-content h3 span { color: var(--muted); font-weight: 400; }
-  .timeline-role-label {
-    font-size: .75rem; color: var(--muted);
-    text-transform: uppercase; letter-spacing: .06em;
-    margin-bottom: .6rem; margin-top: .1rem;
-  }
-  .timeline-group { margin-top: 1rem; }
-  .timeline-group-title {
-    font-size: .78rem; font-weight: 600; color: var(--accent2);
-    text-transform: uppercase; letter-spacing: .05em;
-    margin-bottom: .4rem;
-  }
-  .timeline-content ul { padding-left: 1.1rem; }
-  .timeline-content li { font-size: .875rem; color: #c9d1d9; margin-bottom: .3rem; line-height: 1.55; }
-  .current-badge {
-    display: inline-block; background: rgba(63,185,80,.15);
-    border: 1px solid rgba(63,185,80,.3); color: #7ee787;
-    font-size: .68rem; font-weight: 600; padding: .1rem .5rem;
-    border-radius: 999px; margin-left: .5rem; vertical-align: middle;
-  }
+      /* EXPERIENCE TIMELINE */
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .timeline-item {
+        display: flex;
+        gap: 1.5rem;
+        position: relative;
+      }
+      .timeline-item + .timeline-item {
+        margin-top: 1.5rem;
+      }
+      .timeline-left {
+        flex: 0 0 140px;
+        text-align: right;
+      }
+      .timeline-date {
+        font-size: 0.75rem;
+        color: var(--muted);
+        font-weight: 500;
+        margin-top: 0.2rem;
+      }
+      .timeline-location {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 0.15rem;
+      }
+      .timeline-line {
+        flex: 0 0 1px;
+        background: var(--border);
+        position: relative;
+        margin: 0 1rem;
+      }
+      .timeline-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 2px solid var(--bg);
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.2);
+      }
+      .timeline-content {
+        flex: 1;
+        padding-bottom: 1rem;
+      }
+      .timeline-content h3 {
+        font-size: 1rem;
+        font-weight: 700;
+      }
+      .timeline-content h3 span {
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .timeline-role-label {
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.6rem;
+        margin-top: 0.1rem;
+      }
+      .timeline-group {
+        margin-top: 0.6rem;
+      }
+      .timeline-group-title {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--accent2);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+      }
+      .timeline-content ul {
+        padding-left: 1.1rem;
+      }
+      .timeline-content li {
+        font-size: 0.875rem;
+        color: #c9d1d9;
+        margin-bottom: 0.3rem;
+        line-height: 1.55;
+      }
+      .current-badge {
+        display: inline-block;
+        background: rgba(63, 185, 80, 0.15);
+        border: 1px solid rgba(63, 185, 80, 0.3);
+        color: #7ee787;
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 0.1rem 0.5rem;
+        border-radius: 999px;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+      }
 
-  /* PORTFOLIO */
-  /* COMMUNITY FEATURED CARD */
-  .community-card {
-    background: linear-gradient(135deg, rgba(63,185,80,.07) 0%, rgba(47,129,247,.05) 100%);
-    border: 1px solid rgba(63,185,80,.3);
-    border-radius: 12px; padding: 1.5rem;
-    margin-bottom: 1.5rem; cursor: pointer;
-    transition: border-color .2s, transform .2s;
-    display: flex; flex-direction: column; gap: .75rem;
-  }
-  .community-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
-  .community-card-header { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
-  .community-card h4 { font-size: 1rem; font-weight: 700; color: var(--accent2); }
-  .community-badge {
-    font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-    background: rgba(63,185,80,.15); border: 1px solid rgba(63,185,80,.3);
-    color: #7ee787; padding: .15rem .55rem; border-radius: 999px;
-  }
-  .community-card .card-hint { margin-top: 0; }
-  .community-meta { display: flex; flex-wrap: wrap; gap: .5rem; }
-  .community-stat {
-    background: var(--bg3); border: 1px solid var(--border);
-    font-size: .75rem; color: var(--muted); padding: .2rem .65rem; border-radius: 6px;
-  }
-  .community-stat strong { color: var(--text); }
-  .community-desc { font-size: .85rem; color: #c9d1d9; line-height: 1.6; }
-  .community-card .portfolio-links { margin-top: .25rem; }
+      /* PORTFOLIO */
+      /* COMMUNITY FEATURED CARD */
+      .community-card {
+        background: linear-gradient(
+          135deg,
+          rgba(63, 185, 80, 0.07) 0%,
+          rgba(47, 129, 247, 0.05) 100%
+        );
+        border: 1px solid rgba(63, 185, 80, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .community-card:hover {
+        border-color: var(--accent2);
+        transform: translateY(-2px);
+      }
+      .community-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+      .community-card h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--accent2);
+      }
+      .community-badge {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: rgba(63, 185, 80, 0.15);
+        border: 1px solid rgba(63, 185, 80, 0.3);
+        color: #7ee787;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+      }
+      .community-card .card-hint {
+        margin-top: 0;
+      }
+      .community-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .community-stat {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        font-size: 0.75rem;
+        color: var(--muted);
+        padding: 0.2rem 0.65rem;
+        border-radius: 6px;
+      }
+      .community-stat strong {
+        color: var(--text);
+      }
+      .community-desc {
+        font-size: 0.85rem;
+        color: #c9d1d9;
+        line-height: 1.6;
+      }
+      .community-card .portfolio-links {
+        margin-top: 0.25rem;
+      }
 
-  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-  .portfolio-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.25rem;
-    transition: border-color .2s, transform .2s;
-    display: flex; flex-direction: column; gap: .75rem;
-  }
-  .portfolio-card:hover { border-color: var(--accent3); transform: translateY(-2px); }
-  .portfolio-card h4 { font-size: .9rem; font-weight: 700; color: var(--accent3); }
-  .portfolio-links { display: flex; flex-direction: column; gap: .3rem; }
-  .portfolio-link {
-    display: flex; align-items: center; gap: .5rem;
-    color: var(--muted); text-decoration: none; font-size: .8rem;
-    padding: .3rem .5rem; border-radius: 6px;
-    transition: background .15s, color .15s;
-  }
-  .portfolio-link:hover { background: var(--bg3); color: var(--text); }
-  .link-type {
-    font-size: .65rem; font-weight: 600; text-transform: uppercase;
-    padding: .1rem .4rem; border-radius: 4px; flex-shrink: 0;
-  }
-  .link-type.notion { background: rgba(255,255,255,.08); color: #c9d1d9; }
-  .link-type.gitlab { background: rgba(252,109,38,.15); color: #fc8c4f; }
-  .link-type.diagram { background: rgba(210,168,255,.12); color: var(--accent3); }
+      .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+      .portfolio-card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .portfolio-card:hover {
+        border-color: var(--accent3);
+        transform: translateY(-2px);
+      }
+      .portfolio-card h4 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--accent3);
+      }
+      .portfolio-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .portfolio-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.8rem;
+        padding: 0.3rem 0.5rem;
+        border-radius: 6px;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .portfolio-link:hover {
+        background: var(--bg3);
+        color: var(--text);
+      }
+      .link-type {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .link-type.notion {
+        background: rgba(255, 255, 255, 0.08);
+        color: #c9d1d9;
+      }
+      .link-type.gitlab {
+        background: rgba(252, 109, 38, 0.15);
+        color: #fc8c4f;
+      }
+      .link-type.diagram {
+        background: rgba(210, 168, 255, 0.12);
+        color: var(--accent3);
+      }
 
-  /* CERTS GRID */
-  .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .75rem; }
-  .cert-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 10px; padding: 1rem 1.1rem;
-    display: flex; gap: .75rem; align-items: flex-start;
-    transition: border-color .2s;
-  }
-  .cert-card:hover { border-color: var(--accent); }
-  .cert-icon { font-size: 1.4rem; flex-shrink: 0; }
-  .cert-name { font-size: .82rem; font-weight: 600; color: var(--text); }
-  .cert-short { font-size: .72rem; color: var(--muted); margin-top: .15rem; }
+      /* CERTS GRID */
+      .certs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 0.5rem;
+      }
+      .cert-card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.6rem 0.85rem;
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        transition: border-color 0.2s;
+      }
+      .cert-card:hover {
+        border-color: var(--accent);
+      }
+      .cert-icon {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .cert-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .cert-short {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 0.15rem;
+      }
 
-  /* EDUCATION */
-  .edu-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1.25rem 1.5rem;
-    display: flex; gap: 1rem; align-items: center;
-  }
-  .edu-icon { font-size: 2rem; }
-  .edu-info h4 { font-size: .95rem; font-weight: 700; }
-  .edu-info p { color: var(--muted); font-size: .82rem; }
+      /* EDUCATION */
+      .edu-card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .edu-icon {
+        font-size: 2rem;
+      }
+      .edu-info h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .edu-info p {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
 
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem; text-align: center;
-    color: var(--muted); font-size: .82rem;
-  }
-  footer a { color: var(--accent); text-decoration: none; }
+      /* FOOTER */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 1.25rem 2rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
 
-  /* MODAL */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
-    align-items: flex-start; justify-content: center;
-    padding: 2rem 1rem; overflow-y: auto;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 16px; max-width: 660px; width: 100%;
-    padding: 2rem; position: relative; margin: auto;
-    animation: slideUp .2s ease;
-  }
-  @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
-  .modal-close {
-    position: absolute; top: 1rem; right: 1rem;
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--muted); cursor: pointer; border-radius: 6px;
-    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-    font-size: .95rem; line-height: 1; transition: color .15s, border-color .15s;
-  }
-  .modal-close:hover { color: var(--text); border-color: var(--accent); }
-  .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--accent3); margin-bottom: 1.25rem; padding-right: 2rem; }
-  .modal-body { color: #c9d1d9; font-size: .875rem; line-height: 1.75; }
-  .modal-body p { margin-bottom: .75rem; }
-  .modal-body ul { padding-left: 1.1rem; margin-bottom: .75rem; }
-  .modal-body li { margin-bottom: .4rem; }
-  .modal-body strong { color: var(--text); }
-  .modal-body h4 { font-size: .8rem; font-weight: 700; color: var(--accent2); text-transform: uppercase;
-    letter-spacing: .05em; margin: 1rem 0 .4rem; }
-  .modal-links { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-  .modal-link {
-    display: inline-flex; align-items: center; gap: .35rem;
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--muted); text-decoration: none; font-size: .77rem;
-    padding: .3rem .75rem; border-radius: 6px; transition: color .15s, border-color .15s;
-  }
-  .modal-link:hover { color: var(--text); border-color: var(--accent); }
-  .portfolio-card { cursor: pointer; }
-  .card-hint {
-    font-size: .7rem; color: var(--accent); margin-top: .4rem;
-    opacity: 0; transition: opacity .2s;
-  }
-  .portfolio-card:hover .card-hint { opacity: 1; }
+      /* MODAL */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(6px);
+        align-items: flex-start;
+        justify-content: center;
+        padding: 2rem 1rem;
+        overflow-y: auto;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        max-width: 660px;
+        width: 100%;
+        padding: 2rem;
+        position: relative;
+        margin: auto;
+        animation: slideUp 0.2s ease;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(16px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        cursor: pointer;
+        border-radius: 6px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        line-height: 1;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .modal-close:hover {
+        color: var(--text);
+        border-color: var(--accent);
+      }
+      .modal-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent3);
+        margin-bottom: 1.25rem;
+        padding-right: 2rem;
+      }
+      .modal-body {
+        color: #c9d1d9;
+        font-size: 0.875rem;
+        line-height: 1.75;
+      }
+      .modal-body p {
+        margin-bottom: 0.75rem;
+      }
+      .modal-body ul {
+        padding-left: 1.1rem;
+        margin-bottom: 0.75rem;
+      }
+      .modal-body li {
+        margin-bottom: 0.4rem;
+      }
+      .modal-body strong {
+        color: var(--text);
+      }
+      .modal-body h4 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent2);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 1rem 0 0.4rem;
+      }
+      .modal-links {
+        margin-top: 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+      }
+      .modal-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.77rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 6px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .modal-link:hover {
+        color: var(--text);
+        border-color: var(--accent);
+      }
+      .portfolio-card {
+        cursor: pointer;
+      }
+      .card-hint {
+        font-size: 0.7rem;
+        color: var(--accent);
+        margin-top: 0.4rem;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .portfolio-card:hover .card-hint {
+        opacity: 1;
+      }
 
-  /* HAMBURGER */
-  .nav-hamburger {
-    display: none;
-    flex-direction: column; justify-content: center; gap: 5px;
-    background: none; border: none; cursor: pointer;
-    padding: .4rem; border-radius: 6px;
-    transition: background .15s;
-  }
-  .nav-hamburger:hover { background: var(--bg3); }
-  .nav-hamburger span {
-    display: block; width: 22px; height: 2px;
-    background: var(--muted); border-radius: 2px;
-    transition: transform .25s, opacity .25s, background .15s;
-  }
-  .nav-hamburger:hover span { background: var(--text); }
-  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
-  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+      /* HAMBURGER */
+      .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.4rem;
+        border-radius: 6px;
+        transition: background 0.15s;
+      }
+      .nav-hamburger:hover {
+        background: var(--bg3);
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--muted);
+        border-radius: 2px;
+        transition:
+          transform 0.25s,
+          opacity 0.25s,
+          background 0.15s;
+      }
+      .nav-hamburger:hover span {
+        background: var(--text);
+      }
+      .nav-hamburger.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .nav-hamburger.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-hamburger.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
 
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    nav { padding: 0 1rem; position: relative; flex-wrap: wrap; height: auto; min-height: 56px; }
-    .nav-hamburger { display: flex; }
-    .nav-links {
-      display: none;
-      flex-direction: column; gap: 0;
-      width: 100%;
-      background: rgba(13,17,23,0.98);
-      border-top: 1px solid var(--border);
-      padding: .5rem 0 .75rem;
-      order: 3;
-    }
-    .nav-links.open { display: flex; }
-    .nav-links li { width: 100%; }
-    .nav-links a {
-      display: block; padding: .65rem 1rem;
-      font-size: .9rem; border-radius: 0;
-    }
-    .nav-links a:hover { background: var(--bg3); color: var(--text); }
+      /* RESPONSIVE */
+      @media (max-width: 700px) {
+        nav {
+          padding: 0 1rem;
+          position: relative;
+          flex-wrap: wrap;
+          height: auto;
+          min-height: 56px;
+        }
+        .nav-hamburger {
+          display: flex;
+        }
+        .nav-links {
+          display: none;
+          flex-direction: column;
+          gap: 0;
+          width: 100%;
+          background: rgba(13, 17, 23, 0.98);
+          border-top: 1px solid var(--border);
+          padding: 0.5rem 0 0.75rem;
+          order: 3;
+        }
+        .nav-links.open {
+          display: flex;
+        }
+        .nav-links li {
+          width: 100%;
+        }
+        .nav-links a {
+          display: block;
+          padding: 0.65rem 1rem;
+          font-size: 0.9rem;
+          border-radius: 0;
+        }
+        .nav-links a:hover {
+          background: var(--bg3);
+          color: var(--text);
+        }
 
-    .timeline-item { flex-direction: column; gap: .5rem; }
-    .timeline-left { flex: none; text-align: left; display: flex; gap: 1rem; align-items: center; }
-    .timeline-line { display: none; }
-    section { padding: 3rem 1rem; }
-    .hero { padding: 3rem 1rem 2.5rem; }
-    .kubestronaut-banner { flex-direction: column; gap: 1rem; }
-    .skills-grid { grid-template-columns: 1fr; }
-    .portfolio-grid { grid-template-columns: 1fr; }
-    .certs-grid { grid-template-columns: 1fr; }
-    .hero-contacts { gap: .5rem; }
-    .contact-chip { font-size: .78rem; padding: .35rem .75rem; }
-  }
-</style>
-</head>
-<body>
+        .timeline-item {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .timeline-left {
+          flex: none;
+          text-align: left;
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+        }
+        .timeline-line {
+          display: none;
+        }
+        section {
+          padding: 1.25rem 1rem;
+        }
+        .hero {
+          padding: 1.25rem 1rem 1rem;
+        }
+        .kubestronaut-banner {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+        .portfolio-grid {
+          grid-template-columns: 1fr;
+        }
+        .certs-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-contacts {
+          gap: 0.5rem;
+        }
+        .contact-chip {
+          font-size: 0.78rem;
+          padding: 0.35rem 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a class="nav-logo" href="#"><span>KS</span> · Kyaw Sithu</a>
+      <button
+        class="nav-hamburger"
+        id="nav-toggle"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#certifications">Certs</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#"><span>KS</span> · Kyaw Sithu</a>
-  <button class="nav-hamburger" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#certifications">Certs</a></li>
-    <li><a href="#portfolio">Portfolio</a></li>
-    <li><a href="#community">Community</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<div class="hero" id="about">
-  <a class="hero-badge" href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener">
-    <span class="dot"></span>
-    Kubestronaut · CNCF Certified
-  </a>
-  <h1>Kyaw <span>Sithu</span></h1>
-  <p class="hero-title">Platform/DevOps Engineer · Kubernetes Specialist · Dubai, UAE</p>
-  <p class="hero-summary">
-    Certified Kubernetes professional (Kubestronaut, ICA, RHCSA) with 9+ years of experience in systems and
-    platform engineering across Telecoms, FinTech, Healthcare, and ISP industries. Proven track record of
-    delivering production Kubernetes platforms, building automation that turns architectural standards into
-    repeatable well-documented solutions, and engineering cloud-native observability stacks.
-  </p>
-  <div class="hero-contacts">
-    <a class="contact-chip" href="mailto:kyawsithu@kst-devops.com">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2A1.5 1.5 0 000 3.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l7.598-4.185A.755.755 0 0116 4.293V3.5A1.5 1.5 0 0014.5 2h-13z"/><path d="M16 6.132L8.55 10.159a2.25 2.25 0 01-2.1 0L0 6.132V12.5A1.5 1.5 0 001.5 14h13a1.5 1.5 0 001.5-1.5V6.132z"/></svg>
-      kyawsithu@kst-devops.com
-    </a>
-    <a class="contact-chip" href="https://www.linkedin.com/in/thereisnokst/" target="_blank" rel="noopener">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 01.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-      kyawsithu
-    </a>
-    <a class="contact-chip" href="https://gitlab.com/users/kyawsithu96/projects" target="_blank" rel="noopener">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M15.97 9.058l-.895-2.756L13.3.842a.434.434 0 00-.827 0L10.7 6.302H5.3L3.527.842a.434.434 0 00-.827 0L.925 6.302.03 9.058a.866.866 0 00.314.968L8 15.026l7.656-4.999a.866.866 0 00.314-.969z"/></svg>
-      GitLab
-    </a>
-    <a class="contact-chip" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 7.5h-2v2a.5.5 0 01-1 0v-2h-2a.5.5 0 010-1h2v-2a.5.5 0 011 0v2h2a.5.5 0 010 1z"/></svg>
-      Credly Badges
-    </a>
-  </div>
-</div>
-
-<!-- EXPERIENCE -->
-<section id="experience">
-  <div class="container">
-    <p class="section-label">Career History</p>
-    <h2>Work <span>Experience</span></h2>
-    <div class="timeline">
-
-      <!-- Peg B -->
-      <div class="timeline-item">
-        <div class="timeline-left">
-          <div class="timeline-date">Apr 2022 – Present</div>
-          <div class="timeline-location">Dubai, UAE</div>
-        </div>
-        <div class="timeline-line"><div class="timeline-dot"></div></div>
-        <div class="timeline-content">
-          <h3>DevOps Engineer <span>— Peg B Technology</span> <span class="current-badge">Current</span></h3>
-          <div class="timeline-role-label">Telecoms · FinTech · Platform Engineering</div>
-
-          <div class="timeline-group">
-            <div class="timeline-group-title">Kubernetes Platform &amp; Deployment Engineering</div>
-            <ul>
-              <li>Deployed and managed production Kubernetes clusters using Rancher v2 for multi-cluster orchestration, supporting wallet and payment platform microservices across UAE and South America regions.</li>
-              <li>Implemented Istio service mesh for traffic management, mTLS enforcement, and ingress/egress control across microservice architectures.</li>
-              <li>Built and maintained deployment templates, Helm charts, and automation playbooks for consistent cluster rollouts and upgrades across environments.</li>
-              <li>Configured node-level settings including resource limits, scheduling policies, and container runtime tuning for workload performance optimisation.</li>
-              <li>Configured and troubleshot Kafka message queues ensuring reliable message delivery and fault tolerance for distributed services.</li>
-            </ul>
-          </div>
-
-          <div class="timeline-group">
-            <div class="timeline-group-title">CI/CD Pipeline Development &amp; Automation</div>
-            <ul>
-              <li>Architected Jenkins CI/CD pipelines for 20+ microservices, implementing automated unit, integration, and security testing to reduce deployment time.</li>
-              <li>Managed artifact versioning with retention policies; created Prometheus/Grafana dashboards for build metrics and pipeline monitoring.</li>
-            </ul>
-          </div>
-
-          <div class="timeline-group">
-            <div class="timeline-group-title">Cloud Infrastructure &amp; Observability</div>
-            <ul>
-              <li>Architected hybrid-cloud environments using Huawei Cloud and on-premises infrastructure for global deployments, provisioning compute, storage, networking, and databases.</li>
-              <li>Developed Infrastructure as Code templates (Terraform, Ansible) for repeatable and consistent cloud resource provisioning.</li>
-              <li>Optimised container registries and implemented vulnerability scanning for Docker images to ensure supply chain security.</li>
-              <li>Defined monitoring baselines and maintained Prometheus/Grafana observability dashboards and ELK logging pipelines for workload performance validation.</li>
-              <li>Produced deployment guides, runbooks, and operational documentation for delivery and operations teams.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- GTMH -->
-      <div class="timeline-item">
-        <div class="timeline-left">
-          <div class="timeline-date">Jul 2020 – Apr 2022</div>
-          <div class="timeline-location">Myanmar</div>
-        </div>
-        <div class="timeline-line"><div class="timeline-dot" style="background:var(--accent2)"></div></div>
-        <div class="timeline-content">
-          <h3>System Engineer <span>— GTMH Telecom</span></h3>
-          <div class="timeline-role-label">Telecoms · FinTech · Private Cloud</div>
-
-          <div class="timeline-group">
-            <div class="timeline-group-title">Systems Infrastructure &amp; Automation</div>
-            <ul>
-              <li>Deployed and administered critical enterprise systems including Zimbra email, OSTICKET, and Zabbix monitoring platforms.</li>
-              <li>Automated system configurations using Ansible playbooks, reducing infrastructure provisioning timelines from days to hours.</li>
-              <li>Managed Linux infrastructure with security hardening, patching, kernel tuning, and performance optimisation ensuring 99.9% uptime.</li>
-              <li>Troubleshot complex network services (NFS, DNS, LDAP, SMTP, SNMP) and coordinated with vendors for escalations and compatibility updates.</li>
-            </ul>
-          </div>
-
-          <div class="timeline-group">
-            <div class="timeline-group-title">Kubernetes &amp; Container Platform</div>
-            <ul>
-              <li>Deployed Kubernetes clusters for microservices with auto-scaling capabilities and resource optimisation.</li>
-              <li>Built Jenkins CI/CD pipelines from scratch, automating build, test, and deployment processes end-to-end.</li>
-              <li>Developed Ansible scripts and deployment playbooks enabling consistent, repeatable cluster rollouts.</li>
-            </ul>
-          </div>
-
-          <div class="timeline-group">
-            <div class="timeline-group-title">Private Cloud &amp; Vendor Support</div>
-            <ul>
-              <li>Supported nationwide FinTech platform serving 10K+ users, managing VMware ESXi virtualisation for private cloud customers.</li>
-              <li>Developed Bash scripts for automation, backup, and system maintenance; produced SOPs and technical documentation.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fortune Broadband -->
-      <div class="timeline-item">
-        <div class="timeline-left">
-          <div class="timeline-date">Jul 2019 – Jul 2020</div>
-          <div class="timeline-location">Myanmar</div>
-        </div>
-        <div class="timeline-line"><div class="timeline-dot" style="background:var(--accent4)"></div></div>
-        <div class="timeline-content">
-          <h3>System Engineer <span>— Fortune Broadband</span></h3>
-          <div class="timeline-role-label">ISP · Telecoms</div>
-          <ul>
-            <li>Launched LTE/Fiber broadband system for 10K+ customers with integrated billing and service management.</li>
-            <li>Deployed LibreNMS monitoring with custom dashboards for service visibility and performance tracking.</li>
-            <li>Implemented PowerDNS authoritative server, migrated DNS zones, and configured Exim SMTP with billing integration.</li>
-            <li>Managed ESXi virtualisation and storage systems (SAN/NAS) for high availability.</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Sysnet -->
-      <div class="timeline-item">
-        <div class="timeline-left">
-          <div class="timeline-date">Jan 2018 – Jan 2019</div>
-          <div class="timeline-location">Myanmar</div>
-        </div>
-        <div class="timeline-line"><div class="timeline-dot" style="background:var(--muted)"></div></div>
-        <div class="timeline-content">
-          <h3>System Support Engineer <span>— Sysnet System PTE Ltd</span></h3>
-          <div class="timeline-role-label">Healthcare · SI</div>
-          <ul>
-            <li>Deployed infrastructure solutions for global healthcare industry clients and automated system configurations with Ansible.</li>
-            <li>Managed storage systems for data and VM backups; created SOPs, runbooks, and technical documentation.</li>
-            <li>Configured monitoring systems and developed automated reporting tools for operational visibility.</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- RITZ -->
-      <div class="timeline-item">
-        <div class="timeline-left">
-          <div class="timeline-date">Dec 2016 – Jan 2018</div>
-          <div class="timeline-location">Myanmar</div>
-        </div>
-        <div class="timeline-line"><div class="timeline-dot" style="background:var(--muted)"></div></div>
-        <div class="timeline-content">
-          <h3>Junior System Administrator <span>— RITZ Public Company Limited</span></h3>
-          <div class="timeline-role-label">Linux · Networking</div>
-          <ul>
-            <li>Administered Linux systems including DNS, Apache, SSH, and file services with router and switch configuration management.</li>
-            <li>Wrote shell scripts for automation, backups, and log collection; performed system troubleshooting and performance tuning.</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- SKILLS -->
-<section id="skills">
-  <div class="container">
-    <p class="section-label">Core Competencies</p>
-    <h2>Skills &amp; <span>Technologies</span></h2>
-    <div class="skills-grid">
-      <div class="skill-card">
-        <h4>Kubernetes &amp; Orchestration</h4>
-        <div class="skill-tags">
-          <span class="tag">K8s (CKA)</span><span class="tag">Rancher</span><span class="tag">Helm</span>
-          <span class="tag">Kustomize</span><span class="tag">EKS</span><span class="tag">RKE2</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Service Mesh &amp; Networking</h4>
-        <div class="skill-tags">
-          <span class="tag">Istio (ICA)</span><span class="tag">NGINX</span><span class="tag">CNI plugins</span>
-          <span class="tag">Ingress/Egress</span><span class="tag">mTLS</span><span class="tag">Consul</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Infrastructure as Code</h4>
-        <div class="skill-tags">
-          <span class="tag">Terraform</span><span class="tag">Ansible</span>
-          <span class="tag">Helm Charts</span><span class="tag">Manifests</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>CI/CD &amp; GitOps</h4>
-        <div class="skill-tags">
-          <span class="tag">Jenkins</span><span class="tag">GitHub Actions</span>
-          <span class="tag">GitOps</span><span class="tag">Gitea</span><span class="tag">Bitbucket</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Cloud Platforms</h4>
-        <div class="skill-tags">
-          <span class="tag">AWS</span><span class="tag">Huawei Cloud</span>
-          <span class="tag">Hybrid-cloud</span><span class="tag">VMware ESXi</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Observability &amp; Monitoring</h4>
-        <div class="skill-tags">
-          <span class="tag">Prometheus</span><span class="tag">Grafana</span>
-          <span class="tag">ELK Stack</span><span class="tag">Zabbix</span><span class="tag">LibreNMS</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Security &amp; Identity</h4>
-        <div class="skill-tags">
-          <span class="tag">HashiCorp Vault</span><span class="tag">HCP</span>
-          <span class="tag">Keycloak</span><span class="tag">OIDC</span><span class="tag">Kong API GW</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Data &amp; Messaging</h4>
-        <div class="skill-tags">
-          <span class="tag">Kafka</span><span class="tag">Kafka Connect</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Linux &amp; Containerization</h4>
-        <div class="skill-tags">
-          <span class="tag">RHCSA</span><span class="tag">Docker</span>
-          <span class="tag">Security hardening</span><span class="tag">OS imaging</span>
-        </div>
-      </div>
-      <div class="skill-card">
-        <h4>Programming &amp; Scripting</h4>
-        <div class="skill-tags">
-          <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Shell scripting</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CERTIFICATIONS -->
-<section id="certifications">
-  <div class="container">
-    <p class="section-label">Achievements &amp; Certifications</p>
-    <h2>Professional <span>Credentials</span></h2>
-
-    <div class="kubestronaut-banner">
-      <div class="ks-icon">🏆</div>
-      <div class="ks-info">
-        <h3>Kubestronaut — CNCF Elite Status</h3>
-        <p>
-          Awarded the <strong>Kubestronaut</strong> title by the Cloud Native Computing Foundation — granted only to professionals who hold
-          all five core Kubernetes certifications (CKA, CKAD, CKS, KCNA, KCSA) simultaneously.
-          This places Kyaw in a globally recognised group of elite Kubernetes practitioners.
-        </p>
-        <p style="margin-top:.5rem">
-          <a href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener">
-            View CNCF Kubestronaut Profile →
-          </a>
-        </p>
-        <div class="ks-badges">
-          <span class="cert-pill k8s">CKA</span>
-          <span class="cert-pill k8s">CKAD</span>
-          <span class="cert-pill k8s">CKS</span>
-          <span class="cert-pill k8s">KCNA</span>
-          <span class="cert-pill k8s">KCSA</span>
-          <span class="cert-pill istio">ICA · Istio</span>
-          <span class="cert-pill rh">RHCSA · Red Hat</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="certs-grid">
-      <div class="cert-card">
-        <div class="cert-icon">☸️</div>
-        <div>
-          <div class="cert-name">CKA</div>
-          <div class="cert-short">Certified Kubernetes Administrator</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">☸️</div>
-        <div>
-          <div class="cert-name">CKAD</div>
-          <div class="cert-short">Certified Kubernetes Application Developer</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🔐</div>
-        <div>
-          <div class="cert-name">CKS</div>
-          <div class="cert-short">Certified Kubernetes Security Specialist</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">☁️</div>
-        <div>
-          <div class="cert-name">KCNA</div>
-          <div class="cert-short">Kubernetes and Cloud Native Associate</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🛡️</div>
-        <div>
-          <div class="cert-name">KCSA</div>
-          <div class="cert-short">Kubernetes and Cloud Native Security Associate</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🕸️</div>
-        <div>
-          <div class="cert-name">ICA</div>
-          <div class="cert-short">Istio Certified Associate</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🎩</div>
-        <div>
-          <div class="cert-name">RHCSA</div>
-          <div class="cert-short">Red Hat Certified System Administrator</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PORTFOLIO -->
-<section id="portfolio">
-  <div class="container">
-    <p class="section-label">Projects &amp; Research</p>
-    <h2>Portfolio <span>&amp; Diagrams</span></h2>
-    <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.5rem;margin-top:-.5rem">
-      Documented research, architecture diagrams, and hands-on implementations.
-      <a href="https://marred-network-70a.notion.site/2687346d5fdc808bb0e7e954497fa87d?v=2687346d5fdc8191b4f8000ca13d7e0f" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">View full project board →</a>
-    </p>
-    <div class="portfolio-grid">
-
-      <div class="portfolio-card">
-        <h4>CI/CD &amp; GitOps</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://www.notion.so/CI-CD-Complete-Documentation-2687346d5fdc81f38eb6c79cdc407cf2" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> CI/CD Complete Documentation
-          </a>
-          <a class="portfolio-link" href="https://www.notion.so/GithubWorkFlow-EKS-CICD-26a7346d5fdc8039a517ef901172c2aa" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> GitHub Workflow EKS CI/CD
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8jzN9LHMCE7" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> GitOps Detailed Implementation
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Kubernetes &amp; EKS</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/K8s-Kustomize-Minio-26a7346d5fdc80bf80afe0286659cc99" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> K8s Kustomize &amp; Minio
-          </a>
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/eks-roles-mapping-iam" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> EKS IAM Roles Mapping
-          </a>
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/k8s-kustomize-deep-dive" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> K8s Kustomize Deep Dive
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/2J5dC4WV8hn" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> EKS Detailed Diagram
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/64KXGLHiUn" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> K8s Service Accounts v1.22
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> K8s Single Cluster — Multi DC + Kafka
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>AWS Cloud</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/AWS-ARN-DeepDive-26a7346d5fdc809fb91ac7a927848170" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> AWS ARN Deep Dive
-          </a>
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/aws-assume-role-deep-dive-26a7346d5fdc80db9613c6e45abf14a3" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> AWS Assume Role Deep Dive
-          </a>
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/aws-ssm-s3-kms-packer-architecture" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> SSM + S3 + KMS + Packer Architecture
-          </a>
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/aws-ssm-with-nat-gateway" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> AWS SSM with NAT Gateway
-          </a>
-          <a class="portfolio-link" href="https://app.excalidraw.com/s/9hD7S5FgGWN/20EHmCmwG79" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> AWS SSM Solution
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/kji9QPjfN9" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> How Assume Roles Work
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Terraform</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://gitlab.com/hellocloud4602633/terraform-vpc-peering" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> Terraform VPC Peering
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8mPALVeTysY" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> CLI Driven Workflow (Terraform)
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/4Ad7x0VzXfV" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> How TF Provider Works
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/666nZqgAoRW" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> TF Provider Explanation
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>HashiCorp Vault / HCP</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/hcp-vault-cluster" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> HCP Vault Cluster
-          </a>
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/hcp-aws-private-peer-architecture" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> HCP AWS Private Peer Architecture
-          </a>
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/hc-vpc-cross-peering-from-scratch" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> HC VPC Cross Peering from Scratch
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/SGFnwKLqta" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Vault HCP Peering Architecture
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Istio / Service Mesh</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/ambient-mesh-deepdive" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> Ambient Mesh Deep Dive
-          </a>
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/API-Sources-Whitelist-High-Level-Overview-Why-ISTIO-2687346d5fdc81848113f3e4c815ae68" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> Why Istio — API Sources Whitelist
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Ii06PUN6hU" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Who Injects Istio Sidecar
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Kong API Gateway</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/kong-api-gateway-architecture" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> Kong API Gateway Architecture
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/7Q9hdJVTban" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Kong API GW Architecture
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/70GLvpWZURW" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Kong API GW Auth with JWT
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Keycloak / IDP / IAM</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://gitlab.com/kyawsithu96/eks-keycloak-oidc-issuer" target="_blank" rel="noopener">
-            <span class="link-type gitlab">GitLab</span> EKS Keycloak OIDC Issuer
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/ALXcJGLCxpw" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> IDP with Email Existing Flow
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/1NT5qqBZhmG" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Keycloak Auth Code Flow
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Rancher / RKE2</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/Rancher-RKE-2-2687346d5fdc813db7aaeeeb68acc9bb" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> Rancher RKE2 Documentation
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Kafka</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/KAFKA-Switch-Over-From-Primary-To-DR-DR-To-Primary-2687346d5fdc81bda04bd79f0dd67369" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> Kafka Switchover — Primary ↔ DR
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> K8s Multi-DC with Kafka
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>ELK / Observability</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41" target="_blank" rel="noopener">
-            <span class="link-type notion">Notion</span> ELK Fleet &amp; APM Agent Integration
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>Consul / EKS</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/7p5pYfX1m50" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Consul EKS (1)
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Guild2lhV4" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Consul EKS (2)
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/A326WwhNFAd" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> Consul EKS (3)
-          </a>
-        </div>
-      </div>
-
-      <div class="portfolio-card">
-        <h4>WebRTC / STUN / Cloudflare</h4>
-        <div class="card-hint">Click for details →</div>
-        <div class="portfolio-links">
-          <a class="portfolio-link" href="https://app.excalidraw.com/s/9hD7S5FgGWN/5ciC5HxRvTd" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> WebRTC Troubleshooting — Cloudflare
-          </a>
-          <a class="portfolio-link" href="https://link.excalidraw.com/l/9hD7S5FgGWN/5ciC5HxRvTd" target="_blank" rel="noopener">
-            <span class="link-type diagram">Diagram</span> STUN Research
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- COMMUNITY -->
-<section id="community">
-  <div class="container">
-    <p class="section-label">Community Contribution</p>
-    <h2>Beyond <span>Work</span></h2>
-    <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.5rem;margin-top:-.5rem">
-      Built and operated independently — giving back to the Myanmar expat community in Dubai.
-    </p>
-    <div class="community-card" id="community-dubai-dir">
-      <div class="community-card-header">
-        <h4>Dubai Directory MM — Myanmar Community Platform</h4>
-        <span class="community-badge">Community</span>
-        <div class="card-hint">Click for details →</div>
-      </div>
-      <div class="community-meta">
-        <span class="community-stat"><strong>1,000+</strong> active users</span>
-        <span class="community-stat"><strong>30</strong> businesses listed</span>
-        <span class="community-stat">Dubai, UAE</span>
-        <span class="community-stat">Myanmar Expat Community</span>
-      </div>
-      <p class="community-desc">A digital community platform and business directory built for the Myanmar community in Dubai — connecting Myanmar expats with local businesses, job resources, and community support. Designed, built, and operated as a personal initiative outside of work.</p>
-      <div class="portfolio-links">
-        <a class="portfolio-link" href="https://dubaidirectorymm.com/" target="_blank" rel="noopener">
-          <span class="link-type notion">Live</span> dubaidirectorymm.com
+    <!-- HERO -->
+    <div class="hero" id="about">
+      <a
+        class="hero-badge"
+        href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu"
+        target="_blank"
+        rel="noopener"
+      >
+        <span class="dot"></span>
+        Kubestronaut · CNCF Certified
+      </a>
+      <h1>Kyaw <span>Sithu</span></h1>
+      <p class="hero-title">
+        Platform/DevOps Engineer · Kubernetes Specialist · Dubai, UAE
+      </p>
+      <p class="hero-summary">
+        Certified Kubernetes professional (Kubestronaut, ICA, RHCSA) with 9+
+        years of experience in systems and platform engineering across Telecoms,
+        FinTech, Healthcare, and ISP industries. Proven track record of
+        delivering production Kubernetes platforms, building automation that
+        turns architectural standards into repeatable well-documented solutions,
+        and engineering cloud-native observability stacks.
+      </p>
+      <div class="hero-contacts">
+        <a class="contact-chip" href="mailto:kyawsithu@kst-devops.com">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M1.5 2A1.5 1.5 0 000 3.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l7.598-4.185A.755.755 0 0116 4.293V3.5A1.5 1.5 0 0014.5 2h-13z"
+            />
+            <path
+              d="M16 6.132L8.55 10.159a2.25 2.25 0 01-2.1 0L0 6.132V12.5A1.5 1.5 0 001.5 14h13a1.5 1.5 0 001.5-1.5V6.132z"
+            />
+          </svg>
+          kyawsithu@kst-devops.com
+        </a>
+        <a
+          class="contact-chip"
+          href="https://www.linkedin.com/in/thereisnokst/"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 01.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"
+            />
+          </svg>
+          kyawsithu
+        </a>
+        <a
+          class="contact-chip"
+          href="https://gitlab.com/users/kyawsithu96/projects"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M15.97 9.058l-.895-2.756L13.3.842a.434.434 0 00-.827 0L10.7 6.302H5.3L3.527.842a.434.434 0 00-.827 0L.925 6.302.03 9.058a.866.866 0 00.314.968L8 15.026l7.656-4.999a.866.866 0 00.314-.969z"
+            />
+          </svg>
+          GitLab
+        </a>
+        <a
+          class="contact-chip"
+          href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+          target="_blank"
+          rel="noopener"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 7.5h-2v2a.5.5 0 01-1 0v-2h-2a.5.5 0 010-1h2v-2a.5.5 0 011 0v2h2a.5.5 0 010 1z"
+            />
+          </svg>
+          Credly Badges
+        </a>
+        <a class="contact-chip" href="#community">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 100-6 3 3 0 000 6zm-5.784 6A2.238 2.238 0 015 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 005 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+            />
+          </svg>
+          Community Contributions
         </a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- EDUCATION -->
-<section id="education">
-  <div class="container">
-    <p class="section-label">Education</p>
-    <h2>Academic <span>Background</span></h2>
-    <div class="edu-card">
-      <div class="edu-icon">🎓</div>
-      <div class="edu-info">
-        <h4>BA (English)</h4>
-        <p>University of Dagon, Yangon · 2014 – 2019</p>
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="container">
+        <p class="section-label">Career History</p>
+        <h2>Work <span>Experience</span></h2>
+        <div class="timeline">
+          <!-- Peg B -->
+          <div class="timeline-item">
+            <div class="timeline-left">
+              <div class="timeline-date">Apr 2022 – Present</div>
+              <div class="timeline-location">Dubai, UAE</div>
+            </div>
+            <div class="timeline-line"><div class="timeline-dot"></div></div>
+            <div class="timeline-content">
+              <h3>
+                DevOps Engineer <span>— <a href="https://pegb.tech/" target="_blank" rel="noopener">Peg B Technology</a></span>
+                <span class="current-badge">Current</span>
+              </h3>
+              <div class="timeline-role-label">
+                Telecoms · FinTech · Platform Engineering
+              </div>
+
+              <div class="timeline-group">
+                <div class="timeline-group-title">
+                  Kubernetes Platform &amp; Deployment Engineering
+                </div>
+                <ul>
+                  <li>
+                    Deployed and managed production Kubernetes clusters using
+                    Rancher v2 for multi-cluster orchestration, supporting
+                    wallet and payment platform microservices across UAE and
+                    South America regions.
+                  </li>
+                  <li>
+                    Implemented Istio service mesh for traffic management, mTLS
+                    enforcement, and ingress/egress control across microservice
+                    architectures.
+                  </li>
+                  <li>
+                    Built and maintained deployment templates, Helm charts, and
+                    automation playbooks for consistent cluster rollouts and
+                    upgrades across environments.
+                  </li>
+                  <li>
+                    Configured node-level settings including resource limits,
+                    scheduling policies, and container runtime tuning for
+                    workload performance optimisation.
+                  </li>
+                  <li>
+                    Configured and troubleshot Kafka message queues ensuring
+                    reliable message delivery and fault tolerance for
+                    distributed services.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="timeline-group">
+                <div class="timeline-group-title">
+                  CI/CD Pipeline Development &amp; Automation
+                </div>
+                <ul>
+                  <li>
+                    Architected Jenkins CI/CD pipelines for 20+ microservices,
+                    implementing automated unit, integration, and security
+                    testing to reduce deployment time.
+                  </li>
+                  <li>
+                    Managed artifact versioning with retention policies; created
+                    Prometheus/Grafana dashboards for build metrics and pipeline
+                    monitoring.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="timeline-group">
+                <div class="timeline-group-title">
+                  Cloud Infrastructure &amp; Observability
+                </div>
+                <ul>
+                  <li>
+                    Architected hybrid-cloud environments using Huawei Cloud and
+                    on-premises infrastructure for global deployments,
+                    provisioning compute, storage, networking, and databases.
+                  </li>
+                  <li>
+                    Developed Infrastructure as Code templates (Terraform,
+                    Ansible) for repeatable and consistent cloud resource
+                    provisioning.
+                  </li>
+                  <li>
+                    Optimised container registries and implemented vulnerability
+                    scanning for Docker images to ensure supply chain security.
+                  </li>
+                  <li>
+                    Defined monitoring baselines and maintained
+                    Prometheus/Grafana observability dashboards and ELK logging
+                    pipelines for workload performance validation.
+                  </li>
+                  <li>
+                    Produced deployment guides, runbooks, and operational
+                    documentation for delivery and operations teams.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- GTMH -->
+          <div class="timeline-item">
+            <div class="timeline-left">
+              <div class="timeline-date">Jul 2020 – Apr 2022</div>
+              <div class="timeline-location">Myanmar</div>
+            </div>
+            <div class="timeline-line">
+              <div
+                class="timeline-dot"
+                style="background: var(--accent2)"
+              ></div>
+            </div>
+            <div class="timeline-content">
+              <h3>System Engineer <span>— <a href="https://www.gtmh-telecom.com/" target="_blank" rel="noopener">GTMH Telecom</a></span></h3>
+              <div class="timeline-role-label">
+                Telecoms · FinTech · Private Cloud
+              </div>
+
+              <div class="timeline-group">
+                <div class="timeline-group-title">
+                  Systems Infrastructure &amp; Automation
+                </div>
+                <ul>
+                  <li>
+                    Deployed and administered critical enterprise systems
+                    including Zimbra email, OSTICKET, and Zabbix monitoring
+                    platforms.
+                  </li>
+                  <li>
+                    Automated system configurations using Ansible playbooks,
+                    reducing infrastructure provisioning timelines from days to
+                    hours.
+                  </li>
+                  <li>
+                    Managed Linux infrastructure with security hardening,
+                    patching, kernel tuning, and performance optimisation
+                    ensuring 99.9% uptime.
+                  </li>
+                  <li>
+                    Troubleshot complex network services (NFS, DNS, LDAP, SMTP,
+                    SNMP) and coordinated with vendors for escalations and
+                    compatibility updates.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="timeline-group">
+                <div class="timeline-group-title">
+                  Kubernetes &amp; Container Platform
+                </div>
+                <ul>
+                  <li>
+                    Deployed Kubernetes clusters for microservices with
+                    auto-scaling capabilities and resource optimisation.
+                  </li>
+                  <li>
+                    Built Jenkins CI/CD pipelines from scratch, automating
+                    build, test, and deployment processes end-to-end.
+                  </li>
+                  <li>
+                    Developed Ansible scripts and deployment playbooks enabling
+                    consistent, repeatable cluster rollouts.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="timeline-group">
+                <div class="timeline-group-title">
+                  Private Cloud &amp; Vendor Support
+                </div>
+                <ul>
+                  <li>
+                    Supported nationwide FinTech platform serving 10K+ users,
+                    managing VMware ESXi virtualisation for private cloud
+                    customers.
+                  </li>
+                  <li>
+                    Developed Bash scripts for automation, backup, and system
+                    maintenance; produced SOPs and technical documentation.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fortune Broadband -->
+          <div class="timeline-item">
+            <div class="timeline-left">
+              <div class="timeline-date">Jul 2019 – Jul 2020</div>
+              <div class="timeline-location">Myanmar</div>
+            </div>
+            <div class="timeline-line">
+              <div
+                class="timeline-dot"
+                style="background: var(--accent4)"
+              ></div>
+            </div>
+            <div class="timeline-content">
+              <h3>System Engineer <span>— <a href="https://www.fortunemm.com/" target="_blank" rel="noopener">Fortune Broadband</a></span></h3>
+              <div class="timeline-role-label">ISP · Telecoms</div>
+              <ul>
+                <li>
+                  Launched LTE/Fiber broadband system for 10K+ customers with
+                  integrated billing and service management.
+                </li>
+                <li>
+                  Deployed LibreNMS monitoring with custom dashboards for
+                  service visibility and performance tracking.
+                </li>
+                <li>
+                  Implemented PowerDNS authoritative server, migrated DNS zones,
+                  and configured Exim SMTP with billing integration.
+                </li>
+                <li>
+                  Managed ESXi virtualisation and storage systems (SAN/NAS) for
+                  high availability.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Sysnet -->
+          <div class="timeline-item">
+            <div class="timeline-left">
+              <div class="timeline-date">Jan 2018 – Jan 2019</div>
+              <div class="timeline-location">Myanmar</div>
+            </div>
+            <div class="timeline-line">
+              <div class="timeline-dot" style="background: var(--muted)"></div>
+            </div>
+            <div class="timeline-content">
+              <h3>
+                System Support Engineer <span>— <a href="https://sysnetsystem.com/" target="_blank" rel="noopener">Sysnet System PTE Ltd</a></span>
+              </h3>
+              <div class="timeline-role-label">Healthcare · SI</div>
+              <ul>
+                <li>
+                  Deployed infrastructure solutions for global healthcare
+                  industry clients and automated system configurations with
+                  Ansible.
+                </li>
+                <li>
+                  Managed storage systems for data and VM backups; created SOPs,
+                  runbooks, and technical documentation.
+                </li>
+                <li>
+                  Configured monitoring systems and developed automated
+                  reporting tools for operational visibility.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- RITZ -->
+          <div class="timeline-item">
+            <div class="timeline-left">
+              <div class="timeline-date">Dec 2016 – Jan 2018</div>
+              <div class="timeline-location">Myanmar</div>
+            </div>
+            <div class="timeline-line">
+              <div class="timeline-dot" style="background: var(--muted)"></div>
+            </div>
+            <div class="timeline-content">
+              <h3>
+                Junior System Administrator
+                <span>— <a href="https://ritz.com.mm/" target="_blank" rel="noopener">RITZ Public Company Limited</a></span>
+              </h3>
+              <div class="timeline-role-label">Linux · Networking</div>
+              <ul>
+                <li>
+                  Administered Linux systems including DNS, Apache, SSH, and
+                  file services with router and switch configuration management.
+                </li>
+                <li>
+                  Wrote shell scripts for automation, backups, and log
+                  collection; performed system troubleshooting and performance
+                  tuning.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="container">
+        <p class="section-label">Core Competencies</p>
+        <h2>Skills &amp; <span>Technologies</span></h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <h4>Kubernetes &amp; Orchestration</h4>
+            <div class="skill-tags">
+              <span class="tag">K8s (CKA)</span><span class="tag">Rancher</span
+              ><span class="tag">Helm</span> <span class="tag">Kustomize</span
+              ><span class="tag">EKS</span><span class="tag">RKE2</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Service Mesh &amp; Networking</h4>
+            <div class="skill-tags">
+              <span class="tag">Istio (ICA)</span><span class="tag">NGINX</span
+              ><span class="tag">CNI plugins</span>
+              <span class="tag">Ingress/Egress</span
+              ><span class="tag">mTLS</span><span class="tag">Consul</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Infrastructure as Code</h4>
+            <div class="skill-tags">
+              <span class="tag">Terraform</span><span class="tag">Ansible</span>
+              <span class="tag">Helm Charts</span
+              ><span class="tag">Manifests</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>CI/CD &amp; GitOps</h4>
+            <div class="skill-tags">
+              <span class="tag">Jenkins</span
+              ><span class="tag">GitHub Actions</span>
+              <span class="tag">GitOps</span><span class="tag">Gitea</span
+              ><span class="tag">Bitbucket</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Cloud Platforms</h4>
+            <div class="skill-tags">
+              <span class="tag">AWS</span><span class="tag">Huawei Cloud</span>
+              <span class="tag">Hybrid-cloud</span
+              ><span class="tag">VMware ESXi</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Observability &amp; Monitoring</h4>
+            <div class="skill-tags">
+              <span class="tag">Prometheus</span
+              ><span class="tag">Grafana</span>
+              <span class="tag">ELK Stack</span><span class="tag">Zabbix</span
+              ><span class="tag">LibreNMS</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Security &amp; Identity</h4>
+            <div class="skill-tags">
+              <span class="tag">HashiCorp Vault</span
+              ><span class="tag">HCP</span> <span class="tag">Keycloak</span
+              ><span class="tag">OIDC</span><span class="tag">Kong API GW</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Data &amp; Messaging</h4>
+            <div class="skill-tags">
+              <span class="tag">Kafka</span
+              ><span class="tag">Kafka Connect</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Linux &amp; Containerization</h4>
+            <div class="skill-tags">
+              <span class="tag">RHCSA</span><span class="tag">Docker</span>
+              <span class="tag">Security hardening</span
+              ><span class="tag">OS imaging</span>
+            </div>
+          </div>
+          <div class="skill-card">
+            <h4>Programming &amp; Scripting</h4>
+            <div class="skill-tags">
+              <span class="tag">Python</span><span class="tag">Bash</span
+              ><span class="tag">Shell scripting</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section id="certifications">
+      <div class="container">
+        <p class="section-label">Achievements &amp; Certifications</p>
+        <h2>Professional <span>Credentials</span></h2>
+
+        <div class="kubestronaut-banner">
+          <div class="ks-info">
+            <h3>Kubestronaut — CNCF Elite Status</h3>
+            <p>
+              Awarded the <strong>Kubestronaut</strong> title by the Cloud
+              Native Computing Foundation — granted only to professionals who
+              hold all five core Kubernetes certifications (CKA, CKAD, CKS,
+              KCNA, KCSA) simultaneously. This places Kyaw in a globally
+              recognised group of elite Kubernetes practitioners.
+            </p>
+            <p
+              style="
+                margin-top: 0.5rem;
+                margin-bottom: 0.75rem;
+                color: var(--muted);
+                font-size: 0.82rem;
+              "
+            >
+              You can validate the credentials below:
+            </p>
+            <div
+              style="
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                margin-bottom: 0.25rem;
+              "
+            >
+              <a
+                href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu"
+                target="_blank"
+                rel="noopener"
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 0.35rem;
+                  background: rgba(50, 108, 229, 0.12);
+                  border: 1px solid rgba(50, 108, 229, 0.4);
+                  color: #79b8ff;
+                  text-decoration: none;
+                  font-size: 0.8rem;
+                  padding: 0.3rem 0.8rem;
+                  border-radius: 8px;
+                  transition:
+                    border-color 0.2s,
+                    background 0.2s;
+                "
+                onmouseover="this.style.background = 'rgba(50,108,229,.22)'"
+                onmouseout="this.style.background = 'rgba(50,108,229,.12)'"
+              >
+                ☸️ CNCF Kubestronaut Profile →
+              </a>
+              <a
+                href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+                target="_blank"
+                rel="noopener"
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 0.35rem;
+                  background: rgba(255, 166, 87, 0.1);
+                  border: 1px solid rgba(255, 166, 87, 0.4);
+                  color: var(--accent4);
+                  text-decoration: none;
+                  font-size: 0.8rem;
+                  padding: 0.3rem 0.8rem;
+                  border-radius: 8px;
+                  transition:
+                    border-color 0.2s,
+                    background 0.2s;
+                "
+                onmouseover="this.style.background = 'rgba(255,166,87,.2)'"
+                onmouseout="this.style.background = 'rgba(255,166,87,.1)'"
+              >
+                🏅 Credly Badges →
+              </a>
+              <a
+                href="https://rhtapps.redhat.com/verify?certId=210-230-223"
+                target="_blank"
+                rel="noopener"
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 0.35rem;
+                  background: rgba(210, 0, 0, 0.1);
+                  border: 1px solid rgba(210, 0, 0, 0.4);
+                  color: #ff7b7b;
+                  text-decoration: none;
+                  font-size: 0.8rem;
+                  padding: 0.3rem 0.8rem;
+                  border-radius: 8px;
+                  transition:
+                    border-color 0.2s,
+                    background 0.2s;
+                "
+                onmouseover="this.style.background = 'rgba(210,0,0,.2)'"
+                onmouseout="this.style.background = 'rgba(210,0,0,.1)'"
+              >
+                🎩 Red Hat Verify →
+              </a>
+            </div>
+            <div class="certs-grid" style="margin-top: 1.25rem">
+              <div class="cert-card">
+                <div class="cert-icon">☸️</div>
+                <div>
+                  <div class="cert-name">CKA</div>
+                  <div class="cert-short">
+                    Certified Kubernetes Administrator
+                  </div>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-icon">☸️</div>
+                <div>
+                  <div class="cert-name">CKAD</div>
+                  <div class="cert-short">
+                    Certified Kubernetes Application Developer
+                  </div>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-icon">🔐</div>
+                <div>
+                  <div class="cert-name">CKS</div>
+                  <div class="cert-short">
+                    Certified Kubernetes Security Specialist
+                  </div>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-icon">☁️</div>
+                <div>
+                  <div class="cert-name">KCNA</div>
+                  <div class="cert-short">
+                    Kubernetes and Cloud Native Associate
+                  </div>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-icon">🛡️</div>
+                <div>
+                  <div class="cert-name">KCSA</div>
+                  <div class="cert-short">
+                    Kubernetes and Cloud Native Security Associate
+                  </div>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-icon">🕸️</div>
+                <div>
+                  <div class="cert-name">ICA</div>
+                  <div class="cert-short">Istio Certified Associate</div>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-icon">🎩</div>
+                <div>
+                  <div class="cert-name">RHCSA</div>
+                  <div class="cert-short">
+                    Red Hat Certified System Administrator
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio">
+      <div class="container">
+        <p class="section-label">Projects &amp; Research</p>
+        <h2>Portfolio <span>&amp; Diagrams</span></h2>
+        <p
+          style="
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
+            margin-top: -0.25rem;
+          "
+        >
+          Documented research, architecture diagrams, and hands-on
+          implementations.
+        </p>
+        <div
+          style="
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            background: rgba(255, 166, 87, 0.07);
+            border: 1px solid rgba(255, 166, 87, 0.35);
+            border-radius: 8px;
+            padding: 0.65rem 0.9rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: #ffc680;
+            line-height: 1.5;
+          "
+        >
+          <span style="flex-shrink: 0; font-size: 0.95rem">⚠️</span>
+          <span
+            >Credentials, tokens, and external links referenced in these
+            projects are
+            <strong style="color: var(--accent4)">invalidated</strong> — they
+            are used for demonstration and documentation purposes only.</span
+          >
+        </div>
+        <div class="portfolio-grid">
+          <div class="portfolio-card">
+            <h4>CI/CD &amp; GitOps</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://www.notion.so/CI-CD-Complete-Documentation-2687346d5fdc81f38eb6c79cdc407cf2"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> CI/CD Complete
+                Documentation
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://www.notion.so/GithubWorkFlow-EKS-CICD-26a7346d5fdc8039a517ef901172c2aa"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> GitHub Workflow EKS
+                CI/CD
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/8jzN9LHMCE7"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> GitOps Detailed
+                Implementation
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Kubernetes &amp; EKS</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/K8s-Kustomize-Minio-26a7346d5fdc80bf80afe0286659cc99"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> K8s Kustomize &amp;
+                Minio
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/eks-roles-mapping-iam"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> EKS IAM Roles
+                Mapping
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/k8s-kustomize-deep-dive"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> K8s Kustomize Deep
+                Dive
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/2J5dC4WV8hn"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> EKS Detailed
+                Diagram
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/64KXGLHiUn"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> K8s Service
+                Accounts v1.22
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> K8s Single
+                Cluster — Multi DC + Kafka
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>AWS Cloud</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/AWS-ARN-DeepDive-26a7346d5fdc809fb91ac7a927848170"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> AWS ARN Deep Dive
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/aws-assume-role-deep-dive-26a7346d5fdc80db9613c6e45abf14a3"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> AWS Assume Role
+                Deep Dive
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/aws-ssm-s3-kms-packer-architecture"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> SSM + S3 + KMS +
+                Packer Architecture
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/aws-ssm-with-nat-gateway"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> AWS SSM with NAT
+                Gateway
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://app.excalidraw.com/s/9hD7S5FgGWN/20EHmCmwG79"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> AWS SSM Solution
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/kji9QPjfN9"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> How Assume Roles
+                Work
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Terraform</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/hellocloud4602633/terraform-vpc-peering"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> Terraform VPC
+                Peering
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/8mPALVeTysY"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> CLI Driven
+                Workflow (Terraform)
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/4Ad7x0VzXfV"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> How TF Provider
+                Works
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/666nZqgAoRW"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> TF Provider
+                Explanation
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>HashiCorp Vault / HCP</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/hcp-vault-cluster"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> HCP Vault Cluster
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/hcp-aws-private-peer-architecture"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> HCP AWS Private
+                Peer Architecture
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/hc-vpc-cross-peering-from-scratch"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> HC VPC Cross
+                Peering from Scratch
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/SGFnwKLqta"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Vault HCP Peering
+                Architecture
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Istio / Service Mesh</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/ambient-mesh-deepdive"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> Ambient Mesh Deep
+                Dive
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/API-Sources-Whitelist-High-Level-Overview-Why-ISTIO-2687346d5fdc81848113f3e4c815ae68"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> Why Istio — API
+                Sources Whitelist
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Ii06PUN6hU"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Who Injects Istio
+                Sidecar
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Kong API Gateway</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/kong-api-gateway-architecture"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> Kong API Gateway
+                Architecture
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/7Q9hdJVTban"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Kong API GW
+                Architecture
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/70GLvpWZURW"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Kong API GW Auth
+                with JWT
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Keycloak / IDP / IAM</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://gitlab.com/kyawsithu96/eks-keycloak-oidc-issuer"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type gitlab">GitLab</span> EKS Keycloak OIDC
+                Issuer
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/ALXcJGLCxpw"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> IDP with Email
+                Existing Flow
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/1NT5qqBZhmG"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Keycloak Auth
+                Code Flow
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Rancher / RKE2</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/Rancher-RKE-2-2687346d5fdc813db7aaeeeb68acc9bb"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> Rancher RKE2
+                Documentation
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Kafka</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/KAFKA-Switch-Over-From-Primary-To-DR-DR-To-Primary-2687346d5fdc81bda04bd79f0dd67369"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> Kafka Switchover —
+                Primary ↔ DR
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> K8s Multi-DC with
+                Kafka
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>ELK / Observability</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type notion">Notion</span> ELK Fleet &amp; APM
+                Agent Integration
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>Consul / EKS</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/7p5pYfX1m50"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Consul EKS (1)
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Guild2lhV4"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Consul EKS (2)
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/A326WwhNFAd"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> Consul EKS (3)
+              </a>
+            </div>
+          </div>
+
+          <div class="portfolio-card">
+            <h4>WebRTC / STUN / Cloudflare</h4>
+            <div class="card-hint">Click for details →</div>
+            <div class="portfolio-links">
+              <a
+                class="portfolio-link"
+                href="https://app.excalidraw.com/s/9hD7S5FgGWN/5ciC5HxRvTd"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> WebRTC
+                Troubleshooting — Cloudflare
+              </a>
+              <a
+                class="portfolio-link"
+                href="https://link.excalidraw.com/l/9hD7S5FgGWN/5ciC5HxRvTd"
+                target="_blank"
+                rel="noopener"
+              >
+                <span class="link-type diagram">Diagram</span> STUN Research
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section id="community">
+      <div class="container">
+        <p class="section-label">Community</p>
+        <h2>Beyond <span>Work</span></h2>
+        <p
+          style="
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
+            margin-top: -0.25rem;
+          "
+        >
+          Built and operated independently — giving back to the Myanmar expat
+          community in Dubai.
+        </p>
+
+        <div
+          class="community-card"
+          style="
+            border-color: rgba(47, 129, 247, 0.35);
+            background: linear-gradient(
+              135deg,
+              rgba(47, 129, 247, 0.07) 0%,
+              rgba(50, 108, 229, 0.04) 100%
+            );
+          "
+        >
+          <div class="community-card-header">
+            <h4 style="color: var(--accent)">
+              Dubai IT Community — Facebook Group Moderator
+            </h4>
+            <span
+              class="community-badge"
+              style="
+                background: rgba(47, 129, 247, 0.15);
+                border-color: rgba(47, 129, 247, 0.35);
+                color: #79b8ff;
+              "
+              >Moderator</span
+            >
+          </div>
+          <div class="community-meta">
+            <span class="community-stat">Dubai, UAE</span>
+            <span class="community-stat">IT Professionals</span>
+            <span class="community-stat">Since 2022</span>
+          </div>
+          <p class="community-desc">
+            Active moderator in a Dubai-based IT professionals group,
+            contributing knowledge and community support. Since 2022, the
+            Myanmar IT community in Dubai has grown significantly — members are
+            connecting, finding jobs, and building careers. A small but
+            meaningful impact on people's lives in a foreign country.
+          </p>
+          <div class="portfolio-links">
+            <a
+              class="portfolio-link"
+              href="https://www.facebook.com/share/g/1Ch3VBxtop/?mibextid=wwXIfr"
+              target="_blank"
+              rel="noopener"
+              style="color: #79b8ff; font-weight: 500"
+            >
+              <span
+                class="link-type"
+                style="
+                  background: rgba(47, 129, 247, 0.15);
+                  border: 1px solid rgba(47, 129, 247, 0.4);
+                  color: #79b8ff;
+                "
+                >📘 Facebook</span
+              >
+              Join the Dubai IT Group →
+            </a>
+          </div>
+        </div>
+
+        <div class="community-card" id="community-dubai-dir">
+          <div class="community-card-header">
+            <h4>Dubai Directory MM — Myanmar Community Platform</h4>
+            <span class="community-badge">Community</span>
+            <div class="card-hint">Click for details →</div>
+          </div>
+          <div class="community-meta">
+            <span class="community-stat"
+              ><strong>1,000+</strong> active users</span
+            >
+            <span class="community-stat"
+              ><strong>30</strong> businesses listed</span
+            >
+            <span class="community-stat">Dubai, UAE</span>
+            <span class="community-stat">Myanmar Expat Community</span>
+          </div>
+          <p class="community-desc">
+            A digital community platform and business directory built for the
+            Myanmar community in Dubai — connecting Myanmar expats with local
+            businesses, job resources, and community support. Available as a
+            live web platform and an Android app on Google Play. Designed,
+            built, and operated as a personal initiative outside of work.
+          </p>
+          <div class="portfolio-links">
+            <a
+              class="portfolio-link"
+              href="https://dubaidirectorymm.com/"
+              target="_blank"
+              rel="noopener"
+              style="color: var(--accent2); font-weight: 600"
+            >
+              <span
+                class="link-type"
+                style="
+                  background: rgba(63, 185, 80, 0.2);
+                  border: 1px solid rgba(63, 185, 80, 0.5);
+                  color: #7ee787;
+                "
+                >🟢 Live</span
+              >
+              dubaidirectorymm.com
+            </a>
+            <a
+              class="portfolio-link"
+              href="https://play.google.com/store/apps/details?id=com.dubaidirectory.mm&hl=en"
+              target="_blank"
+              rel="noopener"
+              style="color: #a8d8ff; font-weight: 500"
+            >
+              <span
+                class="link-type"
+                style="
+                  background: rgba(47, 129, 247, 0.15);
+                  border: 1px solid rgba(47, 129, 247, 0.45);
+                  color: #79b8ff;
+                "
+                >📱 Android</span
+              >
+              Download on Google Play →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education">
+      <div class="container">
+        <p class="section-label">Education</p>
+        <h2>Academic <span>Background</span></h2>
+        <div class="edu-card">
+          <div class="edu-icon">🎓</div>
+          <div class="edu-info">
+            <h4>BA (English)</h4>
+            <p>University of Dagon, Yangon · 2014 – 2019</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <p class="section-label">Get In Touch</p>
+        <h2>Contact <span>Me</span></h2>
+        <p
+          style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem"
+        >
+          Open to Platform Engineer, DevOps, and Cloud-Native roles — based in
+          Dubai, open to Singapore and worldwide opportunities.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem">
+          <a
+            class="contact-chip"
+            href="mailto:kyawsithu@kst-devops.com"
+            style="font-size: 0.9rem; padding: 0.55rem 1.1rem"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              style="width: 16px; height: 16px"
+            >
+              <path
+                d="M1.5 2A1.5 1.5 0 000 3.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l7.598-4.185A.755.755 0 0116 4.293V3.5A1.5 1.5 0 0014.5 2h-13z"
+              />
+              <path
+                d="M16 6.132L8.55 10.159a2.25 2.25 0 01-2.1 0L0 6.132V12.5A1.5 1.5 0 001.5 14h13a1.5 1.5 0 001.5-1.5V6.132z"
+              />
+            </svg>
+            kyawsithu@kst-devops.com
+          </a>
+          <a
+            class="contact-chip"
+            href="https://www.linkedin.com/in/thereisnokst/"
+            target="_blank"
+            rel="noopener"
+            style="font-size: 0.9rem; padding: 0.55rem 1.1rem"
+          >
+            LinkedIn — kyawsithu
+          </a>
+          <a
+            class="contact-chip"
+            href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu"
+            target="_blank"
+            rel="noopener"
+            style="font-size: 0.9rem; padding: 0.55rem 1.1rem"
+          >
+            🏆 Kubestronaut Profile
+          </a>
+          <a
+            class="contact-chip"
+            href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+            target="_blank"
+            rel="noopener"
+            style="font-size: 0.9rem; padding: 0.55rem 1.1rem"
+          >
+            Credly Badges
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        Kyaw Sithu · Platform/DevOps Engineer · Dubai, UAE ·
+        <a href="mailto:kyawsithu@kst-devops.com">kyawsithu@kst-devops.com</a>
+      </p>
+    </footer>
+
+    <!-- MODAL -->
+    <div
+      class="modal-overlay"
+      id="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div class="modal">
+        <button class="modal-close" id="modal-close" aria-label="Close">
+          ✕
+        </button>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-body" id="modal-body"></div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- CONTACT -->
-<section id="contact">
-  <div class="container">
-    <p class="section-label">Get In Touch</p>
-    <h2>Contact <span>Me</span></h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;font-size:.9rem">Open to Platform Engineer, DevOps, and Cloud-Native roles — based in Dubai, open to Singapore and worldwide opportunities.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:.75rem">
-      <a class="contact-chip" href="mailto:kyawsithu@kst-devops.com" style="font-size:.9rem;padding:.55rem 1.1rem">
-        <svg viewBox="0 0 16 16" fill="currentColor" style="width:16px;height:16px"><path d="M1.5 2A1.5 1.5 0 000 3.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l7.598-4.185A.755.755 0 0116 4.293V3.5A1.5 1.5 0 0014.5 2h-13z"/><path d="M16 6.132L8.55 10.159a2.25 2.25 0 01-2.1 0L0 6.132V12.5A1.5 1.5 0 001.5 14h13a1.5 1.5 0 001.5-1.5V6.132z"/></svg>
-        kyawsithu@kst-devops.com
-      </a>
-      <a class="contact-chip" href="https://www.linkedin.com/in/thereisnokst/" target="_blank" rel="noopener" style="font-size:.9rem;padding:.55rem 1.1rem">
-        LinkedIn — kyawsithu
-      </a>
-      <a class="contact-chip" href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener" style="font-size:.9rem;padding:.55rem 1.1rem">
-        🏆 Kubestronaut Profile
-      </a>
-      <a class="contact-chip" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener" style="font-size:.9rem;padding:.55rem 1.1rem">
-        Credly Badges
-      </a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <p>Kyaw Sithu · System &amp; Platform Engineer · Dubai, UAE ·
-    <a href="mailto:kyawsithu@kst-devops.com">kyawsithu@kst-devops.com</a>
-  </p>
-</footer>
-
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal">
-    <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
-    <div class="modal-title" id="modal-title"></div>
-    <div class="modal-body" id="modal-body"></div>
-  </div>
-</div>
-
-<script>
-const details = {
-  'Dubai Directory MM — Myanmar Community Platform': {
-    body: `
+    <script>
+      const details = {
+        "Dubai Directory MM — Myanmar Community Platform": {
+          body: `
       <p>A digital community platform and business directory built for the <strong>Myanmar expat community in Dubai</strong> — designed and deployed as a personal initiative serving 1,000+ users connecting with local businesses, professional resources, and community support.</p>
       <h4>What It Does</h4>
       <ul>
@@ -1054,13 +2280,16 @@ const details = {
       <h4>Why This Matters</h4>
       <p>This project reflects the ability to take an idea from zero to a production platform that real people depend on — the same end-to-end ownership mindset applied in professional platform engineering roles.</p>
     `,
-    links: [
-      { label: 'Live Site — dubaidirectorymm.com', href: 'https://dubaidirectorymm.com/' }
-    ]
-  },
+          links: [
+            {
+              label: "Live Site — dubaidirectorymm.com",
+              href: "https://dubaidirectorymm.com/",
+            },
+          ],
+        },
 
-  'CI/CD & GitOps': {
-    body: `
+        "CI/CD & GitOps": {
+          body: `
       <p>A collection documenting end-to-end CI/CD pipelines and GitOps workflows built for production microservice deployments on Kubernetes and EKS.</p>
       <h4>CI/CD Complete Documentation</h4>
       <p>Covers the full pipeline lifecycle — source code triggers, build stages, automated unit/integration/security testing gates, artifact versioning with retention policies, and deployment strategies (rolling, blue/green). Documents how Jenkins pipelines are structured across 20+ microservices with shared libraries for reusability.</p>
@@ -1069,15 +2298,24 @@ const details = {
       <h4>GitOps Detailed Implementation</h4>
       <p>Diagrams the full GitOps reconciliation loop — Git as the single source of truth, how the GitOps operator detects drift between the desired state in Git and live cluster state, and how it automatically reconciles. Covers branch strategy, pull request-based deployments, and rollback procedures via Git revert.</p>
     `,
-    links: [
-      { label: 'Notion — CI/CD Docs', href: 'https://www.notion.so/CI-CD-Complete-Documentation-2687346d5fdc81f38eb6c79cdc407cf2' },
-      { label: 'Notion — GitHub Workflow EKS', href: 'https://www.notion.so/GithubWorkFlow-EKS-CICD-26a7346d5fdc8039a517ef901172c2aa' },
-      { label: 'Diagram — GitOps Implementation', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/8jzN9LHMCE7' }
-    ]
-  },
+          links: [
+            {
+              label: "Notion — CI/CD Docs",
+              href: "https://www.notion.so/CI-CD-Complete-Documentation-2687346d5fdc81f38eb6c79cdc407cf2",
+            },
+            {
+              label: "Notion — GitHub Workflow EKS",
+              href: "https://www.notion.so/GithubWorkFlow-EKS-CICD-26a7346d5fdc8039a517ef901172c2aa",
+            },
+            {
+              label: "Diagram — GitOps Implementation",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/8jzN9LHMCE7",
+            },
+          ],
+        },
 
-  'Kubernetes & EKS': {
-    body: `
+        "Kubernetes & EKS": {
+          body: `
       <p>Deep research into Kubernetes internals, EKS-specific configurations, and production operational patterns covering cluster setup through service account security.</p>
       <h4>EKS Detailed Diagram</h4>
       <p>End-to-end EKS cluster architecture — VPC layout with public/private subnets, managed node groups, control plane endpoint, CoreDNS, kube-proxy, AWS VPC CNI plugin, ALB Ingress Controller, and IAM integration. Shows network traffic flow for both internal service-to-service and external ingress paths.</p>
@@ -1092,16 +2330,28 @@ const details = {
       <h4>K8s Single Cluster — Multi DC + Kafka</h4>
       <p>Architecture for running a single Kubernetes cluster spanning multiple data centers, using topology-aware scheduling to place workloads in the right DC. Kafka brokers are rack-aware with cross-DC replication, ensuring services consume from their local broker set while maintaining global event consistency.</p>
     `,
-    links: [
-      { label: 'GitLab — EKS IAM Roles Mapping', href: 'https://gitlab.com/kyawsithu96/eks-roles-mapping-iam' },
-      { label: 'GitLab — K8s Kustomize Deep Dive', href: 'https://gitlab.com/kyawsithu96/k8s-kustomize-deep-dive' },
-      { label: 'Notion — K8s Kustomize & Minio', href: 'https://marred-network-70a.notion.site/K8s-Kustomize-Minio-26a7346d5fdc80bf80afe0286659cc99' },
-      { label: 'Diagram — EKS Architecture', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/2J5dC4WV8hn' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — EKS IAM Roles Mapping",
+              href: "https://gitlab.com/kyawsithu96/eks-roles-mapping-iam",
+            },
+            {
+              label: "GitLab — K8s Kustomize Deep Dive",
+              href: "https://gitlab.com/kyawsithu96/k8s-kustomize-deep-dive",
+            },
+            {
+              label: "Notion — K8s Kustomize & Minio",
+              href: "https://marred-network-70a.notion.site/K8s-Kustomize-Minio-26a7346d5fdc80bf80afe0286659cc99",
+            },
+            {
+              label: "Diagram — EKS Architecture",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/2J5dC4WV8hn",
+            },
+          ],
+        },
 
-  'AWS Cloud': {
-    body: `
+        "AWS Cloud": {
+          body: `
       <p>Research and hands-on implementations covering AWS identity, secure access patterns, secrets management, and infrastructure architecture — focused on removing attack surface while maintaining operational access.</p>
       <h4>AWS ARN Deep Dive</h4>
       <p>Systematic breakdown of Amazon Resource Name structure — partition, service, region, account-id, resource type, and resource ID. Documents how ARNs are used in IAM policies, resource-based policies (S3 bucket policies, KMS key policies), cross-service references, and the gotchas around wildcards in ARN conditions.</p>
@@ -1112,17 +2362,32 @@ const details = {
       <h4>SSM + S3 + KMS + Packer Architecture</h4>
       <p>Secure golden AMI pipeline: Packer builds the image with no SSH access, secrets are injected at build time from SSM Parameter Store (SecureString backed by KMS), the final AMI is stored and its metadata written to S3, and all artifacts are KMS-encrypted at rest. Eliminates hardcoded credentials from image build pipelines.</p>
     `,
-    links: [
-      { label: 'GitLab — SSM + S3 + KMS + Packer', href: 'https://gitlab.com/kyawsithu96/aws-ssm-s3-kms-packer-architecture' },
-      { label: 'GitLab — SSM with NAT Gateway', href: 'https://gitlab.com/kyawsithu96/aws-ssm-with-nat-gateway' },
-      { label: 'GitLab — SSM with VPC Endpoints', href: 'https://gitlab.com/kyawsithu96/aws-ssm-with-vpc-endpoints' },
-      { label: 'Diagram — AWS SSM Solution', href: 'https://app.excalidraw.com/s/9hD7S5FgGWN/20EHmCmwG79' },
-      { label: 'Diagram — Assume Roles Flow', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/kji9QPjfN9' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — SSM + S3 + KMS + Packer",
+              href: "https://gitlab.com/kyawsithu96/aws-ssm-s3-kms-packer-architecture",
+            },
+            {
+              label: "GitLab — SSM with NAT Gateway",
+              href: "https://gitlab.com/kyawsithu96/aws-ssm-with-nat-gateway",
+            },
+            {
+              label: "GitLab — SSM with VPC Endpoints",
+              href: "https://gitlab.com/kyawsithu96/aws-ssm-with-vpc-endpoints",
+            },
+            {
+              label: "Diagram — AWS SSM Solution",
+              href: "https://app.excalidraw.com/s/9hD7S5FgGWN/20EHmCmwG79",
+            },
+            {
+              label: "Diagram — Assume Roles Flow",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/kji9QPjfN9",
+            },
+          ],
+        },
 
-  'Terraform': {
-    body: `
+        Terraform: {
+          body: `
       <p>Infrastructure as Code research covering Terraform internals, provider architecture, and real-world AWS implementations — focused on understanding how Terraform works under the hood, not just how to use it.</p>
       <h4>CLI Driven Workflow</h4>
       <p>Diagrams the full Terraform CLI lifecycle: <strong>init</strong> (provider plugin download, module resolution, backend initialisation), <strong>plan</strong> (state refresh, configuration parsing, diff calculation), <strong>apply</strong> (parallelised API calls, state locking, state write), and <strong>destroy</strong>. Shows how the state file maps real infrastructure to HCL configuration and why state locking matters in team environments.</p>
@@ -1133,16 +2398,28 @@ const details = {
       <h4>Terraform VPC Peering</h4>
       <p>Complete IaC module for establishing AWS VPC peering — the peering connection resource, accepter configuration (same or cross-account), route table entries on both sides pointing traffic through the peering, and security group rule updates to allow cross-VPC communication.</p>
     `,
-    links: [
-      { label: 'GitLab — Terraform VPC Peering', href: 'https://gitlab.com/hellocloud4602633/terraform-vpc-peering' },
-      { label: 'Diagram — CLI Workflow', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/8mPALVeTysY' },
-      { label: 'Diagram — How TF Provider Works', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/4Ad7x0VzXfV' },
-      { label: 'Diagram — TF Provider Explanation', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/666nZqgAoRW' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — Terraform VPC Peering",
+              href: "https://gitlab.com/hellocloud4602633/terraform-vpc-peering",
+            },
+            {
+              label: "Diagram — CLI Workflow",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/8mPALVeTysY",
+            },
+            {
+              label: "Diagram — How TF Provider Works",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/4Ad7x0VzXfV",
+            },
+            {
+              label: "Diagram — TF Provider Explanation",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/666nZqgAoRW",
+            },
+          ],
+        },
 
-  'HashiCorp Vault / HCP': {
-    body: `
+        "HashiCorp Vault / HCP": {
+          body: `
       <p>Secrets management architecture using HashiCorp Vault on HCP (HashiCorp Cloud Platform) — focused on eliminating static credentials from infrastructure and establishing private, secure connectivity between cloud environments.</p>
       <h4>HCP Vault Cluster</h4>
       <p>Deploying a Vault cluster on HCP — the fully managed Vault offering. Covers cluster tier selection, namespace configuration, enabling auth methods (AWS IAM auth, Kubernetes auth), configuring secret engines (KV v2 for application secrets, PKI for certificate issuance, database engine for dynamic credentials), and access policies.</p>
@@ -1153,16 +2430,28 @@ const details = {
       <h4>Vault HCP Peering Architecture (Diagram)</h4>
       <p>Full topology diagram showing: HVN → AWS VPC peering connection, route tables, EKS pods authenticating to Vault using the Kubernetes auth method (JWT via projected service account token), Vault returning short-lived dynamic credentials (database passwords, AWS STS tokens), and the renewal/revocation lifecycle.</p>
     `,
-    links: [
-      { label: 'GitLab — HCP Vault Cluster', href: 'https://gitlab.com/kyawsithu96/hcp-vault-cluster' },
-      { label: 'GitLab — HCP AWS Private Peer', href: 'https://gitlab.com/kyawsithu96/hcp-aws-private-peer-architecture' },
-      { label: 'GitLab — HC VPC Cross Peering', href: 'https://gitlab.com/kyawsithu96/hc-vpc-cross-peering-from-scratch' },
-      { label: 'Diagram — Vault HCP Peering', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/SGFnwKLqta' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — HCP Vault Cluster",
+              href: "https://gitlab.com/kyawsithu96/hcp-vault-cluster",
+            },
+            {
+              label: "GitLab — HCP AWS Private Peer",
+              href: "https://gitlab.com/kyawsithu96/hcp-aws-private-peer-architecture",
+            },
+            {
+              label: "GitLab — HC VPC Cross Peering",
+              href: "https://gitlab.com/kyawsithu96/hc-vpc-cross-peering-from-scratch",
+            },
+            {
+              label: "Diagram — Vault HCP Peering",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/SGFnwKLqta",
+            },
+          ],
+        },
 
-  'Istio / Service Mesh': {
-    body: `
+        "Istio / Service Mesh": {
+          body: `
       <p>Service mesh research and production implementation covering Istio's sidecar and ambient architectures, traffic policy, and how Istio integrates with Kubernetes admission control.</p>
       <h4>Ambient Mesh Deep Dive</h4>
       <p>Research into Istio's ambient mode — the sidecar-less architecture introduced to reduce resource overhead. In ambient mode, a per-node <strong>ztunnel</strong> handles L4 mTLS and telemetry for all pods on the node, while optional per-namespace/service <strong>waypoint proxies</strong> handle L7 policy (routing, retries, AuthorizationPolicy). This eliminates the need to inject a proxy into every pod, significantly reducing memory and CPU usage in large clusters.</p>
@@ -1171,30 +2460,48 @@ const details = {
       <h4>Who Injects the Istio Sidecar</h4>
       <p>Diagrams the full <strong>mutating admission webhook</strong> flow: when a Pod is submitted to the API server, the admission webhook is triggered before the pod is scheduled. The Istio webhook server receives the AdmissionReview request, checks namespace/pod labels to decide whether to inject, adds the <strong>istio-proxy</strong> sidecar container and <strong>istio-init</strong> init container, and returns the mutated pod spec. The init container sets up iptables rules to intercept all inbound/outbound traffic through the proxy.</p>
     `,
-    links: [
-      { label: 'GitLab — Ambient Mesh Deep Dive', href: 'https://gitlab.com/kyawsithu96/ambient-mesh-deepdive' },
-      { label: 'Notion — Why Istio', href: 'https://marred-network-70a.notion.site/API-Sources-Whitelist-High-Level-Overview-Why-ISTIO-2687346d5fdc81848113f3e4c815ae68' },
-      { label: 'Diagram — Sidecar Injection Flow', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/5Ii06PUN6hU' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — Ambient Mesh Deep Dive",
+              href: "https://gitlab.com/kyawsithu96/ambient-mesh-deepdive",
+            },
+            {
+              label: "Notion — Why Istio",
+              href: "https://marred-network-70a.notion.site/API-Sources-Whitelist-High-Level-Overview-Why-ISTIO-2687346d5fdc81848113f3e4c815ae68",
+            },
+            {
+              label: "Diagram — Sidecar Injection Flow",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/5Ii06PUN6hU",
+            },
+          ],
+        },
 
-  'Kong API Gateway': {
-    body: `
+        "Kong API Gateway": {
+          body: `
       <p>API gateway architecture and authentication patterns using Kong deployed on Kubernetes — covering the full request lifecycle from ingress to upstream service, and JWT-based authentication flows.</p>
       <h4>Kong API Gateway Architecture</h4>
       <p>Full Kong deployment on Kubernetes in <strong>DB-less (declarative)</strong> mode — no PostgreSQL dependency, configuration loaded from ConfigMap via KongIngress and KIC (Kong Ingress Controller). Shows how the Kubernetes Ingress/Gateway API resources are translated into Kong routes and services, how traffic flows from the load balancer through the Kong data plane to upstream pods, and how plugins (rate limiting, authentication, logging) are applied per route, service, or consumer.</p>
       <h4>Kong API GW Auth with JWT</h4>
       <p>Implements JWT authentication in Kong using the <strong>JWT plugin</strong>. The flow: client sends a request with a Bearer token → Kong's JWT plugin intercepts and validates the token signature against a configured JWKS endpoint (e.g., Keycloak's public keys) → Kong maps the JWT subject or claim to a Consumer → the request is forwarded upstream with the validated identity headers. Covers token expiry handling, multi-issuer configuration, and consumer-level rate limiting after authentication.</p>
     `,
-    links: [
-      { label: 'GitLab — Kong Architecture', href: 'https://gitlab.com/kyawsithu96/kong-api-gateway-architecture' },
-      { label: 'Diagram — Kong Architecture', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/7Q9hdJVTban' },
-      { label: 'Diagram — Kong Auth with JWT', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/70GLvpWZURW' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — Kong Architecture",
+              href: "https://gitlab.com/kyawsithu96/kong-api-gateway-architecture",
+            },
+            {
+              label: "Diagram — Kong Architecture",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/7Q9hdJVTban",
+            },
+            {
+              label: "Diagram — Kong Auth with JWT",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/70GLvpWZURW",
+            },
+          ],
+        },
 
-  'Keycloak / IDP / IAM': {
-    body: `
+        "Keycloak / IDP / IAM": {
+          body: `
       <p>Identity provider configurations integrating Keycloak with Kubernetes authentication, application OAuth2 flows, and IDP federation patterns.</p>
       <h4>EKS Keycloak OIDC Issuer</h4>
       <p>Configures Keycloak as the <strong>OIDC identity provider for an EKS cluster</strong> for human user authentication (separate from IRSA). Covers: creating an OIDC client in Keycloak with the correct redirect URIs, configuring the EKS API server's <code>--oidc-issuer-url</code>, <code>--oidc-client-id</code>, and <code>--oidc-username-claim</code> flags, generating kubeconfig with OIDC tokens using kubelogin, and binding Keycloak group claims to Kubernetes RBAC RoleBindings.</p>
@@ -1203,15 +2510,24 @@ const details = {
       <h4>IDP with Email — Existing User Flow</h4>
       <p>Covers the federation flow for users who already have an account in an existing IDP (e.g., corporate Active Directory or Google) logging into an application backed by Keycloak: the broker flow, how Keycloak maps the external IDP's claims to its own user model, how duplicate accounts are detected and linked via email, and the role/group mapping from the upstream IDP.</p>
     `,
-    links: [
-      { label: 'GitLab — EKS Keycloak OIDC', href: 'https://gitlab.com/kyawsithu96/eks-keycloak-oidc-issuer' },
-      { label: 'Diagram — Auth Code Flow (PKCE)', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/1NT5qqBZhmG' },
-      { label: 'Diagram — IDP Email Flow', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/ALXcJGLCxpw' }
-    ]
-  },
+          links: [
+            {
+              label: "GitLab — EKS Keycloak OIDC",
+              href: "https://gitlab.com/kyawsithu96/eks-keycloak-oidc-issuer",
+            },
+            {
+              label: "Diagram — Auth Code Flow (PKCE)",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/1NT5qqBZhmG",
+            },
+            {
+              label: "Diagram — IDP Email Flow",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/ALXcJGLCxpw",
+            },
+          ],
+        },
 
-  'Rancher / RKE2': {
-    body: `
+        "Rancher / RKE2": {
+          body: `
       <p>Multi-cluster Kubernetes management using Rancher v2 with RKE2 (Rancher Kubernetes Engine 2) — the production setup used for managing wallet and payment platform clusters across UAE and South America regions.</p>
       <h4>What is RKE2</h4>
       <p>RKE2 is Rancher's next-generation Kubernetes distribution focused on security and compliance — it runs Kubernetes components as static pods managed by a supervisor process (not systemd), bundles containerd instead of Docker, enables SELinux by default, and passes CIS Kubernetes Benchmark hardening out of the box.</p>
@@ -1220,27 +2536,36 @@ const details = {
       <h4>Operational Runbook</h4>
       <p>Includes etcd snapshot backup configuration, restore procedures, cluster upgrade strategy (RKE2 rolling upgrades), node replacement procedures, and troubleshooting common Rancher agent connectivity issues. Documents the process used to perform Kubernetes version upgrades across 3-year production clusters without workload downtime.</p>
     `,
-    links: [
-      { label: 'Notion — Rancher RKE2 Docs', href: 'https://marred-network-70a.notion.site/Rancher-RKE-2-2687346d5fdc813db7aaeeeb68acc9bb' }
-    ]
-  },
+          links: [
+            {
+              label: "Notion — Rancher RKE2 Docs",
+              href: "https://marred-network-70a.notion.site/Rancher-RKE-2-2687346d5fdc813db7aaeeeb68acc9bb",
+            },
+          ],
+        },
 
-  'Kafka': {
-    body: `
+        Kafka: {
+          body: `
       <p>Event streaming architecture and disaster recovery runbooks for Apache Kafka clusters supporting distributed financial services across multiple data centers.</p>
       <h4>Kafka Primary ↔ DR Switchover</h4>
       <p>Documented operational runbook for performing a controlled switchover between the primary and disaster recovery Kafka clusters. The procedure covers: (1) verifying MirrorMaker 2 replication lag is within acceptable threshold, (2) pausing producers on the primary cluster, (3) confirming consumer groups have drained and offsets are synced to the DR cluster via MirrorMaker 2's offset translation, (4) updating producer/consumer configuration to point to DR cluster endpoints, (5) validating message flow on DR, and (6) re-establishing mirroring in the reverse direction. Includes rollback steps if switchover fails mid-way.</p>
       <h4>K8s Multi-DC with Kafka</h4>
       <p>Architecture for deploying Kafka in a Kubernetes cluster that spans multiple data centers. Kafka brokers are configured with rack awareness (one broker per DC), topics have a replication factor that ensures at least one replica in each DC, and <strong>min.insync.replicas</strong> is set to ensure writes are acknowledged from multiple DCs. Kubernetes pod anti-affinity rules prevent multiple broker replicas from scheduling in the same DC. Services consume from their local DC's broker set to minimise cross-DC traffic latency.</p>
     `,
-    links: [
-      { label: 'Notion — Kafka Primary ↔ DR Switchover', href: 'https://marred-network-70a.notion.site/KAFKA-Switch-Over-From-Primary-To-DR-DR-To-Primary-2687346d5fdc81bda04bd79f0dd67369' },
-      { label: 'Diagram — K8s Multi-DC + Kafka', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw' }
-    ]
-  },
+          links: [
+            {
+              label: "Notion — Kafka Primary ↔ DR Switchover",
+              href: "https://marred-network-70a.notion.site/KAFKA-Switch-Over-From-Primary-To-DR-DR-To-Primary-2687346d5fdc81bda04bd79f0dd67369",
+            },
+            {
+              label: "Diagram — K8s Multi-DC + Kafka",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw",
+            },
+          ],
+        },
 
-  'ELK / Observability': {
-    body: `
+        "ELK / Observability": {
+          body: `
       <p>Centralised observability architecture using the Elastic Stack — combining infrastructure metrics, container logs, and application traces into a unified platform using Elastic Fleet and APM.</p>
       <h4>Elastic Fleet for Agent Management</h4>
       <p><strong>Elastic Fleet</strong> is the central management plane for Elastic Agents deployed across the infrastructure. Instead of managing individual Filebeat/Metricbeat/APM Agent configs separately, Fleet provides a single UI to define Integration Policies (what data to collect and where to send it) and pushes configuration updates to all enrolled agents automatically. In Kubernetes, the Elastic Agent runs as a DaemonSet, collecting container logs from all pods on each node, host system metrics (CPU, memory, disk, network), and Kubernetes API server metrics.</p>
@@ -1249,13 +2574,16 @@ const details = {
       <h4>Architecture</h4>
       <p>Data flow: Elastic Agents on Kubernetes nodes → Logstash (enrichment/filtering) → Elasticsearch cluster → Kibana for visualisation. APM Agents in pods → APM Server → Elasticsearch. Prometheus/Grafana runs in parallel for infrastructure metrics alerting. Documents index lifecycle management (ILM) policies for log retention and cost management.</p>
     `,
-    links: [
-      { label: 'Notion — ELK Fleet & APM Integration', href: 'https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41' }
-    ]
-  },
+          links: [
+            {
+              label: "Notion — ELK Fleet & APM Integration",
+              href: "https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41",
+            },
+          ],
+        },
 
-  'Consul / EKS': {
-    body: `
+        "Consul / EKS": {
+          body: `
       <p>A three-part diagram series covering HashiCorp Consul deployed on Amazon EKS — from cluster setup through service discovery to traffic policy enforcement.</p>
       <h4>Part 1 — Consul Datacenter on EKS</h4>
       <p>Consul server pods deployed as a StatefulSet with persistent storage for the Raft consensus log. Consul client agents run as a DaemonSet on every EKS node, registering node-level health checks. The Consul DNS resolver is configured as a stub zone in CoreDNS so that <code>*.service.consul</code> names resolve via Consul's service catalog. Covers gossip encryption (TLS certificates), ACL system bootstrap, and Consul UI access via port-forward or ingress.</p>
@@ -1264,80 +2592,108 @@ const details = {
       <h4>Part 3 — Intentions & Traffic Policy</h4>
       <p>Consul Intentions define which services are allowed to communicate — deny-all by default, with explicit allow rules. Covers L4 intentions (service-to-service allow/deny) and L7 intentions (path-based routing, header matching). Integrates with AWS networking: Consul's mesh gateways handle cross-cluster traffic, and terminating gateways manage egress to external services (databases, third-party APIs) with mTLS enforced to the gateway boundary.</p>
     `,
-    links: [
-      { label: 'Diagram — Consul EKS (1)', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/7p5pYfX1m50' },
-      { label: 'Diagram — Consul EKS (2)', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/5Guild2lhV4' },
-      { label: 'Diagram — Consul EKS (3)', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/A326WwhNFAd' }
-    ]
-  },
+          links: [
+            {
+              label: "Diagram — Consul EKS (1)",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/7p5pYfX1m50",
+            },
+            {
+              label: "Diagram — Consul EKS (2)",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/5Guild2lhV4",
+            },
+            {
+              label: "Diagram — Consul EKS (3)",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/A326WwhNFAd",
+            },
+          ],
+        },
 
-  'WebRTC / STUN / Cloudflare': {
-    body: `
+        "WebRTC / STUN / Cloudflare": {
+          body: `
       <p>Real-time communication troubleshooting and network research — investigating WebRTC connectivity failures behind Cloudflare's proxy and understanding NAT traversal fundamentals.</p>
       <h4>WebRTC Troubleshooting — Cloudflare</h4>
       <p>Investigated and resolved WebRTC peer-to-peer connectivity failures caused by Cloudflare's reverse proxy. The core problem: Cloudflare operates at L7 (HTTP/HTTPS) but WebRTC's media streams use UDP, which Cloudflare's standard proxy mode blocks. The diagram documents the ICE candidate gathering failure — when a client behind Cloudflare tries to gather <strong>srflx (server-reflexive)</strong> candidates via STUN, it sees Cloudflare's proxy IP rather than the actual client IP, breaking direct peer connections. Resolution paths explored: Cloudflare Spectrum (TCP/UDP proxying), DNS-only mode for WebRTC subdomains, and TURN server fallback configuration.</p>
       <h4>STUN Protocol Research</h4>
       <p>Deep dive into the <strong>STUN (Session Traversal Utilities for NAT)</strong> protocol and ICE (Interactive Connectivity Establishment). Covers the four NAT types: Full Cone, Address-Restricted Cone, Port-Restricted Cone, and Symmetric NAT — and which types allow direct peer connection vs. requiring a TURN relay. Documents the ICE candidate priority ordering (host → srflx → relay), the SDP offer/answer exchange, connectivity checks (STUN binding requests between peer candidates), and when a TURN server is unavoidable (both peers behind symmetric NAT).</p>
     `,
-    links: [
-      { label: 'Diagram — WebRTC Troubleshooting', href: 'https://app.excalidraw.com/s/9hD7S5FgGWN/5ciC5HxRvTd' },
-      { label: 'Diagram — STUN Research', href: 'https://link.excalidraw.com/l/9hD7S5FgGWN/5ciC5HxRvTd' }
-    ]
-  }
-};
+          links: [
+            {
+              label: "Diagram — WebRTC Troubleshooting",
+              href: "https://app.excalidraw.com/s/9hD7S5FgGWN/5ciC5HxRvTd",
+            },
+            {
+              label: "Diagram — STUN Research",
+              href: "https://link.excalidraw.com/l/9hD7S5FgGWN/5ciC5HxRvTd",
+            },
+          ],
+        },
+      };
 
-const overlay = document.getElementById('modal-overlay');
-const modalTitle = document.getElementById('modal-title');
-const modalBody = document.getElementById('modal-body');
+      const overlay = document.getElementById("modal-overlay");
+      const modalTitle = document.getElementById("modal-title");
+      const modalBody = document.getElementById("modal-body");
 
-function openModal(title) {
-  const d = details[title];
-  if (!d) return;
-  modalTitle.textContent = title;
-  let html = d.body;
-  if (d.links && d.links.length) {
-    html += '<div class="modal-links">' +
-      d.links.map(l => `<a class="modal-link" href="${l.href}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('') +
-      '</div>';
-  }
-  modalBody.innerHTML = html;
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
+      function openModal(title) {
+        const d = details[title];
+        if (!d) return;
+        modalTitle.textContent = title;
+        let html = d.body;
+        if (d.links && d.links.length) {
+          html +=
+            '<div class="modal-links">' +
+            d.links
+              .map(
+                (l) =>
+                  `<a class="modal-link" href="${l.href}" target="_blank" rel="noopener">${l.label} ↗</a>`,
+              )
+              .join("") +
+            "</div>";
+        }
+        modalBody.innerHTML = html;
+        overlay.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
 
-function closeModal() {
-  overlay.classList.remove('open');
-  document.body.style.overflow = '';
-}
+      function closeModal() {
+        overlay.classList.remove("open");
+        document.body.style.overflow = "";
+      }
 
-document.querySelectorAll('.portfolio-card, .community-card').forEach(card => {
-  card.addEventListener('click', e => {
-    if (e.target.closest('a')) return;
-    const title = card.querySelector('h4').textContent;
-    openModal(title);
-  });
-});
+      document
+        .querySelectorAll(".portfolio-card, .community-card")
+        .forEach((card) => {
+          card.addEventListener("click", (e) => {
+            if (e.target.closest("a")) return;
+            const title = card.querySelector("h4").textContent;
+            openModal(title);
+          });
+        });
 
-document.getElementById('modal-close').addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+      document
+        .getElementById("modal-close")
+        .addEventListener("click", closeModal);
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+      });
 
-// Hamburger menu
-const navToggle = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
-navToggle.addEventListener('click', () => {
-  const open = navLinks.classList.toggle('open');
-  navToggle.classList.toggle('open', open);
-  navToggle.setAttribute('aria-expanded', open);
-});
-navLinks.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    navToggle.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', false);
-  });
-});
-</script>
-
-</body>
+      // Hamburger menu
+      const navToggle = document.getElementById("nav-toggle");
+      const navLinks = document.getElementById("nav-links");
+      navToggle.addEventListener("click", () => {
+        const open = navLinks.classList.toggle("open");
+        navToggle.classList.toggle("open", open);
+        navToggle.setAttribute("aria-expanded", open);
+      });
+      navLinks.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => {
+          navLinks.classList.remove("open");
+          navToggle.classList.remove("open");
+          navToggle.setAttribute("aria-expanded", false);
+        });
+      });
+    </script>
+  </body>
 </html>
