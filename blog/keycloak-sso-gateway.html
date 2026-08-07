@@ -194,7 +194,7 @@
       }
 
       .author-card {
-        display: flex; gap: 16px; align-items: flex-start;
+        display: flex; gap: 18px; align-items: center;
         margin-top: 28px; padding: 18px 22px; max-width: 720px;
         background: var(--paper); border: 3px solid var(--ink);
         border-radius: 18px; box-shadow: var(--shadow);
@@ -215,10 +215,15 @@
         padding: 1px 11px; font-weight: 700; font-size: 13.5px;
       }
       .author-avatar {
-        flex: 0 0 auto; width: 54px; height: 54px; font-size: 27px;
-        display: grid; place-items: center; background: #f3ecff;
+        flex: 0 0 auto; width: 72px; height: 72px;
+        /* the source is landscape, so crop to the moon rather than squash it */
+        object-fit: cover; object-position: 50% 45%;
         border: 3px solid var(--ink); border-radius: 50%;
         box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      @media (max-width: 520px) {
+        .author-card { align-items: flex-start; }
+        .author-avatar { width: 56px; height: 56px; }
       }
 
       footer.post {
@@ -266,7 +271,7 @@
         </div>
 
         <div class="author-card">
-          <div class="author-avatar">🌙</div>
+          <img class="author-avatar" src="img/moon.jpg" alt="" width="72" height="72" />
           <div>
             <p class="author-loves">He who loves Mum, Ei, and Arsenal —<br />and is still chasing the moon.</p>
             <p class="author-ace">
