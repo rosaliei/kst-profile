@@ -343,6 +343,10 @@
         position: relative;
         margin: 0 1rem;
       }
+      /* these two were never cards, so they had no inner padding —
+         give them some now that they have a visible boundary */
+      .timeline-content { padding: 1rem 1.25rem !important; }
+      .stat-card { padding: 1rem 1.25rem !important; }
       .timeline-dot {
         width: 10px;
         height: 10px;
@@ -970,6 +974,10 @@
         border: 2px solid var(--ink); border-radius: 999px;
         padding: 3px 13px; box-shadow: var(--shadow-sm); transform: rotate(-1.5deg);
       }
+      /* these two were never cards, so they had no inner padding —
+         give them some now that they have a visible boundary */
+      .timeline-content { padding: 1rem 1.25rem !important; }
+      .stat-card { padding: 1rem 1.25rem !important; }
       .timeline-dot {
         border: 3px solid var(--ink) !important; box-shadow: var(--shadow-sm);
       }
