@@ -138,8 +138,16 @@
         border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
       }
       figcaption {
-        margin-top: 12px; font-size: 14.5px; color: var(--ink-soft); font-style: italic;
+        margin-top: 14px; font-size: 16.5px; line-height: 1.6;
+        color: var(--ink); max-width: 760px;
       }
+
+      .board {
+        display: inline-block; margin-top: 6px; font-size: 14.5px;
+        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
+      }
+      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
 
       /* ---- callouts ---- */
       .note {
@@ -256,6 +264,7 @@
             <li><a href="#decisions">The decisions that shaped it</a></li>
             <li><a href="#tracing">What only became clear by tracing</a></li>
             <li><a href="#flows">The seven flows</a></li>
+            <li><a href="#running">Running it</a></li>
             <li><a href="#change">What I would change</a></li>
           </ol>
         </div>
@@ -531,43 +540,43 @@ POST /auth-api/logout        { refresh_token }    -&gt; { message: "logged_out" 
         <h3 class="flow-head"><span class="pill">Authentication</span> 1 · Login with an identity provider</h3>
         <figure>
           <img src="img/1-login-with-idp.svg" alt="Login with IdP flow" />
-          <figcaption>First page load, then Google brokered with no Keycloak page, then an authenticated call.</figcaption>
+          <figcaption>First page load, then Google brokered with no Keycloak page, then an authenticated call. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/7G3Ljd0k8z0" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3 class="flow-head"><span class="pill">Authentication</span> 2 · E-mail OTP login</h3>
         <figure>
           <img src="img/2-email-otp.svg" alt="E-mail OTP flow" />
-          <figcaption>Two calls to one Keycloak endpoint. The 401 in the middle is the expected success.</figcaption>
+          <figcaption>Two calls to one Keycloak endpoint. The 401 in the middle is the expected success. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/91uCoK7vkso" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3 class="flow-head"><span class="pill">Profile</span> 3 · Change e-mail, verified</h3>
         <figure>
           <img src="img/3-change-email.svg" alt="Verified e-mail change flow" />
-          <figcaption>Park the address, mail a code to it, promote only on confirmation.</figcaption>
+          <figcaption>Park the address, mail a code to it, promote only on confirmation. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/2P1SRz06zvv" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3 class="flow-head"><span class="pill">Profile</span> 4 · Change display name</h3>
         <figure>
           <img src="img/4-display-name.svg" alt="Display name change flow" />
-          <figcaption>No verification — a name proves nothing. But the token must be refreshed to see it.</figcaption>
+          <figcaption>No verification — a name proves nothing. But the token must be refreshed to see it. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/3j8z2M2GiRU" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3 class="flow-head"><span class="pill">Lifecycle</span> 5 · Deactivate</h3>
         <figure>
           <img src="img/5-deactivate.svg" alt="Deactivate flow" />
-          <figcaption>The block is a MySQL column, so it applies instantly — even to a token that is still valid.</figcaption>
+          <figcaption>The block is a MySQL column, so it applies instantly — even to a token that is still valid. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/1X2MB0Be4IC" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3 class="flow-head"><span class="pill">Lifecycle</span> 6 · Reactivate</h3>
         <figure>
           <img src="img/6-reactivate.svg" alt="Reactivate flow" />
-          <figcaption>A deactivated user can still authenticate — they simply cannot do anything else.</figcaption>
+          <figcaption>A deactivated user can still authenticate — they simply cannot do anything else. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/6EvkxzeFdnF" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3 class="flow-head"><span class="pill">Lifecycle</span> 7 · Delete</h3>
         <figure>
           <img src="img/7-delete.svg" alt="Account delete flow" />
-          <figcaption>Scrub MySQL first, then remove the identity — <code>sub</code> is the only link between them.</figcaption>
+          <figcaption>Scrub MySQL first, then remove the identity — <code>sub</code> is the only link between them. <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/14EweF4mBYh" target="_blank" rel="noopener">Open the full board ↗</a></figcaption>
         </figure>
 
         <h3>The configuration underneath</h3>
@@ -581,6 +590,53 @@ POST /auth-api/logout        { refresh_token }    -&gt; { message: "logged_out" 
       </div>
 
       <article>
+        <h2 id="running">Running it</h2>
+        <p>
+          Everything is docker-compose, single node. That is a deliberate limit — the
+          point of the project was the auth design, not the platform underneath it.
+        </p>
+
+        <h3>Locally</h3>
+        <pre><code>docker compose up --build</code></pre>
+        <p>
+          The first build takes a couple of minutes because Maven compiles the Keycloak
+          extension. Then the shop is on <code>:8090</code>, Keycloak on <code>:8081</code>,
+          and Mailpit on <code>:8025</code> — which is where the OTP mails land, so you can
+          complete a login without configuring SMTP.
+        </p>
+
+        <h3>On AWS</h3>
+        <p>An EC2 box, provisioned with Terraform:</p>
+        <pre><code>cd terraform
+terraform init
+terraform apply            # t3.medium, Docker preinstalled
+terraform output public_ip</code></pre>
+        <p>
+          Point both subdomains at that IP, put the TLS certificate and the
+          <code>.env</code> on the host — they are the two things that never live in git —
+          then copy the code up and start it:
+        </p>
+        <pre><code>rsync -az --delete \
+  --exclude .git --exclude node_modules --exclude dist \
+  --exclude .env --exclude gateway/certs \
+  ./ ubuntu@$IP:~/app/
+
+ssh ubuntu@$IP
+cd ~/app
+docker compose -f docker-compose.prod.yml up -d --build</code></pre>
+
+        <div class="note warn">
+          <p>
+            <strong>Two things that cost me an outage.</strong> Those rsync excludes are not
+            optional: your local <code>.env</code> is the dev one, and
+            <code>gateway/certs/</code> usually does not exist locally — so with
+            <code>--delete</code>, rsync happily removes the TLS key from the server and
+            nginx then refuses to start. And compose derives its volume names from the
+            <em>directory name</em>, so deploying from a differently-named folder silently
+            starts with empty databases.
+          </p>
+        </div>
+
         <h2 id="change">What I would change</h2>
         <p>Being honest about this is more useful than a feature list.</p>
         <ul>

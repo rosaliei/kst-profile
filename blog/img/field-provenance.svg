@@ -149,7 +149,7 @@
   <rect class="card" x="330" y="556" width="250" height="150" rx="10"/>
   <text class="t"    x="348" y="582">② nginx + njs</text>
   <text class="body" x="348" y="604">verifies the token, adds</text>
-  <text class="body" x="348" y="622">the identity headers</text>
+  <text class="body" x="348" y="622">the identity from claims</text>
   <text class="mono" x="348" y="648">claims.sub: 88aa…</text>
   <text class="sub"  x="348" y="672">the display name is in the</text>
   <text class="sub"  x="348" y="688">body — njs doesn't touch it</text>
@@ -187,7 +187,7 @@
   <text class="zone" x="40" y="762">3 · Reading it back — GET /api/me merges identity (token) + profile (database)</text>
 
   <rect class="tok" x="40" y="782" width="330" height="150" rx="10"/>
-  <text class="lblb" x="58" y="806" fill="#4f8cff">from the token (via njs headers)</text>
+  <text class="lblb" x="58" y="806" fill="#4f8cff">from the token (introspection claims)</text>
   <text class="mono" x="58" y="830">displayName = claims.name</text>
   <text class="mono" x="58" y="850">user  = claims.preferred_username</text>
   <text class="mono" x="58" y="870">email = claims.email</text>
