@@ -15,124 +15,190 @@
       content="Seven authentication flows traced from browser to database — and the design decisions behind them."
     />
     <meta property="og:type" content="article" />
+    <meta name="theme-color" content="#FFF6EC" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #0d1117;
-        --surface: #161b22;
-        --text: #e6edf3;
-        --text-dim: #c9d1d9;
-        --muted: #8b949e;
-        --border: #30363d;
-        --accent: #2f81f7;
-        --green-light: #7ee787;
-        --blue-light: #79b8ff;
-        --warn: #d29922;
+        --cream: #fff6ec;
+        --paper: #ffffff;
+        --ink: #3a3238;
+        --ink-soft: #6b6069;
+        --coral: #ff6b6b;
+        --teal: #3fc1c9;
+        --sun: #ffc93c;
+        --lilac: #b39ddb;
+        --mint: #baf2d8;
+        --shadow: 5px 5px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
+
       body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-        font-size: 15px;
-        line-height: 1.7;
+        background: var(--cream);
+        /* soft polka texture, very faint */
+        background-image: radial-gradient(rgba(58, 50, 56, 0.06) 1.5px, transparent 1.5px);
+        background-size: 22px 22px;
+        color: var(--ink);
+        font-family: Nunito, ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+        font-size: 16.5px;
+        line-height: 1.75;
         -webkit-font-smoothing: antialiased;
       }
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
+      a { color: #d94f6a; text-decoration: none; font-weight: 700; }
+      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
 
       /* ---- nav ---- */
       nav {
         position: sticky; top: 0; z-index: 20;
-        background: rgba(13, 17, 23, 0.85);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--border);
+        background: var(--sun);
+        border-bottom: 3px solid var(--ink);
       }
       .nav-inner {
-        max-width: 1100px; margin: 0 auto; padding: 14px 24px;
+        max-width: 1100px; margin: 0 auto; padding: 12px 24px;
         display: flex; align-items: center; justify-content: space-between; gap: 16px;
       }
-      .nav-logo { color: var(--text); font-weight: 700; font-size: 15px; }
-      .nav-logo span { color: var(--accent); }
-      .nav-back { font-size: 13.5px; color: var(--muted); }
-      .nav-back:hover { color: var(--accent); }
+      .nav-logo {
+        color: var(--ink); font-family: Fredoka, sans-serif; font-weight: 700; font-size: 17px;
+      }
+      .nav-logo span {
+        background: var(--coral); color: #fff; border: 2px solid var(--ink);
+        border-radius: 8px; padding: 1px 7px; display: inline-block; transform: rotate(-3deg);
+      }
+      .nav-back {
+        color: var(--ink); font-size: 14px;
+        background: var(--paper); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 4px 14px; box-shadow: var(--shadow-sm);
+      }
+      .nav-back:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
 
       /* ---- layout ---- */
-      .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 96px; }
-      article { max-width: 780px; }
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 110px; }
+      article { max-width: 760px; }
       .full { max-width: 1100px; }
 
-      header.post { padding: 56px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+      header.post { padding: 54px 0 34px; }
       .eyebrow {
-        font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
-        color: var(--accent); font-weight: 600; margin-bottom: 14px;
+        display: inline-block; font-family: Fredoka, sans-serif; font-size: 13px;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        box-shadow: var(--shadow-sm);
       }
-      h1 { font-size: clamp(28px, 4.5vw, 40px); line-height: 1.2; letter-spacing: -.02em; text-wrap: balance; }
-      .standfirst { margin-top: 18px; font-size: 17px; color: var(--text-dim); max-width: 700px; }
-      .meta { margin-top: 22px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 18px; }
+      h1 {
+        font-family: Fredoka, sans-serif; font-weight: 700;
+        font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
+      }
+      .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
+      .meta {
+        margin-top: 26px; font-size: 14px; color: var(--ink-soft);
+        display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      }
 
       h2 {
-        font-size: 24px; margin: 56px 0 18px; letter-spacing: -.01em;
-        padding-bottom: 10px; border-bottom: 1px solid var(--border); text-wrap: balance;
+        font-family: Fredoka, sans-serif; font-weight: 700;
+        font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
       }
-      h3 { font-size: 17px; margin: 34px 0 12px; color: var(--text); }
-      p { margin: 0 0 16px; color: var(--text-dim); }
-      ul, ol { margin: 0 0 16px 22px; color: var(--text-dim); }
-      li { margin-bottom: 8px; }
-      strong { color: var(--text); font-weight: 600; }
-      em { color: var(--text); }
+      h2::after {
+        content: ""; display: block; width: 74px; height: 6px; margin-top: 8px;
+        background: var(--teal); border-radius: 999px;
+      }
+      h3 {
+        font-family: Fredoka, sans-serif; font-weight: 600;
+        font-size: 20px; margin: 38px 0 12px;
+      }
+      p { margin: 0 0 18px; }
+      ul, ol { margin: 0 0 18px 24px; }
+      li { margin-bottom: 10px; }
+      strong { font-weight: 700; }
 
       code {
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-        font-size: .88em; background: #1f2630; border: 1px solid var(--border);
-        border-radius: 5px; padding: .1em .4em; color: var(--blue-light);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #fff0f3; border: 2px solid #ffd0d8;
+        border-radius: 6px; padding: .05em .38em; color: #c2415c;
       }
       pre {
-        background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-        padding: 16px 18px; overflow-x: auto; margin: 0 0 20px;
+        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
       }
-      pre code { background: none; border: 0; padding: 0; color: var(--text-dim); font-size: 13px; line-height: 1.65; }
+      pre code {
+        background: none; border: 0; padding: 0; color: var(--ink);
+        font-size: 13.5px; line-height: 1.7;
+      }
 
-      /* ---- figures ---- */
-      figure { margin: 26px 0 30px; }
+      /* ---- figures: sticker cards ---- */
+      figure { margin: 30px 0 36px; }
       figure img {
         width: 100%; height: auto; display: block;
-        background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
       }
-      figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
+      figcaption {
+        margin-top: 12px; font-size: 14.5px; color: var(--ink-soft); font-style: italic;
+      }
 
       /* ---- callouts ---- */
       .note {
-        border-left: 3px solid var(--accent); background: #121a26;
-        padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 0 0 22px;
+        background: #eaf6ff; border: 3px solid var(--ink); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
       }
       .note p:last-child { margin-bottom: 0; }
-      .note.warn { border-left-color: var(--warn); background: #1e1a10; }
+      .note.warn { background: #fff4d6; }
 
       /* ---- tables ---- */
-      .tw { overflow-x: auto; margin: 0 0 24px; }
-      table { border-collapse: collapse; width: 100%; font-size: 14px; }
-      th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-      th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
-      td { color: var(--text-dim); }
+      .tw {
+        overflow-x: auto; margin: 0 0 28px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 15px; }
+      th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+      th {
+        font-family: Fredoka, sans-serif; font-size: 13px; text-transform: uppercase;
+        letter-spacing: .05em; background: var(--mint);
+        border-bottom: 3px solid var(--ink); color: var(--ink);
+      }
+      td { border-bottom: 2px dashed #e6ddd4; }
+      tr:last-child td { border-bottom: 0; }
 
       /* ---- contents ---- */
-      .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 0 0 40px; }
-      .toc h4 { font-size: 12.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
-      .toc ol { margin: 0 0 0 20px; }
-      .toc li { margin-bottom: 5px; }
+      .toc {
+        background: #f3ecff; border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
+      }
+      .toc h4 {
+        font-family: Fredoka, sans-serif; font-size: 14px; text-transform: uppercase;
+        letter-spacing: .07em; margin-bottom: 12px;
+      }
+      .toc ol { margin: 0 0 0 22px; }
+      .toc li { margin-bottom: 6px; }
 
-      .flow-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+      /* ---- flow pills ---- */
+      .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
       .pill {
-        font-size: 11.5px; font-weight: 600; color: var(--green-light);
-        border: 1px solid #2b4a34; background: #10231a; border-radius: 999px; padding: 2px 10px;
+        font-family: Fredoka, sans-serif; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
+        transform: rotate(-1deg);
       }
+
       footer.post {
-        margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
-        font-size: 14px; color: var(--muted);
+        margin-top: 70px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
       }
+
       @media (max-width: 640px) {
-        .wrap { padding: 0 16px 64px; }
-        header.post { padding: 36px 0 24px; }
+        body { font-size: 16px; }
+        .wrap { padding: 0 16px 72px; }
+        header.post { padding: 34px 0 24px; }
+        :root { --shadow: 4px 4px 0 var(--ink); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-back:hover { transform: none; }
       }
     </style>
   </head>
