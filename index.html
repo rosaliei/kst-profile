@@ -926,6 +926,54 @@
           padding: 0.35rem 0.75rem;
         }
       }
+
+      /* ===== shared sticker theme — matches /blog ===== */
+      :root {
+        --ink: #3a3238; --sun: #ffc93c; --mint: #baf2d8; --lilac: #b39ddb;
+        --shadow: 5px 5px 0 var(--ink); --shadow-sm: 3px 3px 0 var(--ink);
+      }
+      nav {
+        background: var(--sun) !important;
+        backdrop-filter: none !important;
+        border-bottom: 3px solid var(--ink) !important;
+      }
+      .nav-logo { color: var(--ink) !important; }
+      .nav-logo span {
+        background: #ff6b6b; color: #fff; border: 2px solid var(--ink);
+        border-radius: 8px; padding: 1px 7px; display: inline-block;
+        transform: rotate(-3deg);
+      }
+      .nav-links a { color: var(--ink) !important; font-weight: 700; }
+
+      /* cards become stickers */
+      .portfolio-card, .skill-card, .cert-card, .community-card,
+      .edu-card, .timeline-content, .highlight-card, .stat-card {
+        border: 3px solid var(--ink) !important;
+        border-radius: 16px !important;
+        box-shadow: var(--shadow);
+        background: #fff !important;
+      }
+
+      /* pills, chips and small labels */
+      .tag, .link-type, .contact-chip, .community-stat, .community-badge,
+      .hero-badge {
+        border: 2px solid var(--ink) !important;
+        border-radius: 999px !important;
+        box-shadow: var(--shadow-sm);
+      }
+      .contact-chip, .hero-badge { background: #fff !important; }
+      .contact-chip:hover, .hero-badge:hover {
+        transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink);
+      }
+      .section-label {
+        display: inline-block; background: var(--mint); color: var(--ink) !important;
+        border: 2px solid var(--ink); border-radius: 999px;
+        padding: 3px 13px; box-shadow: var(--shadow-sm); transform: rotate(-1.5deg);
+      }
+      .timeline-dot {
+        border: 3px solid var(--ink) !important; box-shadow: var(--shadow-sm);
+      }
+      h2 { letter-spacing: -.01em; }
     </style>
   </head>
   <body>
