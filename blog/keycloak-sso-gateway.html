@@ -226,6 +226,28 @@
         .author-avatar { width: 56px; height: 56px; }
       }
 
+      .coffee-box {
+        margin-top: 20px; padding: 22px 24px; text-align: center;
+        background: #fff4d6; border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .coffee-title {
+        font-family: Fredoka, sans-serif; font-weight: 600; font-size: 19px;
+        margin: 0 0 6px; color: var(--ink);
+      }
+      .coffee-copy {
+        margin: 0 auto 16px; max-width: 460px; font-size: 15.5px; color: var(--ink);
+      }
+      .coffee-btn {
+        display: inline-block; font-family: Fredoka, sans-serif; font-size: 17px;
+        background: var(--sun); color: var(--ink); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 9px 24px; box-shadow: var(--shadow);
+      }
+      .coffee-btn:hover {
+        text-decoration: none; transform: translate(2px, 2px);
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+
       footer.post {
         margin-top: 70px; background: var(--paper);
         border: 3px solid var(--ink); border-radius: 18px;
@@ -724,7 +746,18 @@ docker compose -f docker-compose.prod.yml up -d --build</code></pre>
             Full source, the seven walkthroughs and the deployment notes:
             <a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">gitlab.com/kyawsithu96/keycloak-sso-federation-gateway</a>
           </p>
-          <p style="margin-top: 10px"><a href="/">← Back to profile</a></p>
+          <div class="coffee-box">
+            <p class="coffee-title">You made it to the end 🎉</p>
+            <p class="coffee-copy">
+              Honestly — not a necessity, and this stays free either way. But if it
+              genuinely saved you an afternoon, a coffee would make my day. xD
+            </p>
+            <a class="coffee-btn" href="https://buymeacoffee.com/kyawsithu" target="_blank" rel="noopener">
+              ☕ Buy me a coffee
+            </a>
+          </div>
+
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
         </footer>
       </article>
     </div>
