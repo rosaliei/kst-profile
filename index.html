@@ -13,21 +13,35 @@
     <meta name="twitter:title" content="Kyaw Sithu — Platform Engineer · Kubestronaut" />
     <meta name="twitter:description" content="Platform/DevOps Engineer and CNCF Kubestronaut based in Dubai, UAE. Specialising in Kubernetes, Istio, CI/CD, and cloud-native infrastructure." />
     <link rel="canonical" href="https://kst-devops.com/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
     <style>
+      .community-badge.paused {
+        background: #fff4d6; color: #8a5a00; border: 2px solid #3a3238;
+        border-radius: 999px; padding: 1px 10px; font-weight: 700;
+      }
+      .paused-note { font-style: italic; opacity: .85; }
+      h1, h2, h3, h4, .nav-logo { font-family: Fredoka, sans-serif !important; letter-spacing: -.01em; }
+      body {
+        font-family: Nunito, ui-rounded, -apple-system, system-ui, sans-serif !important;
+        background-image: radial-gradient(rgba(58,50,56,.06) 1.5px, transparent 1.5px);
+        background-size: 22px 22px;
+      }
       :root {
-        --bg: #0d1117;
-        --bg2: #161b22;
-        --bg3: #21262d;
-        --border: #30363d;
-        --accent: #2f81f7;
-        --accent2: #3fb950;
-        --accent3: #d2a8ff;
-        --accent4: #ffa657;
-        --text: #e6edf3;
-        --text-dim: #c9d1d9;
-        --muted: #8b949e;
-        --blue-light: #79b8ff;
-        --green-light: #7ee787;
+        --bg: #fff6ec;
+        --bg2: #ffffff;
+        --bg3: #fff4d6;
+        --border: #3a3238;
+        --accent: #d94f6a;
+        --accent2: #2f9e6b;
+        --accent3: #7c5cbf;
+        --accent4: #c2680c;
+        --text: #3a3238;
+        --text-dim: #4a4148;
+        --muted: #6b6069;
+        --blue-light: #2563a8;
+        --green-light: #2f7d52;
         --kubestronaut: #326ce5;
       }
       *,
@@ -54,9 +68,9 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        background: rgba(13, 17, 23, 0.92);
+        background: rgba(255, 246, 236, 0.92);
         backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border);
+        border-bottom: 2px solid var(--border);
         padding: 0 2rem;
         display: flex;
         align-items: center;
@@ -102,7 +116,7 @@
         gap: 0.5rem;
         background: rgba(50, 108, 229, 0.15);
         border: 1px solid rgba(50, 108, 229, 0.4);
-        color: #79b8ff;
+        color: #2563a8;
         padding: 0.35rem 0.9rem;
         border-radius: 999px;
         font-size: 0.8rem;
@@ -141,7 +155,7 @@
         font-weight: 400;
       }
       .hero-summary {
-        color: #c9d1d9;
+        color: #4a4148;
         font-size: 0.95rem;
         line-height: 1.75;
         max-width: 700px;
@@ -157,7 +171,7 @@
         align-items: center;
         gap: 0.4rem;
         background: var(--bg2);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         color: var(--text);
         text-decoration: none;
         padding: 0.4rem 0.9rem;
@@ -180,7 +194,7 @@
       /* SECTIONS */
       section {
         padding: 1.75rem 2rem;
-        border-top: 1px solid var(--border);
+        border-top: 2px solid var(--border);
       }
       .container {
         max-width: 900px;
@@ -218,11 +232,11 @@
       .ks-info h3 {
         font-size: 1.3rem;
         font-weight: 700;
-        color: #79b8ff;
+        color: #2563a8;
         margin-bottom: 0.4rem;
       }
       .ks-info p {
-        color: #c9d1d9;
+        color: #4a4148;
         font-size: 0.9rem;
         line-height: 1.6;
       }
@@ -235,7 +249,7 @@
       }
       .cert-pill {
         background: var(--bg3);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         padding: 0.25rem 0.7rem;
         border-radius: 999px;
         font-size: 0.75rem;
@@ -244,11 +258,11 @@
       }
       .cert-pill.k8s {
         border-color: rgba(50, 108, 229, 0.5);
-        color: #79b8ff;
+        color: #2563a8;
       }
       .cert-pill.istio {
         border-color: rgba(63, 185, 80, 0.4);
-        color: #7ee787;
+        color: #2f7d52;
       }
       .cert-pill.rh {
         border-color: rgba(255, 166, 87, 0.4);
@@ -263,7 +277,7 @@
       }
       .skill-card {
         background: var(--bg2);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: 12px;
         padding: 1.1rem 1.25rem;
         transition:
@@ -287,7 +301,7 @@
       }
       .tag {
         background: var(--bg3);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         color: var(--muted);
         font-size: 0.73rem;
         padding: 0.15rem 0.55rem;
@@ -360,7 +374,7 @@
         transition: border-color 0.2s, color 0.2s;
       }
       .timeline-content h3 span a:hover {
-        color: #e8d5ff;
+        color: #efe4ff;
         border-bottom-color: var(--accent3);
       }
       .timeline-role-label {
@@ -387,7 +401,7 @@
       }
       .timeline-content li {
         font-size: 0.875rem;
-        color: #c9d1d9;
+        color: #4a4148;
         margin-bottom: 0.3rem;
         line-height: 1.55;
       }
@@ -395,7 +409,7 @@
         display: inline-block;
         background: rgba(63, 185, 80, 0.15);
         border: 1px solid rgba(63, 185, 80, 0.3);
-        color: #7ee787;
+        color: #2f7d52;
         font-size: 0.68rem;
         font-weight: 600;
         padding: 0.1rem 0.5rem;
@@ -446,7 +460,7 @@
         letter-spacing: 0.06em;
         background: rgba(63, 185, 80, 0.15);
         border: 1px solid rgba(63, 185, 80, 0.3);
-        color: #7ee787;
+        color: #2f7d52;
         padding: 0.15rem 0.55rem;
         border-radius: 999px;
       }
@@ -460,7 +474,7 @@
       }
       .community-stat {
         background: var(--bg3);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         font-size: 0.75rem;
         color: var(--muted);
         padding: 0.2rem 0.65rem;
@@ -471,7 +485,7 @@
       }
       .community-desc {
         font-size: 0.85rem;
-        color: #c9d1d9;
+        color: #4a4148;
         line-height: 1.6;
       }
       .community-card .portfolio-links {
@@ -485,7 +499,7 @@
       }
       .portfolio-card {
         background: var(--bg2);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: 12px;
         padding: 0.9rem 1rem;
         transition:
@@ -536,12 +550,12 @@
         flex-shrink: 0;
       }
       .link-type.notion {
-        background: rgba(255, 255, 255, 0.08);
-        color: #c9d1d9;
+        background: rgba(58, 50, 56, 0.06);
+        color: #4a4148;
       }
       .link-type.gitlab {
         background: rgba(252, 109, 38, 0.15);
-        color: #fc8c4f;
+        color: #c2680c;
       }
       .link-type.diagram {
         background: rgba(210, 168, 255, 0.12);
@@ -556,7 +570,7 @@
       }
       .cert-card {
         background: var(--bg2);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: 8px;
         padding: 0.6rem 0.85rem;
         display: flex;
@@ -585,7 +599,7 @@
       /* EDUCATION */
       .edu-card {
         background: var(--bg2);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: 12px;
         padding: 1.25rem 1.5rem;
         display: flex;
@@ -606,7 +620,7 @@
 
       /* FOOTER */
       footer {
-        border-top: 1px solid var(--border);
+        border-top: 2px solid var(--border);
         padding: 1.25rem 2rem;
         text-align: center;
         color: var(--muted);
@@ -635,7 +649,7 @@
       }
       .modal {
         background: var(--bg2);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: 16px;
         max-width: 660px;
         width: 100%;
@@ -659,7 +673,7 @@
         top: 1rem;
         right: 1rem;
         background: var(--bg3);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         color: var(--muted);
         cursor: pointer;
         border-radius: 6px;
@@ -686,7 +700,7 @@
         padding-right: 2rem;
       }
       .modal-body {
-        color: #c9d1d9;
+        color: #4a4148;
         font-size: 0.875rem;
         line-height: 1.75;
       }
@@ -716,7 +730,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
-        border-top: 1px solid var(--border);
+        border-top: 2px solid var(--border);
         padding-top: 1rem;
       }
       .modal-link {
@@ -724,7 +738,7 @@
         align-items: center;
         gap: 0.35rem;
         background: var(--bg3);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         color: var(--muted);
         text-decoration: none;
         font-size: 0.77rem;
@@ -788,7 +802,7 @@
       .verify-link.vl-red {
         background: rgba(210, 0, 0, 0.1);
         border-color: rgba(210, 0, 0, 0.4);
-        color: #ff7b7b;
+        color: #d94f6a;
       }
       .verify-link.vl-red:hover { background: rgba(210, 0, 0, 0.2); }
 
@@ -849,8 +863,8 @@
           flex-direction: column;
           gap: 0;
           width: 100%;
-          background: rgba(13, 17, 23, 0.98);
-          border-top: 1px solid var(--border);
+          background: rgba(255, 246, 236, 0.98);
+          border-top: 2px solid var(--border);
           padding: 0.5rem 0 0.75rem;
           order: 3;
         }
@@ -1348,7 +1362,7 @@
             padding: 0.65rem 0.9rem;
             margin-bottom: 1rem;
             font-size: 0.8rem;
-            color: #ffc680;
+            color: #9a5b00;
             line-height: 1.5;
           "
         >
@@ -1854,7 +1868,7 @@
               style="
                 background: rgba(47, 129, 247, 0.15);
                 border-color: rgba(47, 129, 247, 0.35);
-                color: #79b8ff;
+                color: #1d5c96;
               "
               >Moderator</span
             >
@@ -1877,14 +1891,14 @@
               href="https://www.facebook.com/share/g/1Ch3VBxtop/?mibextid=wwXIfr"
               target="_blank"
               rel="noopener"
-              style="color: #79b8ff; font-weight: 500"
+              style="color: #1d5c96; font-weight: 500"
             >
               <span
                 class="link-type"
                 style="
                   background: rgba(47, 129, 247, 0.15);
                   border: 1px solid rgba(47, 129, 247, 0.4);
-                  color: #79b8ff;
+                  color: #1d5c96;
                 "
                 >📘 Facebook</span
               >
@@ -1897,6 +1911,7 @@
           <div class="community-card-header">
             <h4>Dubai Directory MM — Myanmar Community Platform</h4>
             <span class="community-badge">Community</span>
+            <span class="community-badge paused">⏸ Paused for now</span>
             <div class="card-hint">Click for details →</div>
           </div>
           <div class="community-meta">
@@ -1907,6 +1922,7 @@
               ><strong>30</strong> businesses listed</span
             >
             <span class="community-stat">Dubai, UAE</span>
+              <span class="community-stat paused-note">The application is paused for a while — the community is still here, and it will be back.</span>
             <span class="community-stat">Myanmar Expat Community</span>
           </div>
           <p class="community-desc">
@@ -1929,7 +1945,7 @@
                 style="
                   background: rgba(63, 185, 80, 0.2);
                   border: 1px solid rgba(63, 185, 80, 0.5);
-                  color: #7ee787;
+                  color: #227a49;
                 "
                 >🟢 Live</span
               >
@@ -1940,14 +1956,14 @@
               href="https://play.google.com/store/apps/details?id=com.dubaidirectory.mm&hl=en"
               target="_blank"
               rel="noopener"
-              style="color: #a8d8ff; font-weight: 500"
+              style="color: #1d5c96; font-weight: 500"
             >
               <span
                 class="link-type"
                 style="
                   background: rgba(47, 129, 247, 0.15);
                   border: 1px solid rgba(47, 129, 247, 0.45);
-                  color: #79b8ff;
+                  color: #1d5c96;
                 "
                 >📱 Android</span
               >
