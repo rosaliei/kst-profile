@@ -193,6 +193,27 @@
         transform: rotate(-1deg);
       }
 
+      .byline strong { font-family: Fredoka, sans-serif; font-weight: 600; }
+      .meta time {
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 1px 11px; font-weight: 700; font-size: 13.5px;
+      }
+      .author {
+        display: flex; gap: 16px; align-items: flex-start;
+        margin-top: 18px; padding-top: 18px; border-top: 2px dashed #e6ddd4;
+      }
+      .author-avatar {
+        flex: 0 0 auto; width: 54px; height: 54px; font-size: 27px;
+        display: grid; place-items: center; background: #f3ecff;
+        border: 3px solid var(--ink); border-radius: 50%;
+        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      .author-name {
+        font-family: Fredoka, sans-serif; font-weight: 600; font-size: 17px;
+        margin: 0 0 2px; color: var(--ink);
+      }
+      .author-bio { margin: 0; font-size: 15px; color: var(--ink-soft); }
+
       footer.post {
         margin-top: 70px; background: var(--paper);
         border: 3px solid var(--ink); border-radius: 18px;
@@ -228,7 +249,9 @@
           request to see what actually happens.
         </p>
         <div class="meta">
-          <span>Kyaw Sithu</span>
+          <span class="byline">by <strong>chasing the moon</strong></span>
+          <span>·</span>
+          <time datetime="2026-08-07">7 August 2026</time>
           <span>·</span>
           <span>Keycloak 26 · nginx + njs · MySQL</span>
           <span>·</span>
@@ -671,7 +694,17 @@ docker compose -f docker-compose.prod.yml up -d --build</code></pre>
             Full source, the seven walkthroughs and the deployment notes:
             <a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">gitlab.com/kyawsithu96/keycloak-sso-federation-gateway</a>
           </p>
-          <p style="margin-top: 10px"><a href="/">← Back to profile</a></p>
+          <div class="author">
+            <div class="author-avatar">🌙</div>
+            <div>
+              <p class="author-name">chasing the moon</p>
+              <p class="author-bio">
+                He who loves Mum, Ei, and Arsenal. Somewhere between the three, he reads
+                logs until the flow makes sense.
+              </p>
+            </div>
+          </div>
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
         </footer>
       </article>
     </div>
