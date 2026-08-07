@@ -1,0 +1,245 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1480 980" width="1480" height="980" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6875"/>
+    </marker>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#14a3a5"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f8cff"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e08c14"/>
+    </marker>
+    <style>
+      .box    { fill:#ffffff; stroke:#d8e0e6; stroke-width:1.5; }
+      .inner  { fill:#f7f9fb; stroke:#e2e8ee; stroke-width:1.2; }
+      .njs    { fill:#f4fbfb; stroke:#7fd3d4; stroke-width:1.5; }
+      .star   { fill:#fffdf5; stroke:#e0a020; stroke-width:2; }
+      .kcbox  { fill:#ffffff; stroke:#14a3a5; stroke-width:2; }
+      .opt    { fill:#fcfdfd; stroke:#c9d4dc; stroke-width:1.5; stroke-dasharray:6 4; }
+      .ext    { fill:#fbfcfd; stroke:#c9d4dc; stroke-width:1.5; stroke-dasharray:5 3; }
+      .title  { font-size:15px; font-weight:700; fill:#23303e; }
+      .sub    { font-size:11.5px; fill:#8a97a5; }
+      .body   { font-size:12px; fill:#3c4a58; }
+      .mono   { font-size:11px; fill:#3c4a58; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+      .monosm { font-size:10.5px; fill:#5a6875; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+      .lbl    { font-size:11px; fill:#5a6875; }
+      .lblb   { font-size:11px; font-weight:600; fill:#3c4a58; }
+      .flow   { stroke:#5a6875; stroke-width:1.8; fill:none; marker-end:url(#arrow); }
+      .flowT  { stroke:#14a3a5; stroke-width:2.2; fill:none; marker-end:url(#arrowTeal); }
+      .flowB  { stroke:#4f8cff; stroke-width:2.2; fill:none; marker-end:url(#arrowBlue); }
+      .flowA  { stroke:#e08c14; stroke-width:2.2; fill:none; marker-end:url(#arrowAmber); }
+      .dash   { stroke-dasharray:6 4; }
+      .badge  { font-size:10.5px; font-weight:700; fill:#ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1480" height="980" fill="#ffffff"/>
+
+  <!-- ================== TITLE ================== -->
+  <text x="40" y="44" font-size="24" font-weight="700" fill="#23303e">DevOps Shop — Components &amp; Traffic</text>
+  <text x="40" y="68" font-size="13.5" fill="#8a97a5">nginx + njs gateway · Keycloak with a custom e-mail OTP authenticator · React frontend · Node backend</text>
+
+  <!-- ================== EXTERNAL IDPs ================== -->
+  <rect class="ext" x="1050" y="24" width="390" height="66" rx="10"/>
+  <text class="title" x="1070" y="48">Google · Facebook · Apple</text>
+  <text class="sub" x="1070" y="68">external IdPs — reached by browser redirect only</text>
+  <text class="sub" x="1070" y="83">Keycloak brokers with kc_idp_hint (no KC page shown)</text>
+
+  <!-- ================== BROWSER ================== -->
+  <rect class="box" x="40" y="140" width="235" height="215" rx="12"/>
+  <text class="title" x="60" y="168">Browser</text>
+  <text class="sub" x="60" y="186">the only client</text>
+  <line x1="60" y1="198" x2="255" y2="198" stroke="#e2e8ee"/>
+  <text class="body" x="60" y="219">• DevOps Shop chat UI</text>
+  <text class="body" x="60" y="239">• Guest Login sheet</text>
+  <text class="body" x="60" y="259">• 6-digit OTP boxes</text>
+  <text class="body" x="60" y="279">• social icon row</text>
+  <line x1="60" y1="293" x2="255" y2="293" stroke="#e2e8ee"/>
+  <text class="monosm" x="60" y="313">tokens in sessionStorage</text>
+  <text class="monosm" x="60" y="331">Authorization: Bearer …</text>
+  <text class="sub" x="60" y="348">refreshed silently every 5 min</text>
+
+  <!-- ================== GATEWAY (nginx + njs) ================== -->
+  <rect class="box" x="310" y="140" width="385" height="680" rx="12"/>
+  <rect x="310" y="140" width="385" height="46" rx="12" fill="#23303e"/>
+  <rect x="310" y="174" width="385" height="12" fill="#23303e"/>
+  <text x="330" y="170" font-size="15" font-weight="700" fill="#ffffff">nginx gateway</text>
+  <rect x="611" y="150" width="66" height="20" rx="10" fill="#14a3a5"/>
+  <text class="badge" x="621" y="164">:8090</text>
+  <text class="sub" x="330" y="207">the single door — everything enters here</text>
+
+  <!-- routing -->
+  <text class="lblb" x="330" y="233">Routing rules</text>
+  <rect class="inner" x="328" y="243" width="349" height="132" rx="8"/>
+  <text class="mono" x="342" y="263">/</text>
+  <text class="lbl" x="470" y="263">→ frontend</text>
+  <text class="mono" x="342" y="285">/auth/*</text>
+  <text class="lbl" x="470" y="285">→ keycloak</text>
+  <text class="mono" x="342" y="307">/auth-api/*</text>
+  <text class="lbl" x="470" y="307">→ njs  (inside nginx)</text>
+  <text class="mono" x="342" y="329">/api/*</text>
+  <text class="lbl" x="470" y="329">→ backend  (introspects)</text>
+  <text class="mono" x="342" y="351">/api/admin/*</text>
+  <text class="lbl" x="470" y="351">→ backend  (introspect + role)</text>
+
+  <!-- njs module 1 -->
+  <text class="lblb" x="330" y="404">njs — JavaScript running inside nginx</text>
+  <rect class="njs" x="328" y="414" width="349" height="196" rx="8"/>
+  <text class="lblb" x="342" y="435" fill="#0e8486">auth.js — guards /api/account/*</text>
+  <text class="sub" x="342" y="451">auth_request subrequest, before the handler</text>
+  <text class="body" x="342" y="472">1 Bearer token present</text>
+  <text class="body" x="342" y="492">2 introspect with Keycloak — active?</text>
+  <text class="body" x="342" y="512">3 azp on the client allow-list</text>
+  <text class="body" x="342" y="532">4 realm role required by this route</text>
+  <rect class="inner" x="342" y="545" width="321" height="54" rx="6"/>
+  <text class="monosm" x="354" y="564">js_shared_dict_zone — introspection</text>
+  <text class="monosm" x="354" y="581">answers cached 10 s, shared by workers</text>
+
+  <!-- njs module 2 -->
+  <rect class="njs" x="328" y="622" width="349" height="118" rx="8"/>
+  <text class="lblb" x="342" y="643" fill="#0e8486">authapi.js — the login endpoints</text>
+  <text class="sub" x="342" y="659">the only auth backend</text>
+  <text class="monosm" x="342" y="679">/auth-api/config · otp/send · otp/verify</text>
+  <text class="monosm" x="342" y="696">/auth-api/refresh · logout</text>
+  <text class="body" x="342" y="717">holds the client secret · relays to Keycloak</text>
+  <text class="sub" x="342" y="733">generates no codes of its own</text>
+
+  <!-- identity rewrite -->
+  <rect class="inner" x="328" y="752" width="349" height="54" rx="8"/>
+  <text class="lblb" x="342" y="771">Identity for /api/account/*:</text>
+  <text class="monosm" x="342" y="790">$auth_sub / $auth_email — set by auth.js</text>
+
+  <!-- ================== FRONTEND ================== -->
+  <rect class="box" x="735" y="140" width="270" height="96" rx="12"/>
+  <text class="title" x="755" y="168">frontend</text>
+  <text class="sub" x="755" y="186">React (Vite build) on nginx · :80</text>
+  <line x1="755" y1="196" x2="985" y2="196" stroke="#e2e8ee"/>
+  <text class="body" x="755" y="216">static files only — all text, products</text>
+  <text class="body" x="755" y="232">and login icons come from the APIs</text>
+
+  <!-- ================== BACKEND ================== -->
+  <rect class="box" x="735" y="426" width="270" height="170" rx="12"/>
+  <text class="title" x="755" y="454">backend — shop-service</text>
+  <text class="sub" x="755" y="472">Node, zero dependencies · :3000</text>
+  <line x1="755" y1="482" x2="985" y2="482" stroke="#e2e8ee"/>
+  <text class="body" x="755" y="502">chat feed · products · cart · checkout</text>
+  <text class="body" x="755" y="522">profile · admin stats</text>
+  <text class="body" x="755" y="546">introspects the token with Keycloak</text>
+  <text class="body" x="755" y="563">itself — never trusts the edge</text>
+  <text class="sub" x="755" y="583">unreachable from the host</text>
+
+  <!-- ================== MAILPIT ================== -->
+  <rect class="box" x="735" y="616" width="270" height="86" rx="12"/>
+  <text class="title" x="755" y="644">Mailpit</text>
+  <text class="sub" x="755" y="662">SMTP catcher + web UI · :8025</text>
+  <text class="body" x="755" y="686">where the OTP mails land in dev</text>
+
+  <!-- ================== KEYCLOAK ================== -->
+  <rect class="kcbox" x="1050" y="140" width="390" height="680" rx="12"/>
+  <rect x="1050" y="140" width="390" height="46" rx="12" fill="#14a3a5"/>
+  <rect x="1050" y="174" width="390" height="12" fill="#14a3a5"/>
+  <text x="1070" y="170" font-size="15" font-weight="700" fill="#ffffff">Keycloak 26.7</text>
+  <rect x="1356" y="150" width="66" height="20" rx="10" fill="#0e8486"/>
+  <text class="badge" x="1366" y="164">:8081</text>
+  <text class="sub" x="1070" y="207">owns every credential · issues every token</text>
+
+  <!-- THE EMAIL AUTHENTICATOR (highlighted) -->
+  <rect class="star" x="1068" y="222" width="354" height="266" rx="10"/>
+  <text class="lblb" x="1082" y="245" fill="#8a6410">★ e-mail OTP authenticator — our Java extension</text>
+  <text class="monosm" x="1082" y="264">devops-email-otp-direct-grant.jar</text>
+  <text class="sub" x="1082" y="281">bound to the realm's Direct Grant flow</text>
+  <line x1="1082" y1="292" x2="1408" y2="292" stroke="#eadfc4"/>
+  <text class="body" x="1082" y="313">Call 1 — username only:</text>
+  <text class="body" x="1096" y="333">• creates the guest account if new</text>
+  <text class="body" x="1096" y="353">• 6-digit SecureRandom code</text>
+  <text class="body" x="1096" y="373">• stores only its SHA-256 hash + expiry</text>
+  <text class="body" x="1096" y="393">• mails it, answers 401 code_sent:300</text>
+  <text class="body" x="1082" y="417">Call 2 — username + otp:</text>
+  <text class="body" x="1096" y="437">• compares hash, single use</text>
+  <text class="body" x="1096" y="457">• 5 min TTL · 3 tries · 50 s cooldown</text>
+  <text class="body" x="1096" y="477">• marks e-mail verified → issues tokens</text>
+
+  <!-- email theme -->
+  <rect class="inner" x="1068" y="500" width="354" height="76" rx="8"/>
+  <text class="lblb" x="1082" y="521">devops e-mail theme</text>
+  <text class="body" x="1082" y="542">branded OTP mail template rendered by</text>
+  <text class="body" x="1082" y="559">Keycloak and sent over its own SMTP</text>
+
+  <!-- realm -->
+  <rect class="inner" x="1068" y="588" width="354" height="216" rx="8"/>
+  <text class="lblb" x="1082" y="609">realm “demo”</text>
+  <text class="body" x="1082" y="630">users · realm roles (admin, user)</text>
+  <text class="body" x="1082" y="650">RSA signing keys → JWKS endpoint</text>
+  <text class="body" x="1082" y="670">identity providers: google · facebook · apple</text>
+  <text class="body" x="1082" y="690">clients:</text>
+  <text class="monosm" x="1096" y="710">web-frontend  (public, PKCE — social)</text>
+  <text class="monosm" x="1096" y="729">api-gateway   (confidential — e-mail OTP)</text>
+  <text class="body" x="1082" y="752">flows: direct grant (e-mail) ·</text>
+  <text class="body" x="1082" y="772">browser flow = cookie + IdP redirector only</text>
+  <text class="sub" x="1082" y="792">no login form exists anywhere in the realm</text>
+
+  <!-- ================== FLOWS ================== -->
+
+  <!-- browser -> gateway -->
+  <path class="flowA" d="M279,232 L306,232"/>
+  <text class="lblb" x="279" y="222">:8090</text>
+
+  <!-- gateway -> frontend -->
+  <path class="flow" d="M699,188 L731,188"/>
+
+  <!-- gateway(njs authapi) -> keycloak : direct grant -->
+  <path class="flowT" d="M681,700 L700,700 L700,764 L1032,764 L1032,470 L1046,470"/>
+  <text class="lblb" x="706" y="758" fill="#14a3a5">② e-mail OTP — direct grant + client secret</text>
+
+  <!-- gateway -> backend -->
+  <path class="flowA" d="M699,500 L731,500"/>
+  <text class="lblb" x="701" y="490" fill="#e08c14">③ API</text>
+
+  <!-- social redirect over the top -->
+  <path class="flowB" d="M699,160 L714,160 L714,116 L1120,116 L1120,136"/>
+  <text class="lblb" x="770" y="109" fill="#4f8cff">① social login — /auth/* redirect with kc_idp_hint</text>
+
+  <!-- keycloak -> external idps -->
+  <path class="flowB" d="M1330,136 L1330,94"/>
+  <text class="lblb" x="1160" y="106" fill="#4f8cff">brokers to the provider</text>
+
+  <!-- keycloak -> mailpit (SMTP) -->
+  <path class="flowT" d="M1046,640 L1009,640"/>
+  <text class="lbl" x="1012" y="632">SMTP</text>
+
+  <!-- JWKS: keycloak -> njs auth.js -->
+  <path class="flow dash" d="M1120,824 L1120,858 L500,858 L500,824"/>
+  <text class="lbl" x="620" y="852">introspection answers → cached in the njs shared zone (10 s)</text>
+
+  <!-- ================== LEGEND ================== -->
+  <rect class="box" x="40" y="386" width="235" height="300" rx="12"/>
+  <text class="lblb" x="60" y="411">The three journeys</text>
+
+  <line x1="60" y1="429" x2="90" y2="429" stroke="#4f8cff" stroke-width="2.6"/>
+  <text class="lblb" x="98" y="433" fill="#4f8cff">① Social login</text>
+  <text class="body" x="60" y="453">Icon → nginx → Keycloak →</text>
+  <text class="body" x="60" y="470">provider → back with a code →</text>
+  <text class="body" x="60" y="487">PKCE exchange → tokens.</text>
+
+  <line x1="60" y1="511" x2="90" y2="511" stroke="#14a3a5" stroke-width="2.6"/>
+  <text class="lblb" x="98" y="515" fill="#14a3a5">② E-mail OTP</text>
+  <text class="body" x="60" y="535">Our sheet → njs authapi.js →</text>
+  <text class="body" x="60" y="552">Keycloak's authenticator mails</text>
+  <text class="body" x="60" y="569">the code, then validates it.</text>
+
+  <line x1="60" y1="593" x2="90" y2="593" stroke="#e08c14" stroke-width="2.6"/>
+  <text class="lblb" x="98" y="597" fill="#e08c14">③ Using the API</text>
+  <text class="body" x="60" y="617">Bearer token → njs auth.js</text>
+  <text class="body" x="60" y="634">introspects for /api/account/*;</text>
+  <text class="body" x="60" y="651">the backend introspects /api/*.</text>
+  <text class="sub" x="60" y="672">dashed = optional / background</text>
+
+  <!-- ================== FOOTNOTES ================== -->
+  <text class="sub" x="40" y="892">Published to the host: gateway :8090 · Keycloak :8081 (admin &amp; API only) · Mailpit :8025 — frontend and backend are unreachable from outside</text>
+  <text class="sub" x="40" y="908">★ The Keycloak extension is the only custom Java in the stack; it is what lets the application render the login UI while Keycloak keeps the credentials</text>
+  <text class="sub" x="40" y="928">njs does two separate jobs: auth.js guards /api/account/*, authapi.js serves the login endpoints</text>
+  <text class="sub" x="40" y="948">Every request carries an id (rid) through nginx, njs, the services and back — one grep follows a login end to end</text>
+</svg>

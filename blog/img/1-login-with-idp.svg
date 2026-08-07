@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="1072" viewBox="0 0 1250 1072" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="ar-browser" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#4285F4"/></marker>
+    <marker id="ar-gateway" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#34A853"/></marker>
+    <marker id="ar-keycloak" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#EA4335"/></marker>
+    <marker id="ar-backend" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#F9AB00"/></marker>
+    <marker id="ar-mysql" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#8E24AA"/></marker>
+    <marker id="ar-mail" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#00838F"/></marker>
+    <marker id="ar-grey" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#9aa0a6"/></marker>
+  </defs>
+  <rect x="0" y="0" width="1250" height="1072" fill="#ffffff"/>
+  <text x="625" y="40" text-anchor="middle" font-size="24" font-weight="700" fill="#1a1a1a">Flow 1 — Landing + Login with IdP (Google)</text>
+  <text x="625" y="64" text-anchor="middle" font-size="13" fill="#666">First page load, PKCE login brokered straight to Google, then an authenticated call. No Keycloak page is ever shown.</text>
+  <rect x="22" y="86" width="176" height="58" rx="10" fill="#E8F0FE" stroke="#4285F4"/>
+  <text x="110" y="109" text-anchor="middle" font-size="13.5" font-weight="700" fill="#174ea6">BROWSER</text>
+  <text x="110" y="127" text-anchor="middle" font-size="10.5" fill="#3c4043">React SPA + sessionStorage</text>
+  <line x1="110" y1="144" x2="110" y2="1032" stroke="#dadce0" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <rect x="280" y="86" width="176" height="58" rx="10" fill="#E6F4EA" stroke="#34A853"/>
+  <text x="368" y="109" text-anchor="middle" font-size="13.5" font-weight="700" fill="#137333">API GATEWAY</text>
+  <text x="368" y="127" text-anchor="middle" font-size="10.5" fill="#3c4043">nginx + njs</text>
+  <line x1="368" y1="144" x2="368" y2="1032" stroke="#dadce0" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <rect x="537" y="86" width="176" height="58" rx="10" fill="#FCE8E6" stroke="#EA4335"/>
+  <text x="625" y="109" text-anchor="middle" font-size="13.5" font-weight="700" fill="#a50e0e">KEYCLOAK</text>
+  <text x="625" y="127" text-anchor="middle" font-size="10.5" fill="#3c4043">identity + credentials</text>
+  <line x1="625" y1="144" x2="625" y2="1032" stroke="#dadce0" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <rect x="794" y="86" width="176" height="58" rx="10" fill="#FEF7E0" stroke="#F9AB00"/>
+  <text x="882" y="109" text-anchor="middle" font-size="13.5" font-weight="700" fill="#b06000">SHOP-SERVICE</text>
+  <text x="882" y="127" text-anchor="middle" font-size="10.5" fill="#3c4043">Node backend</text>
+  <line x1="882" y1="144" x2="882" y2="1032" stroke="#dadce0" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <rect x="1052" y="86" width="176" height="58" rx="10" fill="#F3E8FD" stroke="#8E24AA"/>
+  <text x="1140" y="109" text-anchor="middle" font-size="13.5" font-weight="700" fill="#6a1b9a">MySQL</text>
+  <text x="1140" y="127" text-anchor="middle" font-size="10.5" fill="#3c4043">shop data</text>
+  <line x1="1140" y1="144" x2="1140" y2="1032" stroke="#dadce0" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <line x1="110" y1="182" x2="368" y2="182" stroke="#34A853" stroke-width="1.8" marker-end="url(#ar-gateway)"/>
+  <text x="239" y="174" text-anchor="middle" font-size="11.5" fill="#3c4043">GET https://&lt;shop-domain&gt;</text>
+  <text x="239" y="195" text-anchor="middle" font-size="10" fill="#80868b">no token yet</text>
+  <circle cx="121" cy="182" r="9.5" fill="#5f6368"/>
+  <text x="121" y="186" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">1</text>
+  <path d="M368,212 h34 v18 h-34" fill="none" stroke="#9aa0a6" stroke-width="1.5" marker-end="url(#ar-grey)"/>
+  <text x="410" y="210" font-size="11.5" fill="#3c4043">match server_name → shop block</text>
+  <text x="410" y="224" font-size="10" fill="#80868b">location / → frontend container</text>
+  <circle cx="352" cy="218" r="9.5" fill="#5f6368"/>
+  <text x="352" y="222" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">2</text>
+  <line x1="368" y1="262" x2="110" y2="262" stroke="#9aa0a6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#ar-grey)"/>
+  <text x="239" y="254" text-anchor="middle" font-size="11.5" fill="#3c4043">React app (HTML + JS bundle)</text>
+  <circle cx="356" cy="262" r="9.5" fill="#5f6368"/>
+  <text x="356" y="266" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">3</text>
+  <line x1="110" y1="302" x2="368" y2="302" stroke="#34A853" stroke-width="1.8" marker-end="url(#ar-gateway)"/>
+  <text x="239" y="294" text-anchor="middle" font-size="11.5" fill="#3c4043">GET /auth-api/config</text>
+  <circle cx="121" cy="302" r="9.5" fill="#5f6368"/>
+  <text x="121" y="306" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">4</text>
+  <line x1="368" y1="342" x2="110" y2="342" stroke="#9aa0a6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#ar-grey)"/>
+  <text x="239" y="334" text-anchor="middle" font-size="11.5" fill="#3c4043">njs config() answers locally</text>
+  <text x="239" y="355" text-anchor="middle" font-size="10" fill="#80868b">access log shows empty upstream=</text>
+  <circle cx="356" cy="342" r="9.5" fill="#5f6368"/>
+  <text x="356" y="346" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">5</text>
+  <line x1="110" y1="382" x2="368" y2="382" stroke="#34A853" stroke-width="1.8" marker-end="url(#ar-gateway)"/>
+  <text x="239" y="374" text-anchor="middle" font-size="11.5" fill="#3c4043">GET /api/public/feed</text>
+  <text x="239" y="395" text-anchor="middle" font-size="10" fill="#80868b">guest feed, no token</text>
+  <circle cx="121" cy="382" r="9.5" fill="#5f6368"/>
+  <text x="121" y="386" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">6</text>
+  <line x1="368" y1="422" x2="882" y2="422" stroke="#F9AB00" stroke-width="1.8" marker-end="url(#ar-backend)"/>
+  <text x="625" y="414" text-anchor="middle" font-size="11.5" fill="#3c4043">proxy_pass → shop_service</text>
+  <circle cx="378" cy="422" r="9.5" fill="#5f6368"/>
+  <text x="378" y="426" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">7</text>
+  <line x1="882" y1="462" x2="110" y2="462" stroke="#9aa0a6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#ar-grey)"/>
+  <text x="496" y="454" text-anchor="middle" font-size="11.5" fill="#3c4043">feed JSON + login prompt</text>
+  <circle cx="872" cy="462" r="9.5" fill="#5f6368"/>
+  <text x="872" y="466" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">8</text>
+  <rect x="435" y="486" width="380" height="26" rx="6" fill="#f8f9fa" stroke="#dadce0"/>
+  <text x="625" y="504" text-anchor="middle" font-size="11" fill="#5f6368">— user taps “Sign in with Google” —</text>
+  <line x1="110" y1="542" x2="625" y2="542" stroke="#EA4335" stroke-width="1.8" marker-end="url(#ar-keycloak)"/>
+  <text x="368" y="534" text-anchor="middle" font-size="11.5" fill="#3c4043">/authorize  PKCE + kc_idp_hint=google</text>
+  <circle cx="121" cy="542" r="9.5" fill="#5f6368"/>
+  <text x="121" y="546" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">9</text>
+  <path d="M625,572 h34 v18 h-34" fill="none" stroke="#9aa0a6" stroke-width="1.5" marker-end="url(#ar-grey)"/>
+  <text x="667" y="570" font-size="11.5" fill="#3c4043">broker skips the KC login page</text>
+  <text x="667" y="584" font-size="10" fill="#80868b">forwards to Google, returns ?code=</text>
+  <circle cx="609" cy="578" r="9.5" fill="#5f6368"/>
+  <text x="609" y="582" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">10</text>
+  <line x1="110" y1="622" x2="625" y2="622" stroke="#EA4335" stroke-width="1.8" marker-end="url(#ar-keycloak)"/>
+  <text x="368" y="614" text-anchor="middle" font-size="11.5" fill="#3c4043">POST /token  code + code_verifier</text>
+  <text x="368" y="635" text-anchor="middle" font-size="10" fill="#80868b">direct — no gateway, no secret</text>
+  <circle cx="121" cy="622" r="9.5" fill="#5f6368"/>
+  <text x="121" y="626" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">11</text>
+  <line x1="625" y1="662" x2="110" y2="662" stroke="#9aa0a6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#ar-grey)"/>
+  <text x="368" y="654" text-anchor="middle" font-size="11.5" fill="#3c4043">access + refresh + id token</text>
+  <circle cx="614" cy="662" r="9.5" fill="#5f6368"/>
+  <text x="614" y="666" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">12</text>
+  <line x1="110" y1="702" x2="368" y2="702" stroke="#34A853" stroke-width="1.8" marker-end="url(#ar-gateway)"/>
+  <text x="239" y="694" text-anchor="middle" font-size="11.5" fill="#3c4043">GET /api/me   Authorization: Bearer</text>
+  <circle cx="121" cy="702" r="9.5" fill="#5f6368"/>
+  <text x="121" y="706" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">13</text>
+  <line x1="368" y1="742" x2="882" y2="742" stroke="#F9AB00" stroke-width="1.8" marker-end="url(#ar-backend)"/>
+  <text x="625" y="734" text-anchor="middle" font-size="11.5" fill="#3c4043">forwards the RAW token</text>
+  <text x="625" y="755" text-anchor="middle" font-size="10" fill="#80868b">Flow B — edge does not verify /api/*</text>
+  <circle cx="378" cy="742" r="9.5" fill="#5f6368"/>
+  <text x="378" y="746" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">14</text>
+  <line x1="882" y1="782" x2="625" y2="782" stroke="#EA4335" stroke-width="1.8" marker-end="url(#ar-keycloak)"/>
+  <text x="754" y="774" text-anchor="middle" font-size="11.5" fill="#3c4043">POST /token/introspect</text>
+  <text x="754" y="795" text-anchor="middle" font-size="10" fill="#80868b">backend never trusts the edge</text>
+  <circle cx="872" cy="782" r="9.5" fill="#5f6368"/>
+  <text x="872" y="786" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">15</text>
+  <line x1="625" y1="822" x2="882" y2="822" stroke="#9aa0a6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#ar-grey)"/>
+  <text x="754" y="814" text-anchor="middle" font-size="11.5" fill="#3c4043">active=true + claims (sub, email, roles)</text>
+  <circle cx="636" cy="822" r="9.5" fill="#5f6368"/>
+  <text x="636" y="826" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">16</text>
+  <line x1="882" y1="862" x2="1140" y2="862" stroke="#8E24AA" stroke-width="1.8" marker-end="url(#ar-mysql)"/>
+  <text x="1011" y="854" text-anchor="middle" font-size="11.5" fill="#3c4043">ensureCustomer(sub) — JIT provisioning</text>
+  <circle cx="894" cy="862" r="9.5" fill="#5f6368"/>
+  <text x="894" y="866" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">17</text>
+  <line x1="882" y1="902" x2="110" y2="902" stroke="#9aa0a6" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#ar-grey)"/>
+  <text x="496" y="894" text-anchor="middle" font-size="11.5" fill="#3c4043">profile JSON → shop renders</text>
+  <circle cx="872" cy="902" r="9.5" fill="#5f6368"/>
+  <text x="872" y="906" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">18</text>
+  <line x1="110" y1="942" x2="625" y2="942" stroke="#EA4335" stroke-width="1.8" marker-end="url(#ar-keycloak)"/>
+  <text x="368" y="934" text-anchor="middle" font-size="11.5" fill="#3c4043">LOGOUT → /logout?id_token_hint=…</text>
+  <text x="368" y="955" text-anchor="middle" font-size="10" fill="#80868b">full-page redirect kills the SSO session</text>
+  <circle cx="121" cy="942" r="9.5" fill="#5f6368"/>
+  <text x="121" y="946" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">19</text>
+</svg>

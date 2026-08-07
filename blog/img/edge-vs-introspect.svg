@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1480 1080" width="1480" height="1080" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6875"/>
+    </marker>
+    <marker id="aT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#14a3a5"/>
+    </marker>
+    <marker id="aC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c0803a"/>
+    </marker>
+    <style>
+      .t     { font-size:16px; font-weight:700; fill:#23303e; }
+      .th    { font-size:15px; font-weight:700; fill:#fff; }
+      .sub   { font-size:12px; fill:#8a97a5; }
+      .body  { font-size:12.5px; fill:#3c4a58; }
+      .mono  { font-size:11.5px; fill:#3c4a58; font-family:ui-monospace,Menlo,monospace; }
+      .lbl   { font-size:11px; fill:#5a6875; }
+      .lblb  { font-size:11.5px; font-weight:700; }
+      .flT   { stroke:#14a3a5; stroke-width:2.2; fill:none; marker-end:url(#aT); }
+      .flC   { stroke:#c0803a; stroke-width:2.2; fill:none; marker-end:url(#aC); }
+      .fl    { stroke:#5a6875; stroke-width:2; fill:none; marker-end:url(#a); }
+    </style>
+  </defs>
+
+  <rect width="1480" height="1080" fill="#ffffff"/>
+  <text x="40" y="46" font-size="25" font-weight="700" fill="#23303e">Verify at the edge  vs.  Introspect per request</text>
+  <text x="40" y="72" font-size="14" fill="#8a97a5">Both check the token. The difference is HOW OFTEN they call Keycloak — and that decides speed, scale, and revocation.</text>
+
+  <!-- divider -->
+  <line x1="740" y1="100" x2="740" y2="640" stroke="#e6ebef" stroke-width="2"/>
+
+  <!-- ============ COLUMN A ============ -->
+  <rect x="40" y="104" width="680" height="34" rx="8" fill="#eef6f6"/>
+  <text x="60" y="126" font-size="15" font-weight="700" fill="#0e8486">A · Verify at the edge  (the common default)</text>
+  <text x="500" y="126" font-size="12" font-weight="700" fill="#0e8486">stateless · offline · fast</text>
+
+  <!-- browser -->
+  <rect x="60" y="158" width="300" height="60" rx="10" class="card" fill="#fff" stroke="#d8e0e6" stroke-width="1.5"/>
+  <text class="t" x="80" y="184">Browser</text>
+  <text class="sub" x="80" y="204">one screen → GET /api/me, /feed, /cart …</text>
+
+  <!-- nginx -->
+  <rect x="60" y="262" width="300" height="92" rx="10" fill="#23303e"/>
+  <text class="th" x="80" y="288">nginx + njs  (auth.js)</text>
+  <text x="80" y="310" font-size="12" fill="#c7d0dc">verifies the JWT itself — signature,</text>
+  <text x="80" y="328" font-size="12" fill="#c7d0dc">exp, iss — with CACHED public keys</text>
+  <text x="80" y="346" font-size="11.5" fill="#7fd3d4" font-family="ui-monospace,Menlo,monospace">→ injects X-Auth-Sub / Email / Name</text>
+
+  <!-- keycloak (jwks) to the side -->
+  <rect x="440" y="262" width="260" height="92" rx="10" fill="#fff" stroke="#7fd3d4" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <text class="t" x="460" y="288" fill="#0e8486">Keycloak</text>
+  <text class="sub" x="460" y="308">public keys (JWKS)</text>
+  <text class="body" x="460" y="332">fetched ONCE, cached ~5 min</text>
+  <text class="mono" x="460" y="349" fill="#0e8486">NOT per request</text>
+  <path class="flT" d="M362,300 L436,300" stroke-dasharray="5 3"/>
+  <text class="lbl" x="368" y="292">refresh</text>
+
+  <!-- backend -->
+  <rect x="60" y="398" width="300" height="70" rx="10" fill="#fff" stroke="#d8e0e6" stroke-width="1.5"/>
+  <text class="t" x="80" y="424">shop-service</text>
+  <text class="sub" x="80" y="444">reads X-Auth-* headers · no token, no KC call</text>
+
+  <!-- mysql -->
+  <rect x="60" y="512" width="300" height="58" rx="10" fill="#fff" stroke="#6b7a8c" stroke-width="1.6"/>
+  <text class="t" x="80" y="538">MySQL</text>
+  <text class="sub" x="80" y="556">upsert by sub</text>
+
+  <path class="fl" d="M210,220 L210,258"/>
+  <path class="fl" d="M210,356 L210,394"/>
+  <path class="fl" d="M210,470 L210,508"/>
+
+  <!-- counter A -->
+  <rect x="440" y="404" width="260" height="164" rx="12" fill="#eef6f6" stroke="#7fd3d4"/>
+  <text x="570" y="450" font-size="52" font-weight="800" fill="#0e8486" text-anchor="middle">0</text>
+  <text x="570" y="474" font-size="12.5" font-weight="700" fill="#0e8486" text-anchor="middle">Keycloak calls</text>
+  <text x="570" y="492" font-size="12.5" font-weight="700" fill="#0e8486" text-anchor="middle">per API request</text>
+  <text x="570" y="524" font-size="11.5" fill="#3c4a58" text-anchor="middle">works even if</text>
+  <text x="570" y="541" font-size="11.5" fill="#3c4a58" text-anchor="middle">Keycloak is briefly down</text>
+
+  <!-- ============ COLUMN B ============ -->
+  <rect x="760" y="104" width="680" height="34" rx="8" fill="#f6ecdf"/>
+  <text x="780" y="126" font-size="15" font-weight="700" fill="#b0682c">B · Introspect per request  (what this project does)</text>
+  <text x="1210" y="126" font-size="12" font-weight="700" fill="#b0682c">live · revocation-aware</text>
+
+  <!-- browser -->
+  <rect x="780" y="158" width="300" height="60" rx="10" fill="#fff" stroke="#d8e0e6" stroke-width="1.5"/>
+  <text class="t" x="800" y="184">Browser</text>
+  <text class="sub" x="800" y="204">one screen → GET /api/me, /feed, /cart …</text>
+
+  <!-- nginx -->
+  <rect x="780" y="262" width="300" height="92" rx="10" fill="#23303e"/>
+  <text class="th" x="800" y="288">nginx + njs</text>
+  <text x="800" y="310" font-size="12" fill="#c7d0dc">forwards the raw token</text>
+  <text x="800" y="328" font-size="12" fill="#c7d0dc">(no verify, no X-Auth)</text>
+  <text x="800" y="346" font-size="11.5" fill="#e0b07a" font-family="ui-monospace,Menlo,monospace">→ Authorization: Bearer &lt;jwt&gt;</text>
+
+  <!-- backend -->
+  <rect x="780" y="398" width="300" height="92" rx="10" fill="#fff" stroke="#d8e0e6" stroke-width="1.5"/>
+  <text class="t" x="800" y="424">shop-service</text>
+  <text class="sub" x="800" y="444">calls Keycloak /introspect …</text>
+  <text class="sub" x="800" y="462">… then reads sub / email / name</text>
+  <text class="mono" x="800" y="481" fill="#b0682c">holds the client secret now</text>
+
+  <!-- keycloak introspect -->
+  <rect x="1160" y="398" width="260" height="92" rx="10" fill="#fff" stroke="#c0803a" stroke-width="2"/>
+  <text class="t" x="1180" y="424" fill="#b0682c">Keycloak</text>
+  <text class="sub" x="1180" y="444">/token/introspect</text>
+  <text class="body" x="1180" y="468">checks the live session</text>
+  <text class="mono" x="1180" y="485" fill="#b0682c">EVERY request</text>
+  <path class="flC" d="M1082,436 L1156,436"/>
+  <path class="flC" d="M1156,462 L1084,462"/>
+  <text class="lbl" x="1092" y="428">ask</text>
+  <text class="lbl" x="1092" y="478">reply</text>
+
+  <!-- mysql -->
+  <rect x="780" y="534" width="300" height="58" rx="10" fill="#fff" stroke="#6b7a8c" stroke-width="1.6"/>
+  <text class="t" x="800" y="560">MySQL</text>
+  <text class="sub" x="800" y="578">upsert by sub</text>
+
+  <path class="fl" d="M930,220 L930,258"/>
+  <path class="fl" d="M930,356 L930,394"/>
+  <path class="fl" d="M930,492 L930,530"/>
+
+  <!-- counter B -->
+  <rect x="1160" y="512" width="260" height="80" rx="12" fill="#f6ecdf" stroke="#dcae74"/>
+  <text x="1200" y="566" font-size="44" font-weight="800" fill="#b0682c">1</text>
+  <text x="1245" y="552" font-size="12.5" font-weight="700" fill="#b0682c">Keycloak call</text>
+  <text x="1245" y="570" font-size="12.5" font-weight="700" fill="#b0682c">per API request</text>
+  <text x="1245" y="586" font-size="11" fill="#3c4a58">(× every call on the screen)</text>
+
+  <!-- ============ 'PER REQUEST' EXPLAINER ============ -->
+  <rect x="40" y="666" width="1400" height="150" rx="14" fill="#fbfcfd" stroke="#e2e8ee"/>
+  <text x="64" y="700" font-size="17" font-weight="700" fill="#23303e">What “per request” means</text>
+  <text x="64" y="726" class="body">A “request” is one API call. A single screen usually fires several. The token check repeats for <tspan font-weight="700">each</tspan> one —</text>
+  <text x="64" y="746" class="body">so introspection cost grows 1:1 with traffic, while edge-verify stays flat.</text>
+
+  <!-- little scenario -->
+  <rect x="64" y="762" width="640" height="40" rx="8" fill="#eef6f6"/>
+  <text x="80" y="787" font-size="13" fill="#0e8486"><tspan font-weight="700">A</tspan>  1 screen = 5 API calls  →  <tspan font-weight="700">0</tspan> Keycloak hits</text>
+  <rect x="720" y="762" width="656" height="40" rx="8" fill="#f6ecdf"/>
+  <text x="736" y="787" font-size="13" fill="#b0682c"><tspan font-weight="700">B</tspan>  1 screen = 5 API calls  →  <tspan font-weight="700">5</tspan> Keycloak hits   ·   1,000 users × 20 calls/min → <tspan font-weight="700">20,000 introspections/min</tspan></text>
+
+  <!-- ============ VERDICT ============ -->
+  <rect x="40" y="838" width="1400" height="200" rx="14" fill="#f4fbf7" stroke="#7fcaa3"/>
+  <text x="64" y="872" font-size="17" font-weight="700" fill="#2e7d54">Best for industry</text>
+
+  <text x="64" y="902" class="body"><tspan font-weight="700" fill="#0e8486">Default → A, verify at the edge.</tspan>  Stateless, fast, offline, scales. This is the standard for JWTs, and it's what you already run.</text>
+  <text x="64" y="926" class="body">For opaque (non-JWT) tokens the industry equivalent is the <tspan font-weight="700">Phantom-Token pattern</tspan>: introspect <tspan font-weight="700">ONCE at the gateway</tspan>, forward claims inward —</text>
+  <text x="64" y="946" class="body">still not per-backend. (NGINX, Kong, Curity, Gloo all do this.)</text>
+
+  <text x="64" y="978" class="body"><tspan font-weight="700" fill="#b0682c">Use B (introspect per request) only when:</tspan>  tokens are opaque · zero-trust mesh (backend can't trust the edge) ·</text>
+  <text x="64" y="998" class="body">hard instant-revocation is required (banking, “log out everywhere now”).  And always add a <tspan font-weight="700">short-TTL cache</tspan> to blunt the per-request cost.</text>
+  <text x="64" y="1024" class="sub">Bottom line: B makes the backend authoritative &amp; revocation-aware, but trades away speed, scale, and Keycloak-independence. A is the scalable norm; reach for B for a reason, not by default.</text>
+</svg>

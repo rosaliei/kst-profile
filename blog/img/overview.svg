@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 820" width="1500" height="820" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6875"/>
+    </marker>
+    <marker id="aT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#14a3a5"/>
+    </marker>
+    <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f8cff"/>
+    </marker>
+    <style>
+      .card  { fill:#ffffff; stroke:#d8e0e6; stroke-width:1.5; }
+      .kc    { fill:#ffffff; stroke:#14a3a5; stroke-width:2.5; }
+      .gw    { fill:#23303e; }
+      .my    { fill:#ffffff; stroke:#6b7a8c; stroke-width:2; }
+      .pg    { fill:#ffffff; stroke:#8a97a5; stroke-width:1.6; }
+      .t     { font-size:16px; font-weight:700; fill:#23303e; }
+      .th    { font-size:16px; font-weight:700; fill:#ffffff; }
+      .sub   { font-size:12px; fill:#8a97a5; }
+      .body  { font-size:12.5px; fill:#3c4a58; }
+      .mono  { font-size:11.5px; fill:#3c4a58; font-family:ui-monospace,Menlo,monospace; }
+      .lbl   { font-size:11.5px; fill:#5a6875; }
+      .lblb  { font-size:11.5px; font-weight:700; }
+      .fl    { stroke:#5a6875; stroke-width:2; fill:none; marker-end:url(#a); }
+      .flT   { stroke:#14a3a5; stroke-width:2.6; fill:none; marker-end:url(#aT); }
+      .flB   { stroke:#4f8cff; stroke-width:2.4; fill:none; marker-end:url(#aB); }
+      .pill  { rx:13; }
+    </style>
+  </defs>
+
+  <rect width="1500" height="820" fill="#ffffff"/>
+  <text x="40" y="46" font-size="25" font-weight="700" fill="#23303e">DevOps Shop — High-Level Overview</text>
+  <text x="40" y="72" font-size="14" fill="#8a97a5">Four ways to sign in, one identity in Keycloak, business data in MySQL. Profile edits split by owner; data flows one way: Keycloak → MySQL.</text>
+
+  <!-- ============ USER + 4 methods ============ -->
+  <rect class="card" x="40" y="120" width="250" height="330" rx="14"/>
+  <text class="t" x="60" y="150">User / Browser</text>
+  <text class="sub" x="60" y="169">React app — DevOps Shop</text>
+  <line x1="60" y1="182" x2="270" y2="182" stroke="#e2e8ee"/>
+
+  <text class="lblb" x="60" y="206" fill="#8a97a5">Four ways to sign in</text>
+
+  <rect x="60" y="220" width="210" height="40" rx="10" fill="#eef6f6" stroke="#7fd3d4"/>
+  <text class="body" x="76" y="238" font-weight="700" fill="#0e8486">① Email + password</text>
+  <text class="sub" x="76" y="253">signup &amp; login</text>
+
+  <rect x="60" y="270" width="210" height="40" rx="10" fill="#eef6f6" stroke="#7fd3d4"/>
+  <text class="body" x="76" y="288" font-weight="700" fill="#0e8486">② Email OTP</text>
+  <text class="sub" x="76" y="303">passwordless code</text>
+
+  <rect x="60" y="320" width="210" height="40" rx="10" fill="#eef2fb" stroke="#9dbcf0"/>
+  <text class="body" x="76" y="338" font-weight="700" fill="#3f78e0">③ Google · Facebook · LinkedIn</text>
+  <text class="sub" x="76" y="353">social (kc_idp_hint)</text>
+
+  <rect x="60" y="378" width="210" height="54" rx="10" fill="#f7f9fb" stroke="#e2e8ee"/>
+  <text class="body" x="76" y="398">1st login → set your name</text>
+  <text class="body" x="76" y="416">(onboarding), then the shop</text>
+
+  <!-- ============ GATEWAY ============ -->
+  <rect class="gw" x="380" y="150" width="250" height="270" rx="14"/>
+  <text class="th" x="400" y="182">nginx + njs</text>
+  <rect x="566" y="160" width="52" height="20" rx="10" fill="#14a3a5"/>
+  <text x="576" y="174" font-size="10.5" font-weight="700" fill="#fff">:8090</text>
+  <text class="sub" x="400" y="202" fill="#9fb0c0">the single entry point</text>
+  <line x1="400" y1="214" x2="610" y2="214" stroke="#3a4656"/>
+  <text x="400" y="238" font-size="12.5" fill="#e8edf6" font-weight="700">authapi.js</text>
+  <text x="400" y="256" font-size="11.5" fill="#c7d0dc">relays login → Keycloak</text>
+  <text x="400" y="273" font-size="11.5" fill="#c7d0dc">(holds the client secret)</text>
+  <line x1="400" y1="288" x2="610" y2="288" stroke="#3a4656"/>
+  <text x="400" y="312" font-size="12.5" fill="#e8edf6" font-weight="700">auth.js</text>
+  <text x="400" y="330" font-size="11.5" fill="#c7d0dc">verifies every API token</text>
+  <text x="400" y="347" font-size="11.5" fill="#c7d0dc">sets $auth_sub for /api/account/*</text>
+  <line x1="400" y1="362" x2="610" y2="362" stroke="#3a4656"/>
+  <text x="400" y="386" font-size="11.5" fill="#9fb0c0">/, /auth/*, /auth-api/*, /api/*,</text>
+  <text x="400" y="403" font-size="11.5" fill="#9fb0c0">/api/account/*  (verified profile edits)</text>
+
+  <!-- ============ KEYCLOAK ============ -->
+  <rect class="kc" x="720" y="120" width="300" height="330" rx="14"/>
+  <rect x="720" y="120" width="300" height="30" rx="14" fill="#14a3a5"/>
+  <rect x="720" y="138" width="300" height="12" fill="#14a3a5"/>
+  <text class="th" x="740" y="143">Keycloak — identity owner</text>
+  <text class="sub" x="740" y="172">PostgreSQL (private) · :8081</text>
+  <line x1="740" y1="184" x2="1000" y2="184" stroke="#e2e8ee"/>
+  <text class="body" x="740" y="208" font-weight="700">creates / returns ONE user</text>
+  <text class="body" x="740" y="228">for every method — account</text>
+  <text class="body" x="740" y="246">linking keeps it one identity</text>
+  <rect x="740" y="262" width="260" height="80" rx="8" fill="#f4fbfb" stroke="#7fd3d4"/>
+  <text class="lblb" x="754" y="282" fill="#0e8486">★ email-OTP-direct-grant.jar</text>
+  <text class="body" x="754" y="302">our authenticator — validates</text>
+  <text class="body" x="754" y="320">password OR emails+checks OTP</text>
+  <text class="sub" x="754" y="336">creates guests, hashes codes</text>
+  <text class="mono" x="740" y="366">username · email · password</text>
+  <text class="mono" x="740" y="386">social links · roles</text>
+  <text class="sub" x="740" y="410">issues the token → carries `sub`</text>
+
+  <!-- ============ BACKEND + MYSQL ============ -->
+  <rect class="card" x="720" y="500" width="300" height="150" rx="14"/>
+  <text class="t" x="740" y="530">backend — shop-service</text>
+  <text class="sub" x="740" y="549">Node · introspects the token itself</text>
+  <line x1="740" y1="561" x2="1000" y2="561" stroke="#e2e8ee"/>
+  <text class="body" x="740" y="585">never parses a JWT · reads sub</text>
+  <text class="body" x="740" y="605">just-in-time: creates the</text>
+  <text class="body" x="740" y="623">customer row on first API call</text>
+
+  <rect class="my" x="1090" y="500" width="290" height="150" rx="14"/>
+  <rect x="1090" y="500" width="290" height="30" rx="14" fill="#6b7a8c"/>
+  <rect x="1090" y="518" width="290" height="12" fill="#6b7a8c"/>
+  <text class="th" x="1110" y="523">MySQL — your data</text>
+  <text class="sub" x="1110" y="552">business + profile · :3306</text>
+  <line x1="1110" y1="564" x2="1360" y2="564" stroke="#e2e8ee"/>
+  <text class="mono" x="1110" y="588">customer (keyed by kc_sub)</text>
+  <text class="mono" x="1110" y="608">phone · profile_completed</text>
+  <text class="mono" x="1110" y="628">cart · orders</text>
+
+  <!-- external IdPs -->
+  <rect class="pg" x="1090" y="120" width="290" height="90" rx="12" stroke-dasharray="5 3"/>
+  <text class="t" x="1110" y="150">Google · Facebook · LinkedIn</text>
+  <text class="sub" x="1110" y="170">external identity providers</text>
+  <text class="sub" x="1110" y="189">reached by browser redirect</text>
+
+  <!-- mailpit -->
+  <rect class="pg" x="1090" y="240" width="290" height="70" rx="12"/>
+  <text class="t" x="1110" y="270">Mailpit</text>
+  <text class="sub" x="1110" y="290">receives the OTP mails · :8025</text>
+
+  <!-- ============ ARROWS ============ -->
+  <!-- user -> gateway -->
+  <path class="fl" d="M292,290 L376,285"/>
+  <text class="lbl" x="300" y="278">HTTPS</text>
+
+  <!-- gateway -> keycloak (login relay) -->
+  <path class="flT" d="M632,250 L716,240"/>
+  <text class="lblb" x="640" y="232" fill="#14a3a5">login relay</text>
+
+  <!-- keycloak -> gateway (token) -->
+  <path class="flT" d="M716,300 L634,320"/>
+  <text class="lblb" x="636" y="342" fill="#14a3a5">token (sub)</text>
+
+  <!-- keycloak <-> external idps -->
+  <path class="flB" d="M1022,175 L1086,170"/>
+  <text class="lblb" x="1010" y="205" fill="#4f8cff">broker</text>
+
+  <!-- keycloak -> mailpit -->
+  <path class="fl" d="M1022,300 L1086,285"/>
+  <text class="lbl" x="1030" y="322">SMTP</text>
+
+  <!-- gateway -> backend (API) -->
+  <path class="fl" d="M505,422 L505,560 L716,565"/>
+  <text class="lblb" x="515" y="500" fill="#5a6875">API call — raw Bearer token forwarded</text>
+
+  <!-- backend -> mysql (ONE WAY) -->
+  <path class="flT" d="M1022,575 L1086,575"/>
+  <text class="lblb" x="1024" y="596" fill="#14a3a5">upsert by sub</text>
+
+  <!-- keycloak -> backend : the sub travels down via the token/headers (dashed concept) -->
+  <path class="fl" d="M870,452 L870,496" stroke-dasharray="5 4"/>
+  <text class="lbl" x="880" y="480">sub in every request</text>
+
+  <!-- ============ one-way rule banner ============ -->
+  <rect x="40" y="500" width="640" height="150" rx="14" fill="#f4fbf7" stroke="#7fcaa3"/>
+  <text class="t" x="64" y="532" fill="#2e7d54">The one rule</text>
+  <text class="body" x="64" y="560">Identity (username · email · password · social · roles) lives in <tspan font-weight="700">Keycloak</tspan>.</text>
+  <text class="body" x="64" y="582">Profile + business data lives in <tspan font-weight="700">your MySQL</tspan>, keyed by the `sub` UUID.</text>
+  <text class="body" x="64" y="608">Data flows <tspan font-weight="700" fill="#2e7d54">one way: Keycloak → MySQL</tspan>. Keycloak never reads MySQL.</text>
+  <text class="sub" x="64" y="632">Signup = the first time a person arrives through any door. The MySQL row appears on their first API call.</text>
+
+  <text class="sub" x="40" y="668">Profile page: display name / username / password → Keycloak Admin API (njs) · phone → MySQL (shop-service). Identity edits on verified /api/account/*</text>
+  <text class="sub" x="40" y="690">Per-flow traffic and confirmed logs, the federation decision and the data model are covered further down this page</text>
+</svg>

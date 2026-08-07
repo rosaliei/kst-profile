@@ -1,0 +1,252 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1245" width="1500" height="1245" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="fk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f8cff"/>
+    </marker>
+    <marker id="link" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e08c14"/>
+    </marker>
+    <marker id="step" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6875"/>
+    </marker>
+    <style>
+      .card    { fill:#ffffff; stroke:#d8e0e6; stroke-width:1.5; }
+      .zoneKc  { fill:#fafbfc; stroke:#c9d4dc; stroke-width:1.5; stroke-dasharray:7 4; }
+      .zoneApp { fill:#f7fdfd; stroke:#14a3a5; stroke-width:2; }
+      .hdrKc   { fill:#6b7a8c; }
+      .hdrApp  { fill:#14a3a5; }
+      .hdrRef  { fill:#8a97a5; }
+      .t       { font-size:15px; font-weight:700; fill:#23303e; }
+      .zone    { font-size:14px; font-weight:700; fill:#23303e; }
+      .sub     { font-size:11.5px; fill:#8a97a5; }
+      .body    { font-size:12px; fill:#3c4a58; }
+      .col     { font-size:11.5px; fill:#23303e; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+      .type    { font-size:10.5px; fill:#8a97a5; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+      .badge   { font-size:9px; font-weight:700; font-family:ui-monospace,Menlo,monospace; }
+      .hdrTxt  { font-size:13px; font-weight:700; fill:#ffffff; font-family:ui-monospace,Menlo,monospace; }
+      .fkline  { stroke:#4f8cff; stroke-width:1.6; fill:none; marker-end:url(#fk); }
+      .linkline{ stroke:#e08c14; stroke-width:2.4; fill:none; stroke-dasharray:7 4; marker-end:url(#link); }
+      .stepline{ stroke:#5a6875; stroke-width:1.8; fill:none; marker-end:url(#step); }
+      .lbl     { font-size:11px; fill:#5a6875; }
+      .lblb    { font-size:11px; font-weight:600; fill:#3c4a58; }
+    </style>
+  </defs>
+
+  <rect width="1500" height="1245" fill="#ffffff"/>
+
+  <text x="40" y="44" font-size="24" font-weight="700" fill="#23303e">Data Model — how Keycloak and your database relate</text>
+  <text x="40" y="68" font-size="13.5" fill="#8a97a5">Two separate databases. One shared UUID. No foreign key between them.</text>
+
+  <!-- ===== PANEL 1 — TABLES ===== -->
+  <text class="zone" x="40" y="108">1 · Table relationships</text>
+
+  <!-- Keycloak zone -->
+  <rect class="zoneKc" x="40" y="125" width="410" height="400" rx="12"/>
+  <text class="zone" x="60" y="152">Keycloak — PostgreSQL</text>
+  <text class="sub" x="60" y="170">private schema · your app must never query it</text>
+
+  <!-- user_entity -->
+  <rect class="card" x="60" y="185" width="370" height="158" rx="8"/>
+  <rect class="hdrKc" x="60" y="185" width="370" height="26" rx="8"/>
+  <rect class="hdrKc" x="60" y="203" width="370" height="8"/>
+  <text class="hdrTxt" x="74" y="203">user_entity</text>
+  <text class="badge" x="74" y="233" fill="#0e8486">PK</text>
+  <text class="col"   x="100" y="233">id</text>
+  <text class="type"  x="230" y="233">VARCHAR(36) — a UUID</text>
+  <text class="col"   x="100" y="255">username</text>
+  <text class="col"   x="100" y="277">email</text>
+  <text class="col"   x="100" y="299">email_verified</text>
+  <text class="type"  x="230" y="299">BOOLEAN</text>
+  <text class="badge" x="74" y="321" fill="#4f8cff">FK</text>
+  <text class="col"   x="100" y="321">realm_id</text>
+  <text class="type"  x="230" y="321">→ realm.id</text>
+
+  <!-- user_attribute -->
+  <rect class="card" x="60" y="365" width="370" height="140" rx="8"/>
+  <rect class="hdrKc" x="60" y="365" width="370" height="26" rx="8"/>
+  <rect class="hdrKc" x="60" y="383" width="370" height="8"/>
+  <text class="hdrTxt" x="74" y="383">user_attribute</text>
+  <text class="badge" x="74" y="413" fill="#0e8486">PK</text>
+  <text class="col"   x="100" y="413">id</text>
+  <text class="badge" x="74" y="435" fill="#4f8cff">FK</text>
+  <text class="col"   x="100" y="435">user_id</text>
+  <text class="type"  x="230" y="435">→ user_entity.id</text>
+  <text class="col"   x="100" y="457">name</text>
+  <text class="type"  x="230" y="457">devops.otp.hash …</text>
+  <text class="col"   x="100" y="479">value</text>
+  <text class="type"  x="230" y="479">SHA-256, never the code</text>
+
+  <!-- App zone -->
+  <rect class="zoneApp" x="530" y="125" width="930" height="565" rx="12"/>
+  <text class="zone" x="550" y="152">Your application — MySQL (schema “shop”)</text>
+  <text class="sub" x="550" y="170">business data only · you own every table here</text>
+
+  <!-- customer -->
+  <rect class="card" x="550" y="185" width="400" height="180" rx="8"/>
+  <rect class="hdrApp" x="550" y="185" width="400" height="26" rx="8"/>
+  <rect class="hdrApp" x="550" y="203" width="400" height="8"/>
+  <text class="hdrTxt" x="564" y="203">customer</text>
+  <text class="badge" x="564" y="233" fill="#0e8486">PK</text>
+  <text class="col"   x="590" y="233">id</text>
+  <text class="type"  x="700" y="233">BIGINT, auto-increment</text>
+  <text class="badge" x="564" y="257" fill="#e08c14">UQ</text>
+  <text class="col"   x="590" y="257">kc_sub</text>
+  <text class="type"  x="700" y="257">CHAR(36) ← the link</text>
+  <text class="col"   x="590" y="281">email</text>
+  <text class="type"  x="700" y="281">display / search only</text>
+  <text class="col"   x="590" y="303">phone</text>
+  <text class="type"  x="700" y="303">app-owned · display name is in Keycloak</text>
+  <text class="col"   x="590" y="325">created_at</text>
+  <text class="col"   x="590" y="347">last_seen_at</text>
+  <text class="type"  x="700" y="347">touched on every call</text>
+
+  <!-- product -->
+  <rect class="card" x="1010" y="185" width="420" height="136" rx="8"/>
+  <rect class="hdrApp" x="1010" y="185" width="420" height="26" rx="8"/>
+  <rect class="hdrApp" x="1010" y="203" width="420" height="8"/>
+  <text class="hdrTxt" x="1024" y="203">product</text>
+  <text class="badge" x="1024" y="233" fill="#0e8486">PK</text>
+  <text class="col"   x="1050" y="233">id</text>
+  <text class="type"  x="1160" y="233">VARCHAR(16) — 'p1'</text>
+  <text class="col"   x="1050" y="255">name</text>
+  <text class="col"   x="1050" y="277">price</text>
+  <text class="type"  x="1160" y="277">DECIMAL(10,2)</text>
+  <text class="col"   x="1050" y="299">emoji · tag</text>
+
+  <!-- orders -->
+  <rect class="card" x="1010" y="360" width="420" height="136" rx="8"/>
+  <rect class="hdrApp" x="1010" y="360" width="420" height="26" rx="8"/>
+  <rect class="hdrApp" x="1010" y="378" width="420" height="8"/>
+  <text class="hdrTxt" x="1024" y="378">orders</text>
+  <text class="badge" x="1024" y="408" fill="#0e8486">PK</text>
+  <text class="col"   x="1050" y="408">id</text>
+  <text class="badge" x="1024" y="430" fill="#4f8cff">FK</text>
+  <text class="col"   x="1050" y="430">customer_id</text>
+  <text class="type"  x="1180" y="430">→ customer.id</text>
+  <text class="col"   x="1050" y="452">total</text>
+  <text class="col"   x="1050" y="474">placed_at</text>
+
+  <!-- cart_item -->
+  <rect class="card" x="550" y="405" width="400" height="160" rx="8"/>
+  <rect class="hdrApp" x="550" y="405" width="400" height="26" rx="8"/>
+  <rect class="hdrApp" x="550" y="423" width="400" height="8"/>
+  <text class="hdrTxt" x="564" y="423">cart_item</text>
+  <text class="badge" x="564" y="453" fill="#0e8486">PK</text>
+  <text class="col"   x="590" y="453">id</text>
+  <text class="badge" x="564" y="475" fill="#4f8cff">FK</text>
+  <text class="col"   x="590" y="475">customer_id</text>
+  <text class="type"  x="720" y="475">→ customer.id</text>
+  <text class="badge" x="564" y="497" fill="#4f8cff">FK</text>
+  <text class="col"   x="590" y="497">product_id</text>
+  <text class="type"  x="720" y="497">→ product.id</text>
+  <text class="col"   x="590" y="519">qty</text>
+  <text class="badge" x="564" y="543" fill="#e08c14">UQ</text>
+  <text class="type"  x="590" y="543">(customer_id, product_id) — one row per product</text>
+
+  <!-- order_item -->
+  <rect class="card" x="1010" y="535" width="420" height="140" rx="8"/>
+  <rect class="hdrApp" x="1010" y="535" width="420" height="26" rx="8"/>
+  <rect class="hdrApp" x="1010" y="553" width="420" height="8"/>
+  <text class="hdrTxt" x="1024" y="553">order_item</text>
+  <text class="badge" x="1024" y="583" fill="#0e8486">PK</text>
+  <text class="col"   x="1050" y="583">id</text>
+  <text class="badge" x="1024" y="605" fill="#4f8cff">FK</text>
+  <text class="col"   x="1050" y="605">order_id</text>
+  <text class="type"  x="1180" y="605">→ orders.id  (cascade)</text>
+  <text class="col"   x="1050" y="627">product_id</text>
+  <text class="type"  x="1180" y="627">snapshot — no FK</text>
+  <text class="col"   x="1050" y="649">qty · unit_price</text>
+  <text class="type"  x="1180" y="649">price when bought</text>
+
+  <!-- the logical link -->
+  <path class="linkline" d="M434,233 L470,233 L470,257 L546,257"/>
+  <text class="lblb" x="60" y="562" fill="#e08c14">THE ONLY CONNECTION</text>
+  <text class="body" x="60" y="584">user_entity.id  ➜  customer.kc_sub</text>
+  <text class="sub"  x="60" y="604">the value travels inside the access token as the</text>
+  <text class="sub"  x="60" y="622">`sub` claim — it is NOT a foreign key, and the two</text>
+  <text class="sub"  x="60" y="640">databases never talk to each other</text>
+  <path stroke="#e08c14" stroke-width="1" fill="none" stroke-dasharray="3 3" d="M300,548 L490,548 L490,250 L478,250"/>
+
+  <!-- FK arrows inside the app schema -->
+  <path class="fkline" d="M954,475 L972,475 L972,240 L958,240"/>
+  <path class="fkline" d="M1006,430 L990,430 L990,300 L958,300"/>
+  <path class="fkline" d="M1434,605 L1446,605 L1446,412 L1434,412"/>
+
+  <!-- ===== PANEL 2 — HOW THE ROW APPEARS ===== -->
+  <text class="zone" x="40" y="740">2 · How calling the API creates the customer row  (just-in-time provisioning)</text>
+
+  <rect class="card" x="40" y="762" width="250" height="128" rx="10"/>
+  <text class="t"    x="58" y="788">① Browser</text>
+  <text class="body" x="58" y="810">calls any protected route</text>
+  <text class="col"  x="58" y="832">GET /api/me</text>
+  <text class="col"  x="58" y="852">Authorization:</text>
+  <text class="col"  x="58" y="870">  Bearer eyJhbGciOi…</text>
+
+  <rect class="card" x="330" y="762" width="250" height="128" rx="10"/>
+  <text class="t"    x="348" y="788">② nginx + njs</text>
+  <text class="body" x="348" y="810">verifies the token, reads</text>
+  <text class="body" x="348" y="828">the sub claim out of it</text>
+  <text class="col"  x="348" y="852">claims.sub: c2acdaad-…</text>
+  <text class="col"  x="348" y="870">claims.email: …</text>
+
+  <rect class="card" x="620" y="762" width="250" height="128" rx="10"/>
+  <text class="t"    x="638" y="788">③ shop-service</text>
+  <text class="body" x="638" y="810">reads the headers and</text>
+  <text class="body" x="638" y="828">calls ensureCustomer()</text>
+  <text class="sub"  x="638" y="852">no token parsing,</text>
+  <text class="sub"  x="638" y="870">no call to Keycloak</text>
+
+  <rect class="card" x="910" y="762" width="290" height="128" rx="10"/>
+  <text class="t"    x="928" y="788">④ MySQL upsert</text>
+  <text class="col"  x="928" y="810">INSERT INTO customer</text>
+  <text class="col"  x="928" y="828">  (kc_sub, email, …)</text>
+  <text class="col"  x="928" y="846">ON DUPLICATE KEY UPDATE</text>
+  <text class="col"  x="928" y="864">  last_seen_at = NOW()</text>
+
+  <rect class="card" x="1240" y="762" width="220" height="128" rx="10"/>
+  <text class="t"    x="1258" y="788">⑤ Result</text>
+  <text class="body" x="1258" y="812">1st call → row created</text>
+  <text class="body" x="1258" y="834">later calls → same row,</text>
+  <text class="body" x="1258" y="852">only last_seen_at moves</text>
+  <text class="sub"  x="1258" y="874">UNIQUE(kc_sub) = no dupes</text>
+
+  <path class="stepline" d="M294,826 L326,826"/>
+  <path class="stepline" d="M584,826 L616,826"/>
+  <path class="stepline" d="M874,826 L906,826"/>
+  <path class="stepline" d="M1204,826 L1236,826"/>
+
+  <!-- ===== NOTES ===== -->
+  <text class="zone" x="40" y="940">3 · Why it is built this way</text>
+
+  <rect class="card" x="40" y="958" width="690" height="225" rx="10"/>
+  <text class="lblb" x="60" y="984">No foreign key across the two databases</text>
+  <text class="body" x="60" y="1004">Keycloak's schema is private and changes between versions; a real FK</text>
+  <text class="body" x="60" y="1022">would break on upgrade. They are separate servers anyway.</text>
+  <text class="lblb" x="60" y="1050">Other tables point at customer.id, not at kc_sub</text>
+  <text class="body" x="60" y="1070">If the identity provider is ever replaced you rewrite one column,</text>
+  <text class="body" x="60" y="1088">not every table in the schema.</text>
+  <text class="lblb" x="60" y="1116">email is stored, but never used as a key</text>
+  <text class="body" x="60" y="1136">People change their e-mail address. The UUID never changes.</text>
+  <text class="body" x="60" y="1154">Looking users up by e-mail would silently create duplicates.</text>
+
+  <rect class="card" x="760" y="958" width="700" height="225" rx="10"/>
+  <text class="lblb" x="780" y="984">order_item keeps a price snapshot</text>
+  <text class="body" x="780" y="1004">unit_price and product_id are copied at checkout and product_id has</text>
+  <text class="body" x="780" y="1022">no FK, so a past order still reads correctly after a price change or</text>
+  <text class="body" x="780" y="1040">a product is removed from the catalogue.</text>
+  <text class="lblb" x="780" y="1068">The row appears on the first API call — not at login</text>
+  <text class="body" x="780" y="1088">Signing in only creates the Keycloak user. Until a request reaches</text>
+  <text class="body" x="780" y="1106">the backend there is nothing to store, so counts legitimately differ.</text>
+  <text class="lblb" x="780" y="1134">Deletes do not propagate</text>
+  <text class="body" x="780" y="1154">Removing a user in Keycloak leaves the customer row behind — add a</text>
+  <text class="body" x="780" y="1172">Keycloak event listener when that matters (e.g. GDPR).</text>
+
+  <!-- legend -->
+  <text class="badge" x="40" y="1220" fill="#0e8486">PK</text>
+  <text class="sub"   x="66" y="1220">primary key</text>
+  <text class="badge" x="170" y="1220" fill="#4f8cff">FK</text>
+  <text class="sub"   x="196" y="1220">foreign key (enforced by MySQL)</text>
+  <text class="badge" x="420" y="1220" fill="#e08c14">UQ</text>
+  <text class="sub"   x="446" y="1220">unique constraint</text>
+  <text class="sub"   x="580" y="1220">— — —  orange dashes = logical link carried by the token, not enforced by any database</text>
+</svg>

@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Keycloak SSO behind an nginx/njs gateway — Kyaw Sithu</title>
+    <meta
+      name="description"
+      content="Can an application own 100% of its login UI while an identity provider still owns 100% of the credentials? Seven auth flows traced end to end — SSO, identity federation, e-mail OTP and account lifecycle."
+    />
+    <link rel="canonical" href="https://kst-devops.com/blog/keycloak-sso-gateway.html" />
+    <meta property="og:title" content="Keycloak SSO behind an nginx/njs gateway" />
+    <meta
+      property="og:description"
+      content="Seven authentication flows traced from browser to database — and the design decisions behind them."
+    />
+    <meta property="og:type" content="article" />
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --text: #e6edf3;
+        --text-dim: #c9d1d9;
+        --muted: #8b949e;
+        --border: #30363d;
+        --accent: #2f81f7;
+        --green-light: #7ee787;
+        --blue-light: #79b8ff;
+        --warn: #d29922;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      /* ---- nav ---- */
+      nav {
+        position: sticky; top: 0; z-index: 20;
+        background: rgba(13, 17, 23, 0.85);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-inner {
+        max-width: 1100px; margin: 0 auto; padding: 14px 24px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .nav-logo { color: var(--text); font-weight: 700; font-size: 15px; }
+      .nav-logo span { color: var(--accent); }
+      .nav-back { font-size: 13.5px; color: var(--muted); }
+      .nav-back:hover { color: var(--accent); }
+
+      /* ---- layout ---- */
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 96px; }
+      article { max-width: 780px; }
+      .full { max-width: 1100px; }
+
+      header.post { padding: 56px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+      .eyebrow {
+        font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+        color: var(--accent); font-weight: 600; margin-bottom: 14px;
+      }
+      h1 { font-size: clamp(28px, 4.5vw, 40px); line-height: 1.2; letter-spacing: -.02em; text-wrap: balance; }
+      .standfirst { margin-top: 18px; font-size: 17px; color: var(--text-dim); max-width: 700px; }
+      .meta { margin-top: 22px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 18px; }
+
+      h2 {
+        font-size: 24px; margin: 56px 0 18px; letter-spacing: -.01em;
+        padding-bottom: 10px; border-bottom: 1px solid var(--border); text-wrap: balance;
+      }
+      h3 { font-size: 17px; margin: 34px 0 12px; color: var(--text); }
+      p { margin: 0 0 16px; color: var(--text-dim); }
+      ul, ol { margin: 0 0 16px 22px; color: var(--text-dim); }
+      li { margin-bottom: 8px; }
+      strong { color: var(--text); font-weight: 600; }
+      em { color: var(--text); }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+        font-size: .88em; background: #1f2630; border: 1px solid var(--border);
+        border-radius: 5px; padding: .1em .4em; color: var(--blue-light);
+      }
+      pre {
+        background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+        padding: 16px 18px; overflow-x: auto; margin: 0 0 20px;
+      }
+      pre code { background: none; border: 0; padding: 0; color: var(--text-dim); font-size: 13px; line-height: 1.65; }
+
+      /* ---- figures ---- */
+      figure { margin: 26px 0 30px; }
+      figure img {
+        width: 100%; height: auto; display: block;
+        background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 10px;
+      }
+      figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+      /* ---- callouts ---- */
+      .note {
+        border-left: 3px solid var(--accent); background: #121a26;
+        padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 0 0 22px;
+      }
+      .note p:last-child { margin-bottom: 0; }
+      .note.warn { border-left-color: var(--warn); background: #1e1a10; }
+
+      /* ---- tables ---- */
+      .tw { overflow-x: auto; margin: 0 0 24px; }
+      table { border-collapse: collapse; width: 100%; font-size: 14px; }
+      th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+      th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
+      td { color: var(--text-dim); }
+
+      /* ---- contents ---- */
+      .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 0 0 40px; }
+      .toc h4 { font-size: 12.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+      .toc ol { margin: 0 0 0 20px; }
+      .toc li { margin-bottom: 5px; }
+
+      .flow-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+      .pill {
+        font-size: 11.5px; font-weight: 600; color: var(--green-light);
+        border: 1px solid #2b4a34; background: #10231a; border-radius: 999px; padding: 2px 10px;
+      }
+      footer.post {
+        margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
+        font-size: 14px; color: var(--muted);
+      }
+      @media (max-width: 640px) {
+        .wrap { padding: 0 16px 64px; }
+        header.post { padding: 36px 0 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
+        <a class="nav-back" href="/">← Back to profile</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="post">
+        <div class="eyebrow">Deep dive · Authentication</div>
+        <h1>Keycloak SSO and identity federation behind an nginx/njs API gateway</h1>
+        <p class="standfirst">
+          Can an application own 100% of its login UI while an identity provider still
+          owns 100% of the credentials? I built the thing to find out, and traced every
+          request to see what actually happens.
+        </p>
+        <div class="meta">
+          <span>Kyaw Sithu</span>
+          <span>·</span>
+          <span>Keycloak 26 · nginx + njs · MySQL</span>
+          <span>·</span>
+          <span><a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">Source on GitLab →</a></span>
+        </div>
+      </header>
+
+      <article>
+        <p>
+          Most Keycloak integrations settle for one of two compromises. You either accept
+          the identity provider's hosted pages and theme them, or you build authentication
+          yourself and take on password storage, lockout, rate limiting and audit. This is
+          an attempt at neither: every pixel is the application's, and no credential ever
+          touches application code.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>Where I am coming from.</strong> I am not a backend or frontend
+            developer. I came at this wanting to understand authentication and
+            authorization from a 360° view — not "which library do I call", but what
+            actually crosses the wire, which component is entitled to decide what, and
+            where a decision becomes irreversible. The frontend and backend in this
+            project exist only to make those questions concrete.
+          </p>
+        </div>
+
+        <div class="toc">
+          <h4>Contents</h4>
+          <ol>
+            <li><a href="#protocols">The protocols, briefly</a></li>
+            <li><a href="#architecture">What it looks like</a></li>
+            <li><a href="#decisions">The decisions that shaped it</a></li>
+            <li><a href="#tracing">What only became clear by tracing</a></li>
+            <li><a href="#flows">The seven flows</a></li>
+            <li><a href="#change">What I would change</a></li>
+          </ol>
+        </div>
+
+        <h2 id="protocols">The protocols, briefly</h2>
+        <p>
+          If you are approaching this the way I did, the vocabulary is most of the
+          barrier. Two specifications do the work, and they are often named together as
+          if they were one thing.
+        </p>
+        <p>
+          <strong>OAuth 2.0 is about access.</strong> It was designed so an application
+          can act on your behalf <em>without holding your password</em> — you approve it
+          once, and the app receives a token instead of a credential. What OAuth
+          deliberately does not define is who you are: a valid token proves someone
+          approved something, not which human is behind it.
+        </p>
+        <p>
+          <strong>OpenID Connect is a thin identity layer on top of OAuth 2.0.</strong>
+          It adds the missing half: an <code>id_token</code> describing the user, an
+          agreed set of claims like <code>sub</code> and <code>email</code>, the
+          <code>openid</code> scope, and standard endpoints for discovery and logout.
+        </p>
+        <p>The short version: <strong>OAuth answers <em>may you</em>, OIDC answers <em>who are you</em>.</strong></p>
+
+        <div class="tw">
+          <table>
+            <thead><tr><th>Mechanism</th><th>Used for</th></tr></thead>
+            <tbody>
+              <tr><td>Authorization Code + PKCE</td><td>Google / social login. PKCE replaces the client secret a browser cannot keep</td></tr>
+              <tr><td><code>kc_idp_hint</code></td><td>Keycloak-specific: skip the provider chooser and broker straight to Google</td></tr>
+              <tr><td>Resource Owner Password Credentials</td><td>the e-mail OTP flow — see the caveat below</td></tr>
+              <tr><td>Refresh token grant</td><td>silent renewal, 30 s before expiry</td></tr>
+              <tr><td>Client credentials grant</td><td>njs authenticating <em>as itself</em> for Admin API calls</td></tr>
+              <tr><td>Token introspection (RFC 7662)</td><td>asking Keycloak "is this token still alive?"</td></tr>
+              <tr><td>RP-initiated logout</td><td>ending the Keycloak SSO session for social logins</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note warn">
+          <p>
+            <strong>An honest caveat.</strong> The Direct Grant is discouraged in modern
+            guidance and dropped in OAuth 2.1, because it normally means an application
+            handling a raw password. It is used here for the opposite reason: it is the
+            one flow that lets the <em>application</em> own the UI while Keycloak still
+            owns the credential — the password field is replaced by a one-time code that
+            Keycloak generates, hashes, expires and validates. No password is ever
+            collected by application code. That is a deliberate trade, and worth knowing
+            it is one.
+          </p>
+        </div>
+      </article>
+
+      <div class="full">
+        <h2 id="architecture">What it looks like</h2>
+        <figure>
+          <img src="img/overview.svg" alt="High-level overview of the system" />
+          <figcaption>The shape of the system and the three journeys through it.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/architecture.svg" alt="Components and traffic" />
+          <figcaption>The same thing with every component, port and routing rule spelled out.</figcaption>
+        </figure>
+      </div>
+
+      <article>
+        <h2 id="decisions">The decisions that shaped it</h2>
+        <p>
+          I did not want to trust a diagram. For each flow I followed one real request
+          through nginx, njs, Keycloak, the backend and MySQL, and read the logs at every
+          hop. Most of what follows came out of that — including several things I had
+          assumed were true and were not.
+        </p>
+
+        <h3>Keycloak keeps the credentials; the app keeps the interface</h3>
+        <p>
+          No Keycloak-rendered page appears anywhere. Social login is brokered straight
+          through with <code>kc_idp_hint</code>, so the user goes app → provider → app and
+          never sees an intermediate screen. E-mail OTP runs over the OAuth Direct Grant
+          with a custom Keycloak authenticator, so the code is generated, hashed, expired,
+          rate-limited and validated inside the identity provider.
+        </p>
+        <p>
+          <em>Cost:</em> ~200 lines of Java as a Keycloak SPI. <em>Bought:</em> the
+          credential handling, lockout and audit trail I would otherwise have had to write
+          and defend.
+        </p>
+
+        <h3>Single sign-on stays real — hiding the login page does not cost you it</h3>
+        <p>
+          This was the part I most expected to break. It does not: Keycloak still creates
+          a genuine SSO session, held as a cookie on the auth domain, even though the user
+          never saw a Keycloak screen. Sign in once and a second application in the same
+          realm signs you in without a prompt; the session can be ended centrally;
+          <code>kc_idp_hint</code> only skips the <em>chooser</em>, not the protocol.
+          What is avoided is Keycloak's UI, not Keycloak's behaviour.
+        </p>
+
+        <h3>Application developers never have to learn any of this</h3>
+        <p>That is the property I care about most. What a product team sees is four JSON endpoints and a Bearer token:</p>
+        <pre><code>POST /auth-api/otp/send      { email }            -&gt; { message: "code_sent" }
+POST /auth-api/otp/verify    { email, code }      -&gt; { access_token, ... }
+POST /auth-api/refresh       { refresh_token }    -&gt; { access_token, ... }
+POST /auth-api/logout        { refresh_token }    -&gt; { message: "logged_out" }</code></pre>
+        <p>
+          Adding a login button does not require knowing what PKCE is, which client is
+          confidential, that a <code>401</code> from Keycloak means the code was mailed, or
+          that <code>azp</code> needs checking. All of that lives in the gateway and in one
+          Keycloak extension — a single place to review, and a single place to change when
+          a rule changes.
+        </p>
+        <figure>
+          <img src="img/refresh-flow-comparison.svg" alt="Token refresh takes two different paths" />
+          <figcaption>
+            A refresh takes a different route depending on how the user signed in — and the
+            application never has to know which.
+          </figcaption>
+        </figure>
+
+        <h3>An API gateway needs real logic, not just routing</h3>
+        <p>
+          This is the conclusion I did not expect at the start. A gateway handles path- and
+          header-based routing out of the box, and for a while I assumed that plus an auth
+          plugin would be the whole job. It is not. The decisions that matter here cannot
+          be expressed as configuration:
+        </p>
+        <ul>
+          <li><em>is this token still alive?</em> — not "is the signature valid", which is a different and weaker question</li>
+          <li><em>which client was it minted for?</em> — an active token issued to some other client in the same realm is still active</li>
+          <li><em>does this particular route need a role, and which one?</em></li>
+          <li><em>what should the caller be told when it fails?</em> — a 401 makes a browser throw its tokens away, a 403 does not, and picking the wrong one breaks a flow</li>
+        </ul>
+        <p>
+          None of that is path matching. I do not think this is peculiar to nginx either:
+          every serious gateway ships an extension point for exactly this reason — Lua in
+          Kong and OpenResty, custom authorizers in AWS API Gateway, policies in Apigee.
+          <strong>The escape hatch is not an admission that the product is incomplete; it
+          is where your business rules are supposed to live</strong>, because no vendor can
+          ship them for you.
+        </p>
+
+        <h3>The auth API runs inside nginx, not beside it</h3>
+        <p>
+          The OTP flow needs a confidential client secret, which cannot ship to a browser —
+          but a whole container to relay four endpoints seemed like a poor trade. So it runs
+          in njs, JavaScript executing inside nginx itself: no extra service, no extra
+          network hop, and the secret stays server-side.
+        </p>
+        <p>
+          <em>Cost:</em> njs is a small runtime — no npm, no <code>require</code>, and a
+          fresh VM per request, so nothing can be cached in a variable. That last constraint
+          shaped the code more than anything else.
+        </p>
+
+        <h3>The backend verifies tokens itself instead of trusting the gateway</h3>
+        <p>
+          The edge could verify a signature and pass identity headers down; that is faster.
+          Instead every <code>/api/*</code> call introspects the token with Keycloak, so the
+          backend learns about logout, revoked sessions and disabled users — things a
+          signature check cannot know, because they happen after signing. The cost is a
+          round-trip per request, softened by a 10-second cache; that cache is itself a
+          deliberate trade, since a revoked token stays usable for up to ten seconds.
+        </p>
+      </article>
+
+      <div class="full">
+        <figure>
+          <img src="img/edge-vs-introspect.svg" alt="Verify at the edge versus introspect per request" />
+          <figcaption>
+            I did not pick this blind. Edge verification is the scalable norm and the right
+            default; introspection is what you reach for when the backend must be
+            authoritative about revocation — <em>for a reason, not by default</em>.
+          </figcaption>
+        </figure>
+      </div>
+
+      <article>
+        <h3>Keycloak does not get to see the application database</h3>
+        <p>
+          It is technically possible to point Keycloak at MySQL with user federation and
+          have one store. I decided against it.
+        </p>
+      </article>
+
+      <div class="full">
+        <figure>
+          <img src="img/why-not-federate.svg" alt="Why Keycloak must not connect to MySQL" />
+          <figcaption>The reasoning, as its own decision note.</figcaption>
+        </figure>
+      </div>
+
+      <article>
+        <h3>One immutable id links the two databases</h3>
+        <p>
+          Keycloak owns identity, MySQL owns the shop, and the only thing joining them is
+          the Keycloak <code>sub</code>. Not the e-mail, which changes; not the username,
+          which changes. So a user can change their e-mail and keep their order history,
+          because nothing the user can edit is load-bearing.
+        </p>
+      </article>
+
+      <div class="full">
+        <figure>
+          <img src="img/data-model.svg" alt="How Keycloak and the application database relate" />
+          <figcaption>Two stores, joined on one immutable id.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/field-provenance.svg" alt="Where does each field come from" />
+          <figcaption>
+            Every field has exactly one owner. Knowing which is the difference between a
+            sync bug and a system that cannot drift.
+          </figcaption>
+        </figure>
+      </div>
+
+      <article>
+        <h3>Changing an e-mail proves ownership before it commits</h3>
+        <p>
+          In an OTP system the e-mail <em>is</em> the login credential. Writing a new
+          address straight to the account would let a borrowed session repoint it at an
+          attacker's inbox — a temporary compromise becoming permanent. So the new address
+          is parked, a code is sent <em>to it</em>, and only a correct code promotes it.
+          E-mail and username move together, so the old address stops resolving entirely.
+        </p>
+
+        <h3>Account deactivation lives in the application, not the identity provider</h3>
+        <p>
+          The obvious approach is Keycloak's <code>enabled</code> flag. But social and OTP
+          users have no password, so disabling them there removes the only way they could
+          ever prove ownership again — "pause my account" quietly becomes "locked out
+          forever". Instead the block is a column in MySQL, checked on every request. The
+          user can still <em>authenticate</em>; they simply cannot <em>do</em> anything
+          except reactivate. Authentication intact, authorization suspended.
+        </p>
+
+        <h2 id="tracing">What only became clear by tracing</h2>
+        <ul>
+          <li>
+            <strong>A <code>401</code> from Keycloak can mean success.</strong> The first
+            call of the OTP flow deliberately fails: the login is unfinished because the
+            code has only just been mailed. Reading that as an error would be reading the
+            protocol wrong.
+          </li>
+          <li>
+            <strong><code>401</code> versus <code>403</code> is a product decision.</strong>
+            A deactivated user holds a perfectly valid token. Answering <code>401</code>
+            would make the client discard it — and the client needs that token to
+            reactivate.
+          </li>
+          <li>
+            <strong>Two calls to the same endpoint can be a protocol.</strong> E-mail OTP
+            is one Keycloak endpoint invoked twice, with the state carried in user
+            attributes rather than a session.
+          </li>
+          <li>
+            <strong>Ownership is the whole design.</strong> Almost every question resolved
+            to "who owns this field". Once that line is drawn, most of the remaining
+            answers follow.
+          </li>
+        </ul>
+      </article>
+
+      <div class="full">
+        <h2 id="flows">The seven flows</h2>
+        <p style="max-width: 780px">
+          Each one follows a single user action from browser to MySQL. The sequence
+          diagrams below are the short version; the
+          <a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">repository</a>
+          has the step-by-step walkthrough with the file and function behind every step.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Authentication</span> 1 · Login with an identity provider</h3>
+        <figure>
+          <img src="img/1-login-with-idp.svg" alt="Login with IdP flow" />
+          <figcaption>First page load, then Google brokered with no Keycloak page, then an authenticated call.</figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Authentication</span> 2 · E-mail OTP login</h3>
+        <figure>
+          <img src="img/2-email-otp.svg" alt="E-mail OTP flow" />
+          <figcaption>Two calls to one Keycloak endpoint. The 401 in the middle is the expected success.</figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Profile</span> 3 · Change e-mail, verified</h3>
+        <figure>
+          <img src="img/3-change-email.svg" alt="Verified e-mail change flow" />
+          <figcaption>Park the address, mail a code to it, promote only on confirmation.</figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Profile</span> 4 · Change display name</h3>
+        <figure>
+          <img src="img/4-display-name.svg" alt="Display name change flow" />
+          <figcaption>No verification — a name proves nothing. But the token must be refreshed to see it.</figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Lifecycle</span> 5 · Deactivate</h3>
+        <figure>
+          <img src="img/5-deactivate.svg" alt="Deactivate flow" />
+          <figcaption>The block is a MySQL column, so it applies instantly — even to a token that is still valid.</figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Lifecycle</span> 6 · Reactivate</h3>
+        <figure>
+          <img src="img/6-reactivate.svg" alt="Reactivate flow" />
+          <figcaption>A deactivated user can still authenticate — they simply cannot do anything else.</figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Lifecycle</span> 7 · Delete</h3>
+        <figure>
+          <img src="img/7-delete.svg" alt="Account delete flow" />
+          <figcaption>Scrub MySQL first, then remove the identity — <code>sub</code> is the only link between them.</figcaption>
+        </figure>
+
+        <h3>The configuration underneath</h3>
+        <figure>
+          <img src="img/keycloak-config.svg" alt="Keycloak clients, mappers and roles" />
+          <figcaption>
+            Two clients, deliberately different: one ships in the browser and can hold no
+            secret, the other never leaves the server and holds all of them.
+          </figcaption>
+        </figure>
+      </div>
+
+      <article>
+        <h2 id="change">What I would change</h2>
+        <p>Being honest about this is more useful than a feature list.</p>
+        <ul>
+          <li>
+            <strong>Tokens live in <code>sessionStorage</code>.</strong> This is the weakest
+            decision in the system and it was deliberate, to keep the demo simple. Any XSS
+            reads them. A backend-for-frontend holding an httpOnly cookie is the stronger
+            design.
+          </li>
+          <li>
+            <strong>Rate limiting is per account, not per IP.</strong> Nothing stops one
+            client enumerating many addresses. <code>limit_req</code> at the gateway belongs
+            there.
+          </li>
+          <li>
+            <strong>The internal API trusts the network.</strong> Endpoints the gateway uses
+            to update the shop database take no credential — they are protected only by not
+            being routable from outside.
+          </li>
+          <li><strong>Single-node by design.</strong> No clustering, no HA, no session replication.</li>
+          <li><strong>No automated tests.</strong> Verification was manual and log-driven.</li>
+        </ul>
+
+        <h3>Still open</h3>
+        <ul>
+          <li><strong>Phone verification</strong> over WhatsApp / Telegram — the next flow, and new territory for me.</li>
+          <li><strong>Legal name at checkout</strong> — likely the same shape as the e-mail change flow, but unverified, and I would rather test than assume.</li>
+        </ul>
+
+        <footer class="post">
+          <p>
+            Full source, the seven walkthroughs and the deployment notes:
+            <a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">gitlab.com/kyawsithu96/keycloak-sso-federation-gateway</a>
+          </p>
+          <p style="margin-top: 10px"><a href="/">← Back to profile</a></p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>

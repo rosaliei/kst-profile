@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1480 940" width="1480" height="940" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#35a06f"/>
+    </marker>
+    <marker id="bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d0433b"/>
+    </marker>
+    <marker id="tok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5a6875"/>
+    </marker>
+    <style>
+      .card    { fill:#ffffff; stroke:#d8e0e6; stroke-width:1.5; }
+      .kc      { fill:#ffffff; stroke:#14a3a5; stroke-width:2; }
+      .my      { fill:#ffffff; stroke:#6b7a8c; stroke-width:2; }
+      .okzone  { fill:#f4fbf7; stroke:#7fcaa3; stroke-width:1.5; }
+      .badzone { fill:#fdf5f4; stroke:#e6a19c; stroke-width:1.5; }
+      .t       { font-size:16px; font-weight:700; fill:#23303e; }
+      .zt      { font-size:15px; font-weight:700; }
+      .sub     { font-size:12px; fill:#8a97a5; }
+      .body    { font-size:12.5px; fill:#3c4a58; }
+      .mono    { font-size:11.5px; fill:#3c4a58; font-family:ui-monospace,Menlo,monospace; }
+      .okline  { stroke:#35a06f; stroke-width:3; fill:none; marker-end:url(#ok); }
+      .badline { stroke:#d0433b; stroke-width:3; fill:none; marker-end:url(#bad); }
+      .tokline { stroke:#5a6875; stroke-width:1.8; fill:none; marker-end:url(#tok); }
+      .hdr     { font-size:13px; font-weight:700; fill:#ffffff; font-family:ui-monospace,Menlo,monospace; }
+    </style>
+  </defs>
+
+  <rect width="1480" height="940" fill="#ffffff"/>
+  <text x="40" y="46" font-size="25" font-weight="700" fill="#23303e">Why Keycloak must not connect to MySQL</text>
+  <text x="40" y="72" font-size="14" fill="#8a97a5">Identity flows one way. Reversing the arrow (federation) recreates the exact problems this design avoids.</text>
+
+  <!-- ===================== LEFT: the right way ===================== -->
+  <rect class="okzone" x="40" y="100" width="680" height="360" rx="14"/>
+  <text class="zt" x="64" y="132" fill="#2e7d54">✓  THE STANDARD WAY — Keycloak owns identity</text>
+  <text class="sub" x="64" y="152">data flows one direction · what you have today</text>
+
+  <!-- keycloak -->
+  <rect class="kc" x="80" y="180" width="250" height="120" rx="10"/>
+  <rect x="80" y="180" width="250" height="26" rx="10" fill="#14a3a5"/>
+  <rect x="80" y="196" width="250" height="10" fill="#14a3a5"/>
+  <text class="hdr" x="98" y="199">Keycloak</text>
+  <text class="body" x="98" y="228">owns identity:</text>
+  <text class="mono" x="98" y="248">username · email</text>
+  <text class="mono" x="98" y="266">password · social</text>
+  <text class="mono" x="98" y="284">roles</text>
+
+  <!-- mysql -->
+  <rect class="my" x="430" y="180" width="250" height="120" rx="10"/>
+  <rect x="430" y="180" width="250" height="26" rx="10" fill="#6b7a8c"/>
+  <rect x="430" y="196" width="250" height="10" fill="#6b7a8c"/>
+  <text class="hdr" x="448" y="199">MySQL (your app)</text>
+  <text class="body" x="448" y="228">owns profile + data:</text>
+  <text class="mono" x="448" y="248">phone · cart · orders</text>
+  <text class="mono" x="448" y="266">cart · orders</text>
+  <text class="mono" x="448" y="284">keyed by kc_sub</text>
+
+  <!-- one-way arrow -->
+  <path class="okline" d="M334,240 L426,240"/>
+  <text x="340" y="228" fill="#2e7d54" font-weight="700" font-size="11" font-family="ui-monospace,Menlo,monospace">sub</text>
+
+  <text class="body" x="80" y="342" font-weight="700" fill="#2e7d54">Result</text>
+  <text class="body" x="80" y="366">• one identity across every login method (account linking)</text>
+  <text class="body" x="80" y="388">• MySQL never holds a password</text>
+  <text class="body" x="80" y="410">• MySQL down → login still works</text>
+  <text class="body" x="80" y="432">• upgrade either side independently</text>
+
+  <!-- ===================== RIGHT: the wrong way ===================== -->
+  <rect class="badzone" x="760" y="100" width="680" height="360" rx="14"/>
+  <text class="zt" x="784" y="132" fill="#b23b34">✗  FEDERATION — Keycloak reads users from MySQL</text>
+  <text class="sub" x="784" y="152">reverses the arrow · the extension you linked</text>
+
+  <rect class="kc" x="800" y="180" width="250" height="120" rx="10"/>
+  <rect x="800" y="180" width="250" height="26" rx="10" fill="#14a3a5"/>
+  <rect x="800" y="196" width="250" height="10" fill="#14a3a5"/>
+  <text class="hdr" x="818" y="199">Keycloak</text>
+  <text class="body" x="818" y="228">social + OTP users</text>
+  <text class="body" x="818" y="248">live here…</text>
+
+  <rect class="my" x="1150" y="180" width="250" height="120" rx="10"/>
+  <rect x="1150" y="180" width="250" height="26" rx="10" fill="#6b7a8c"/>
+  <rect x="1150" y="196" width="250" height="10" fill="#6b7a8c"/>
+  <text class="hdr" x="1168" y="199">MySQL users table</text>
+  <text class="body" x="1168" y="228">…but password users</text>
+  <text class="body" x="1168" y="248">live HERE — split!</text>
+  <text class="mono" x="1168" y="272">password_hash</text>
+  <text class="mono" x="1168" y="290">(you maintain it)</text>
+
+  <!-- two-way arrows -->
+  <path class="badline" d="M1054,230 L1146,230"/>
+  <path class="badline" d="M1146,258 L1054,258"/>
+  <text class="body" x="1058" y="222" fill="#b23b34" font-weight="700">read users</text>
+  <text class="body" x="1058" y="284" fill="#b23b34" font-weight="700">sync back</text>
+
+  <text class="body" x="800" y="342" font-weight="700" fill="#b23b34">Result — 7 problems</text>
+  <text class="body" x="800" y="366">• same person split across two stores (linking breaks)</text>
+  <text class="body" x="800" y="388">• YOU hash passwords · extension is read-only</text>
+  <text class="body" x="800" y="410">• MySQL down → nobody can log in</text>
+  <text class="body" x="800" y="432">• schema change breaks login · shared DB credentials</text>
+
+  <!-- ===================== BOTTOM: the 7 reasons ===================== -->
+  <text class="zt" x="40" y="512" fill="#23303e">The 7 concrete reasons, at a glance</text>
+
+  <!-- row of reason cards -->
+  <rect class="card" x="40" y="532" width="450" height="86" rx="9"/>
+  <text class="t" x="60" y="562" font-size="14">1 · Two-way sync</text>
+  <text class="body" x="60" y="586">One-way arrow becomes a bidirectional sync —</text>
+  <text class="body" x="60" y="606">Red Hat's docs call it "painful and messy".</text>
+
+  <rect class="card" x="515" y="532" width="450" height="86" rx="9"/>
+  <text class="t" x="535" y="562" font-size="14">2 · Split identity</text>
+  <text class="body" x="535" y="586">Social/OTP users in Keycloak, password users in</text>
+  <text class="body" x="535" y="606">MySQL → account linking breaks. The big one.</text>
+
+  <rect class="card" x="990" y="532" width="450" height="86" rx="9"/>
+  <text class="t" x="1010" y="562" font-size="14">3 · Read-only extension</text>
+  <text class="body" x="1010" y="586">It can't write. You hash passwords, write the</text>
+  <text class="body" x="1010" y="606">auth SQL, own the hard security parts.</text>
+
+  <rect class="card" x="40" y="628" width="450" height="86" rx="9"/>
+  <text class="t" x="60" y="658" font-size="14">4 · Availability coupling</text>
+  <text class="body" x="60" y="682">MySQL down → login down. Today a shop-DB</text>
+  <text class="body" x="60" y="702">outage never stops people signing in.</text>
+
+  <rect class="card" x="515" y="628" width="450" height="86" rx="9"/>
+  <text class="t" x="535" y="658" font-size="14">5 · Schema coupling</text>
+  <text class="body" x="535" y="682">A column rename or hash change breaks login.</text>
+  <text class="body" x="535" y="702">Migrations and authentication get entangled.</text>
+
+  <rect class="card" x="990" y="628" width="450" height="86" rx="9"/>
+  <text class="t" x="1010" y="658" font-size="14">6 · Bigger attack surface</text>
+  <text class="body" x="1010" y="682">Keycloak gets DB creds to your app; password</text>
+  <text class="body" x="1010" y="702">hashes sit in a table your app also touches.</text>
+
+  <rect class="card" x="40" y="724" width="925" height="86" rx="9"/>
+  <text class="t" x="60" y="754" font-size="14">7 · You lose Keycloak features</text>
+  <text class="body" x="60" y="778">Brute-force protection, password policies, MFA, social brokering, RP-initiated logout — these operate on</text>
+  <text class="body" x="60" y="798">Keycloak's own store. Point auth at an external read-only table and those stop applying to those users.</text>
+
+  <!-- exception card -->
+  <rect class="okzone" x="990" y="724" width="450" height="86" rx="9"/>
+  <text class="t" x="1010" y="754" font-size="14" fill="#2e7d54">The one time federation is right</text>
+  <text class="body" x="1010" y="778">A legacy users table other systems already own,</text>
+  <text class="body" x="1010" y="798">added to Keycloak without migrating. Not this app.</text>
+
+  <text class="sub" x="40" y="860">Self-test: does a system OUTSIDE this app need to read the user/password table directly in SQL?  No → Keycloak owns identity.  Yes → federation, knowing reasons 1–7.</text>
+  <text class="sub" x="40" y="884">Full walkthrough with every traffic flow: IDENTITY-ARCHITECTURE.md</text>
+</svg>
