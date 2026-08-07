@@ -214,21 +214,12 @@
         background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
         padding: 1px 11px; font-weight: 700; font-size: 13.5px;
       }
-      .author {
-        display: flex; gap: 16px; align-items: flex-start;
-        margin-top: 18px; padding-top: 18px; border-top: 2px dashed #e6ddd4;
-      }
       .author-avatar {
         flex: 0 0 auto; width: 54px; height: 54px; font-size: 27px;
         display: grid; place-items: center; background: #f3ecff;
         border: 3px solid var(--ink); border-radius: 50%;
         box-shadow: var(--shadow-sm); transform: rotate(-4deg);
       }
-      .author-name {
-        font-family: Fredoka, sans-serif; font-weight: 600; font-size: 17px;
-        margin: 0 0 2px; color: var(--ink);
-      }
-      .author-bio { margin: 0; font-size: 15px; color: var(--ink-soft); }
 
       footer.post {
         margin-top: 70px; background: var(--paper);
@@ -277,7 +268,7 @@
         <div class="author-card">
           <div class="author-avatar">🌙</div>
           <div>
-            <p class="author-loves">He who loves Mum, Ei, and Arsenal.</p>
+            <p class="author-loves">He who loves Mum, Ei, and Arsenal —<br />and is still chasing the moon.</p>
             <p class="author-ace">
               Proudly a
               <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
@@ -286,7 +277,8 @@
             <p class="author-humble">
               A note, humbly: I am not an expert, and none of this is a brag. It is all
               about learning how to learn — and how to unlearn — and cherishing the
-              process somewhere along the way.
+              process somewhere along the way. If you got this far, I hope you learned
+              something too.
             </p>
           </div>
         </div>
@@ -727,18 +719,7 @@ docker compose -f docker-compose.prod.yml up -d --build</code></pre>
             Full source, the seven walkthroughs and the deployment notes:
             <a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">gitlab.com/kyawsithu96/keycloak-sso-federation-gateway</a>
           </p>
-          <div class="author">
-            <div class="author-avatar">🌙</div>
-            <div>
-              <p class="author-name">Kyaw Sithu</p>
-              <p class="author-bio">
-                He who loves Mum, Ei, and Arsenal — and a
-                <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
-                candidate still learning how to learn.
-              </p>
-            </div>
-          </div>
-          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
+          <p style="margin-top: 10px"><a href="/">← Back to profile</a></p>
         </footer>
       </article>
     </div>
