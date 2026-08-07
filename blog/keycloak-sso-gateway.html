@@ -193,6 +193,22 @@
         transform: rotate(-1deg);
       }
 
+      .author-card {
+        display: flex; gap: 16px; align-items: flex-start;
+        margin-top: 28px; padding: 18px 22px; max-width: 720px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .author-loves {
+        font-family: Fredoka, sans-serif; font-weight: 600; font-size: 17px;
+        margin: 0 0 4px; color: var(--ink);
+      }
+      .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+      .author-humble {
+        margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
+        border-top: 2px dashed #e6ddd4; padding-top: 10px;
+      }
+
       .byline strong { font-family: Fredoka, sans-serif; font-weight: 600; }
       .meta time {
         background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
@@ -249,13 +265,30 @@
           request to see what actually happens.
         </p>
         <div class="meta">
-          <span class="byline">by <strong>chasing the moon</strong></span>
+          <span class="byline">by <strong>Kyaw Sithu</strong></span>
           <span>·</span>
           <time datetime="2026-08-07">7 August 2026</time>
           <span>·</span>
           <span>Keycloak 26 · nginx + njs · MySQL</span>
           <span>·</span>
           <span><a href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway">Source on GitLab →</a></span>
+        </div>
+
+        <div class="author-card">
+          <div class="author-avatar">🌙</div>
+          <div>
+            <p class="author-loves">He who loves Mum, Ei, and Arsenal.</p>
+            <p class="author-ace">
+              Proudly a
+              <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
+              candidate.
+            </p>
+            <p class="author-humble">
+              A note, humbly: I am not an expert, and none of this is a brag. It is all
+              about learning how to learn — and how to unlearn — and cherishing the
+              process somewhere along the way.
+            </p>
+          </div>
         </div>
       </header>
 
@@ -697,10 +730,11 @@ docker compose -f docker-compose.prod.yml up -d --build</code></pre>
           <div class="author">
             <div class="author-avatar">🌙</div>
             <div>
-              <p class="author-name">chasing the moon</p>
+              <p class="author-name">Kyaw Sithu</p>
               <p class="author-bio">
-                He who loves Mum, Ei, and Arsenal. Somewhere between the three, he reads
-                logs until the flow makes sense.
+                He who loves Mum, Ei, and Arsenal — and a
+                <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
+                candidate still learning how to learn.
               </p>
             </div>
           </div>
