@@ -1070,6 +1070,11 @@
         .herotop h1 {
           margin-top: 2px;
         }
+        /* the whole pitch is one grid cell — status, headline and lead must
+           stay wrapped, or they land in the 170px avatar column */
+        .herotext {
+          min-width: 0;
+        }
 
         /* CV and Kubestronaut sit side by side */
         .hero2 {
@@ -1448,18 +1453,20 @@
                 />
               </svg>
             </div>
-            <div class="status">
-              <span class="dot"></span> Open to Platform &amp; DevOps roles
+            <div class="herotext">
+              <div class="status">
+                <span class="dot"></span> Open to Platform &amp; DevOps roles
+              </div>
+              <h1>
+                I build Kubernetes platforms that stay
+                <mark>boring in production</mark>.
+              </h1>
+              <p class="lead" style="margin-top: 14px">
+                Platform/DevOps Engineer in Dubai. 9+ years across Telecoms,
+                FinTech, Healthcare and ISP — turning architectural standards
+                into repeatable, well-documented automation.
+              </p>
             </div>
-            <h1>
-              I build Kubernetes platforms that stay
-              <mark>boring in production</mark>.
-            </h1>
-            <p class="lead" style="margin-top: 14px">
-              Platform/DevOps Engineer in Dubai. 9+ years across Telecoms,
-              FinTech, Healthcare and ISP — turning architectural standards into
-              repeatable, well-documented automation.
-            </p>
           </div>
 
           <div class="stats">
