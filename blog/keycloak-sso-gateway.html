@@ -15,25 +15,30 @@
       content="Seven authentication flows traced from browser to database — and the design decisions behind them."
     />
     <meta property="og:type" content="article" />
-    <meta name="theme-color" content="#FFF6EC" />
+    <meta name="theme-color" content="#FFF6E9" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --cream: #fff6ec;
-        --paper: #ffffff;
-        --ink: #3a3238;
-        --ink-soft: #6b6069;
-        --coral: #ff6b6b;
-        --teal: #3fc1c9;
-        --sun: #ffc93c;
-        --lilac: #b39ddb;
-        --mint: #baf2d8;
-        --shadow: 5px 5px 0 var(--ink);
+        /* same tokens as the profile page */
+        --cream: #fff6e9;
+        --paper: #fffdf7;
+        --ink: #16161d;
+        --ink-soft: #5a5a66;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --teal: #2ec4a6;
+        --sun: #ffd24c;
+        --sky: #4ea8f5;
+        /* light tints — these sit behind ink-coloured text */
+        --lilac: #cdc5f7;
+        --mint: #b6f0e4;
+        --dash: rgba(22, 22, 29, 0.16);
+        --shadow: 6px 6px 0 var(--ink);
         --shadow-sm: 3px 3px 0 var(--ink);
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,15 +46,15 @@
       body {
         background: var(--cream);
         /* soft polka texture, very faint */
-        background-image: radial-gradient(rgba(58, 50, 56, 0.06) 1.5px, transparent 1.5px);
+        background-image: radial-gradient(rgba(22, 22, 29, 0.055) 1.5px, transparent 1.5px);
         background-size: 22px 22px;
         color: var(--ink);
-        font-family: Nunito, ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+        font-family: Inter, system-ui, sans-serif;
         font-size: 16.5px;
         line-height: 1.75;
         -webkit-font-smoothing: antialiased;
       }
-      a { color: #d94f6a; text-decoration: none; font-weight: 700; }
+      a { color: var(--grape); text-decoration: none; font-weight: 700; }
       a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
 
       /* ---- nav ---- */
@@ -63,10 +68,10 @@
         display: flex; align-items: center; justify-content: space-between; gap: 16px;
       }
       .nav-logo {
-        color: var(--ink); font-family: Fredoka, sans-serif; font-weight: 700; font-size: 17px;
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 700; font-size: 17px;
       }
       .nav-logo span {
-        background: var(--coral); color: #fff; border: 2px solid var(--ink);
+        background: var(--grape); color: #fff; border: 2px solid var(--ink);
         border-radius: 8px; padding: 1px 7px; display: inline-block; transform: rotate(-3deg);
       }
       .nav-back {
@@ -83,14 +88,14 @@
 
       header.post { padding: 54px 0 34px; }
       .eyebrow {
-        display: inline-block; font-family: Fredoka, sans-serif; font-size: 13px;
+        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
         letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
         background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
         padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
         box-shadow: var(--shadow-sm);
       }
       h1 {
-        font-family: Fredoka, sans-serif; font-weight: 700;
+        font-family: "Baloo 2", cursive; font-weight: 700;
         font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
       }
       .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
@@ -100,7 +105,7 @@
       }
 
       h2 {
-        font-family: Fredoka, sans-serif; font-weight: 700;
+        font-family: "Baloo 2", cursive; font-weight: 700;
         font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
       }
       h2::after {
@@ -108,7 +113,7 @@
         background: var(--teal); border-radius: 999px;
       }
       h3 {
-        font-family: Fredoka, sans-serif; font-weight: 600;
+        font-family: "Baloo 2", cursive; font-weight: 600;
         font-size: 20px; margin: 38px 0 12px;
       }
       p { margin: 0 0 18px; }
@@ -117,9 +122,9 @@
       strong { font-weight: 700; }
 
       code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: .85em; background: #fff0f3; border: 2px solid #ffd0d8;
-        border-radius: 6px; padding: .05em .38em; color: #c2415c;
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #f1eeff; border: 2px solid #d6ceff;
+        border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
       }
       pre {
         background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
@@ -151,11 +156,11 @@
 
       /* ---- callouts ---- */
       .note {
-        background: #eaf6ff; border: 3px solid var(--ink); border-radius: 16px;
+        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
         box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
       }
       .note p:last-child { margin-bottom: 0; }
-      .note.warn { background: #fff4d6; }
+      .note.warn { background: #fff0c9; }
 
       /* ---- tables ---- */
       .tw {
@@ -165,20 +170,20 @@
       table { border-collapse: collapse; width: 100%; font-size: 15px; }
       th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
       th {
-        font-family: Fredoka, sans-serif; font-size: 13px; text-transform: uppercase;
+        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
         letter-spacing: .05em; background: var(--mint);
         border-bottom: 3px solid var(--ink); color: var(--ink);
       }
-      td { border-bottom: 2px dashed #e6ddd4; }
+      td { border-bottom: 2px dashed var(--dash); }
       tr:last-child td { border-bottom: 0; }
 
       /* ---- contents ---- */
       .toc {
-        background: #f3ecff; border: 3px solid var(--ink); border-radius: 18px;
+        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
         box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
       }
       .toc h4 {
-        font-family: Fredoka, sans-serif; font-size: 14px; text-transform: uppercase;
+        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
         letter-spacing: .07em; margin-bottom: 12px;
       }
       .toc ol { margin: 0 0 0 22px; }
@@ -187,7 +192,7 @@
       /* ---- flow pills ---- */
       .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
       .pill {
-        font-family: Fredoka, sans-serif; font-size: 13px; color: var(--ink);
+        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
         background: var(--lilac); border: 2px solid var(--ink);
         border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
         transform: rotate(-1deg);
@@ -200,16 +205,16 @@
         border-radius: 18px; box-shadow: var(--shadow);
       }
       .author-loves {
-        font-family: Fredoka, sans-serif; font-weight: 600; font-size: 17px;
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
         margin: 0 0 4px; color: var(--ink);
       }
       .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
       .author-humble {
         margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
-        border-top: 2px dashed #e6ddd4; padding-top: 10px;
+        border-top: 2px dashed var(--dash); padding-top: 10px;
       }
 
-      .byline strong { font-family: Fredoka, sans-serif; font-weight: 600; }
+      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
       .meta time {
         background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
         padding: 1px 11px; font-weight: 700; font-size: 13.5px;
@@ -227,15 +232,15 @@
       }
 
 
-      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed #e6ddd4; }
+      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
       .share-title {
-        font-family: Fredoka, sans-serif; font-weight: 600; font-size: 17px;
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
         margin: 0 0 12px; color: var(--ink);
       }
       .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
       .share-btn {
         display: inline-flex; align-items: center; gap: 9px;
-        font-family: Fredoka, sans-serif; font-size: 15.5px; color: #fff;
+        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
         border: 3px solid var(--ink); border-radius: 999px;
         padding: 8px 18px; box-shadow: var(--shadow-sm);
       }
