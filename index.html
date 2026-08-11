@@ -897,6 +897,11 @@
         font-weight: 500;
         margin: 9px 0 16px;
       }
+      /* stacked, not side by side — the address is long and must not shrink */
+      .mailrow {
+        display: grid;
+        gap: 11px;
+      }
       .mailbox .btn {
         width: 100%;
         word-break: break-word;
@@ -3040,23 +3045,31 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
               <svg class="i" style="width: 22px; height: 22px">
                 <use href="#i-mail" />
               </svg>
-              Just email me
+              Email me, or say hi on LinkedIn
             </h3>
             <p>
-              No form to fill in — write to me directly and I read every message.
-              Tell me about the team and the stack, and I will come back to you.
+              No form to fill in — either of these reaches me directly, and I
+              read every message. Tell me about the team and the stack, and I
+              will come back to you.
             </p>
-            <a class="btn btn-cta" href="mailto:kyawsithu@kst-devops.com"
-              ><svg class="i" style="width: 17px; height: 17px">
-                <use href="#i-mail" />
-              </svg>
-              kyawsithu@kst-devops.com</a
-            >
-          </div>
-
-          <div class="note">
-            Prefer LinkedIn? That works too — the links below all reach me, and
-            LinkedIn is usually the fastest for a first hello.
+            <div class="mailrow">
+              <a class="btn btn-cta" href="mailto:kyawsithu@kst-devops.com"
+                ><svg class="i" style="width: 17px; height: 17px">
+                  <use href="#i-mail" />
+                </svg>
+                kyawsithu@kst-devops.com</a
+              >
+              <a
+                class="btn"
+                href="https://www.linkedin.com/in/thereisnokst/"
+                target="_blank"
+                rel="noopener"
+                ><svg class="i" style="width: 17px; height: 17px">
+                  <use href="#i-brief" />
+                </svg>
+                Message me on LinkedIn</a
+              >
+            </div>
           </div>
 
           <div class="socials">
