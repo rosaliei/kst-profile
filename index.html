@@ -216,6 +216,57 @@ nav{border-top:none;padding:0 0 10px}
 
 .divider{height:3px;background:var(--ink);border-radius:2px}
 footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;line-height:1.8}
+
+/* wrappers that only become grids on wide screens — plain flow on mobile */
+.edugrid{display:grid;gap:14px;margin-top:14px}
+
+/* ---- desktop ----------------------------------------------------------
+   The template was authored mobile-first at 560px. Everything below is
+   additive: it only opens up once there is room, so the phone layout is
+   exactly as it was. */
+@media (min-width:900px){
+  .wrap{max-width:1040px;padding:0 32px}
+  .tabs{max-width:1040px;padding:2px 32px 6px}
+  h1{font-size:44px} h2{font-size:30px} h3{font-size:19.5px}
+  section{padding:44px 0}
+  .lead{font-size:17.5px}
+
+  /* hero: portrait beside the pitch instead of stacked */
+  .herotop{display:grid;grid-template-columns:170px 1fr;gap:34px;align-items:center}
+  .herotop .avatar{width:170px;height:170px;margin-bottom:0}
+  .herotop .avatar svg{width:170px;height:170px}
+  .herotop h1{margin-top:2px}
+
+  /* CV and Kubestronaut sit side by side */
+  .hero2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin-top:24px}
+  .hero2 .cvbox,.hero2 .kube{margin-top:0;height:100%}
+
+  .stats{gap:16px}
+  .stat b{font-size:30px} .stat span{font-size:12px}
+
+  .skillgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .skillgrid .skillbox{margin-bottom:0}
+
+  /* accordions two-up; the domain headings span the full row */
+  .accgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  .accgrid .groupname{grid-column:1/-1;margin:16px 0 0}
+  .accgrid .acc{margin-bottom:0}
+  .filters{margin:0;padding-left:0;padding-right:0}
+
+  .certs{grid-template-columns:repeat(4,1fr)}
+  .socials{grid-template-columns:repeat(3,1fr)}
+  .grid2{grid-template-columns:repeat(4,1fr)}
+
+  .pringrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .pringrid .prin{margin-bottom:0}
+  .edugrid{grid-template-columns:1fr 1fr}
+
+  /* long-form things stay at a readable measure rather than filling 1040px */
+  .tl{max-width:780px}
+  #cform{max-width:660px}
+  .term{max-width:780px}
+  .card p{max-width:70ch}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 :focus-visible{outline:3px solid var(--grape);outline-offset:3px}
 </style>
@@ -283,6 +334,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
 <!-- ============ PROFILE ============ -->
 <div class="page on" id="p-home">
   <section class="hero">
+    <div class="herotop">
     <div class="avatar">
       <svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true">
         <circle cx="50" cy="37" r="18" fill="#FFD24C" stroke="#16161D" stroke-width="4"/>
@@ -296,6 +348,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
     <div class="status"><span class="dot"></span> Open to Platform &amp; DevOps roles</div>
     <h1>I build Kubernetes platforms that stay <mark>boring in production</mark>.</h1>
     <p class="lead" style="margin-top:14px">Platform/DevOps Engineer in Dubai. 9+ years across Telecoms, FinTech, Healthcare and ISP — turning architectural standards into repeatable, well-documented automation.</p>
+    </div>
 
     <div class="stats">
       <div class="stat"><b>9+</b><span>years engineering</span></div>
@@ -303,6 +356,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
       <div class="stat"><b>4</b><span>industries</span></div>
     </div>
 
+    <div class="hero2">
     <div class="cvbox">
       <h3><svg class="i" style="width:22px;height:22px"><use href="#i-doc"/></svg> Grab my CV</h3>
       <p>Two versions, both PDF — one framed for platform engineering, one for DevOps. Pick whichever matches the role.</p>
@@ -316,6 +370,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
       <h3><svg class="i"><use href="#i-k8s"/></svg> CNCF Kubestronaut</h3>
       <p>Elite CNCF status earned by passing all five core Kubernetes certifications — CKA, CKAD, CKS, KCNA and KCSA. Fewer than a thousand engineers worldwide hold it.</p>
       <a class="btn" href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener">Verify on CNCF →</a>
+    </div>
     </div>
   </section>
 
@@ -392,9 +447,21 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
   <section>
     <div class="eyebrow">Academic background</div>
     <h2>Education</h2>
-    <div class="pop" style="padding:18px;margin-top:14px;display:flex;gap:14px;align-items:center">
-      <div class="tile tile-lg" style="background:var(--butter)"><svg class="i"><use href="#i-cap"/></svg></div>
-      <div><h3>BA (English)</h3><div style="font-size:14px;color:var(--muted)">University of Dagon, Yangon · 2014 – 2019</div></div>
+    <div class="edugrid">
+      <div class="pop" style="padding:18px;display:flex;gap:14px;align-items:center">
+        <div class="tile tile-lg" style="background:var(--mint)"><svg class="i"><use href="#i-code"/></svg></div>
+        <div>
+          <h3>Bachelor of Computing <span class="tag t-mint" style="vertical-align:middle;font-size:11px">In progress</span></h3>
+          <div style="font-size:14px;color:var(--muted)">NCC Education · Strategy First University · Present</div>
+        </div>
+      </div>
+      <div class="pop" style="padding:18px;display:flex;gap:14px;align-items:center">
+        <div class="tile tile-lg" style="background:var(--butter)"><svg class="i"><use href="#i-cap"/></svg></div>
+        <div>
+          <h3>BA (English)</h3>
+          <div style="font-size:14px;color:var(--muted)">University of Dagon, Yangon · 2014 – 2019</div>
+        </div>
+      </div>
     </div>
   </section>
 </div>
@@ -406,6 +473,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
     <h2>Skills &amp; technologies</h2>
     <p class="lead" style="margin:10px 0 20px">Grouped by what they actually do, not by vendor.</p>
 
+    <div class="skillgrid">
     <div class="skillbox"><h3><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-k8s"/></svg></span> Kubernetes &amp; orchestration</h3>
       <div class="tags"><span class="tag t-grape">K8s (CKA)</span><span class="tag">Rancher</span><span class="tag">Helm</span><span class="tag">Kustomize</span><span class="tag">EKS</span><span class="tag">RKE2</span></div></div>
 
@@ -435,6 +503,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
 
     <div class="skillbox"><h3><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-code"/></svg></span> Programming &amp; scripting</h3>
       <div class="tags"><span class="tag t-butter">Python</span><span class="tag">Bash</span><span class="tag">Shell scripting</span></div></div>
+    </div>
   </section>
 
   <section>
@@ -520,6 +589,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
 
     <div class="warnbox">Credentials, tokens and external links in these projects are invalidated — they exist for demonstration and documentation only.</div>
 
+    <div class="accgrid">
     <!-- PLATFORM -->
     <div class="groupname" data-g="platform">Platform &amp; delivery</div>
     <div class="acc" data-g="platform"><button onclick="acc(this)"><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-k8s"/></svg></span> Kubernetes &amp; EKS <span class="count">6</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
@@ -623,6 +693,7 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
       <div class="body">
         <a class="lk" href="https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> ELK Fleet &amp; APM agent integration</a>
       </div></div>
+    </div>
   </section>
 </div>
 
@@ -665,24 +736,20 @@ footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;li
 <pre><span class="p">➜</span> <span class="c">whoami</span>
 Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
 
-<span class="p">➜</span> <span class="c">kubectl get career -o wide</span>
-NAME            YEARS   INDUSTRIES                           STATUS
-kyaw-sithu      9+      telecom,fintech,healthcare,isp       Running
-
-<span class="p">➜</span> <span class="c">cat ./why.txt</span>
-I started on a helpdesk in Yangon and wrote a shell script
-to stop doing the same thing twice. That never really stopped.
-<span class="d"># Now it is clusters instead of servers, but the job is the same:</span>
-<span class="d"># make the boring path the easy path, then write it down.</span>
-
 <span class="p">➜</span> <span class="cursor"></span></pre>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-sm btn-cta" href="/assets/kyaw-platform-engineer.pdf" download><svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg> Platform CV</a>
+      <a class="btn btn-sm" href="/assets/kyaw_devops.pdf" download><svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg> DevOps CV</a>
+      <a class="btn btn-sm" href="https://www.linkedin.com/in/thereisnokst/" target="_blank" rel="noopener"><svg class="i" style="width:15px;height:15px"><use href="#i-brief"/></svg> LinkedIn</a>
     </div>
 
     <div class="grid2" style="margin-top:18px">
       <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-globe"/></svg> Based in</b><span>Dubai, UAE — open to Singapore and worldwide</span></div>
       <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-msg"/></svg> Languages</b><span>English · Burmese</span></div>
-      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-book"/></svg> Degree</b><span>BA (English), University of Dagon</span></div>
-      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-rocket"/></svg> Currently</b><span>Ambient mesh, Vault on HCP, Kafka DR</span></div>
+      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-book"/></svg> Degrees</b><span>BA (English) · Bachelor of Computing, in progress</span></div>
+      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-rocket"/></svg> Currently</b><span>Deep-diving PAM, AuthN/AuthZ, multi-cloud infra &amp; API gateways</span></div>
     </div>
   </section>
 
@@ -690,21 +757,23 @@ to stop doing the same thing twice. That never really stopped.
     <div class="eyebrow">How I work</div>
     <h2>Four principles</h2>
 
+    <div class="pringrid">
     <div class="prin">
       <div class="num" style="background:var(--butter)">1</div>
-      <div><h3>Boring is the goal</h3><p>A platform that surprises nobody at 3am is worth more than a clever one. Predictable beats impressive.</p></div>
+      <div><h3>Heartwork</h3><p>Not just hard work. I care how the thing turns out after I hand it over — whether the next engineer can read it, run it and fix it without calling me.</p></div>
     </div>
     <div class="prin">
       <div class="num" style="background:var(--mint)">2</div>
-      <div><h3>If it isn't written down, it doesn't exist</h3><p>Every design here has a Notion page or a diagram behind it. Documentation is the deliverable, not the afterthought.</p></div>
+      <div><h3>Passionate</h3><p>I chase the problems I find genuinely interesting, and it shows in the work. Most of the research on this site was done because I wanted to know, not because a ticket asked.</p></div>
     </div>
     <div class="prin">
       <div class="num" style="background:var(--sky)">3</div>
-      <div><h3>Promotion should be a merge</h3><p>Environment promotion through GitOps, not a ticket and a maintenance window. The pipeline is the process.</p></div>
+      <div><h3>Deep dive</h3><p>Surface-level answers don't stick. I trace a request end to end until I understand what actually happens — then write it down so the next person can skip the digging.</p></div>
     </div>
     <div class="prin">
       <div class="num" style="background:var(--coral)">4</div>
-      <div><h3>Understand it before you automate it</h3><p>Trace the request end to end first. Automating something you don't understand just makes the confusion faster.</p></div>
+      <div><h3>Flexible</h3><p>I came up as a traditional system engineer — racks, ESXi, hand-built servers — and moved into DevOps and platform work. Tools change; being willing to relearn is the actual skill.</p></div>
+    </div>
     </div>
   </section>
 
