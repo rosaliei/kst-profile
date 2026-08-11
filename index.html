@@ -1,896 +1,3200 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kyaw Sithu — Platform Engineer · Kubestronaut</title>
-<meta name="description" content="Kyaw Sithu — Platform/DevOps Engineer and CNCF Kubestronaut based in Dubai, UAE. 9+ years across Telecoms, FinTech, Healthcare and ISP. Kubernetes, Istio, CI/CD, cloud-native infrastructure.">
-<link rel="canonical" href="https://kst-devops.com/">
-<meta name="theme-color" content="#FFF6E9">
-<meta property="og:title" content="Kyaw Sithu — Platform Engineer · Kubestronaut">
-<meta property="og:description" content="Platform/DevOps Engineer in Dubai. 9+ years across Telecoms, FinTech, Healthcare and ISP. CNCF Kubestronaut.">
-<meta property="og:type" content="profile">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --ink:#16161D; --paper:#FFF6E9; --card:#FFFDF7;
-  --grape:#6C5CE7; --coral:#FF7A45; --mint:#2EC4A6; --butter:#FFD24C; --sky:#4EA8F5;
-  --muted:#5A5A66; --bd:3px solid var(--ink); --r:16px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
-  font-size:16px;line-height:1.65;padding-bottom:30px;overflow-x:hidden}
-h1,h2,h3{font-family:'Baloo 2',cursive;font-weight:800;line-height:1.15;letter-spacing:-.01em}
-h1{font-size:33px} h2{font-size:24px} h3{font-size:18.5px}
-a{color:var(--grape);text-decoration:none;font-weight:600}
-.wrap{max-width:560px;margin:0 auto;padding:0 20px}
-.pop{border:var(--bd);border-radius:var(--r);background:var(--card);box-shadow:6px 6px 0 var(--ink)}
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kyaw Sithu — Platform Engineer · Kubestronaut</title>
+    <meta
+      name="description"
+      content="Kyaw Sithu — Platform/DevOps Engineer and CNCF Kubestronaut based in Dubai, UAE. 9+ years across Telecoms, FinTech, Healthcare and ISP. Kubernetes, Istio, CI/CD, cloud-native infrastructure."
+    />
+    <link rel="canonical" href="https://kst-devops.com/" />
+    <meta name="theme-color" content="#FFF6E9" />
+    <meta
+      property="og:title"
+      content="Kyaw Sithu — Platform Engineer · Kubestronaut"
+    />
+    <meta
+      property="og:description"
+      content="Platform/DevOps Engineer in Dubai. 9+ years across Telecoms, FinTech, Healthcare and ISP. CNCF Kubestronaut."
+    />
+    <meta property="og:type" content="profile" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #16161d;
+        --paper: #fff6e9;
+        --card: #fffdf7;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --mint: #2ec4a6;
+        --butter: #ffd24c;
+        --sky: #4ea8f5;
+        --muted: #5a5a66;
+        --bd: 3px solid var(--ink);
+        --r: 16px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
+        padding-bottom: 30px;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Baloo 2", cursive;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+      }
+      h1 {
+        font-size: 33px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      h3 {
+        font-size: 18.5px;
+      }
+      a {
+        color: var(--grape);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .wrap {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .pop {
+        border: var(--bd);
+        border-radius: var(--r);
+        background: var(--card);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
 
-/* icons */
-.i{width:20px;height:20px;stroke:var(--ink);stroke-width:2;fill:none;
-   stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
-.tile{width:34px;height:34px;border:2.5px solid var(--ink);border-radius:10px;
-  display:grid;place-items:center;flex:none}
-.tile .i{width:19px;height:19px}
-.tile-lg{width:46px;height:46px;border:var(--bd);border-radius:12px;box-shadow:3px 3px 0 var(--ink)}
-.tile-lg .i{width:24px;height:24px}
+      /* icons */
+      .i {
+        width: 20px;
+        height: 20px;
+        stroke: var(--ink);
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
+        display: block;
+      }
+      .tile {
+        width: 34px;
+        height: 34px;
+        border: 2.5px solid var(--ink);
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .tile .i {
+        width: 19px;
+        height: 19px;
+      }
+      .tile-lg {
+        width: 46px;
+        height: 46px;
+        border: var(--bd);
+        border-radius: 12px;
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+      .tile-lg .i {
+        width: 24px;
+        height: 24px;
+      }
 
-header{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:var(--bd)}
-.bar{display:flex;align-items:center;justify-content:space-between;height:56px}
-.tab-cv{background:var(--coral);text-decoration:none}
-.logo{display:flex;align-items:center;gap:10px;font-family:'Baloo 2';font-weight:800;font-size:18px;line-height:1}
-.blob{width:34px;height:34px;border:var(--bd);border-radius:50%;background:var(--butter);
-  display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;
-  letter-spacing:.02em;padding-top:1px;box-shadow:2px 2px 0 var(--ink)}
-.ghost{border:var(--bd);border-radius:999px;background:var(--card);box-shadow:3px 3px 0 var(--ink);
-  padding:7px 14px;font:600 13px 'Inter';color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.ghost:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--paper);
+        border-bottom: var(--bd);
+      }
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+      }
+      .tab-cv {
+        background: var(--coral);
+        text-decoration: none;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Baloo 2";
+        font-weight: 800;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .blob {
+        width: 34px;
+        height: 34px;
+        border: var(--bd);
+        border-radius: 50%;
+        background: var(--butter);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        padding-top: 1px;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      .ghost {
+        border: var(--bd);
+        border-radius: 999px;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--ink);
+        padding: 7px 14px;
+        font: 600 13px "Inter";
+        color: var(--ink);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .ghost:active {
+        transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:var(--bd);
-  border-radius:14px;box-shadow:6px 6px 0 var(--ink);padding:13px 20px;font-family:'Baloo 2';
-  font-weight:700;font-size:16.5px;cursor:pointer;background:var(--card);color:var(--ink);
-  transition:transform .08s,box-shadow .08s;text-align:center}
-.btn:active{transform:translate(6px,6px);box-shadow:0 0 0 var(--ink)}
-.btn-cta{background:var(--coral)}
-.btn-sm{padding:9px 15px;font-size:14.5px;box-shadow:4px 4px 0 var(--ink);border-radius:11px}
-.btn-sm:active{transform:translate(4px,4px)}
-.btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: var(--bd);
+        border-radius: 14px;
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 13px 20px;
+        font-family: "Baloo 2";
+        font-weight: 700;
+        font-size: 16.5px;
+        cursor: pointer;
+        background: var(--card);
+        color: var(--ink);
+        transition:
+          transform 0.08s,
+          box-shadow 0.08s;
+        text-align: center;
+      }
+      .btn:active {
+        transform: translate(6px, 6px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      .btn-cta {
+        background: var(--coral);
+      }
+      .btn-sm {
+        padding: 9px 15px;
+        font-size: 14.5px;
+        box-shadow: 4px 4px 0 var(--ink);
+        border-radius: 11px;
+      }
+      .btn-sm:active {
+        transform: translate(4px, 4px);
+      }
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 22px;
+      }
 
-.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-.tag{border:2px solid var(--ink);border-radius:999px;padding:3px 11px;font:600 12.5px 'Inter';background:var(--card);color:var(--ink)}
-.t-grape{background:var(--grape);color:#fff} .t-mint{background:var(--mint)}
-.t-butter{background:var(--butter)} .t-sky{background:var(--sky)} .t-coral{background:var(--coral)}
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .tag {
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        padding: 3px 11px;
+        font: 600 12.5px "Inter";
+        background: var(--card);
+        color: var(--ink);
+      }
+      .t-grape {
+        background: var(--grape);
+        color: #fff;
+      }
+      .t-mint {
+        background: var(--mint);
+      }
+      .t-butter {
+        background: var(--butter);
+      }
+      .t-sky {
+        background: var(--sky);
+      }
+      .t-coral {
+        background: var(--coral);
+      }
 
-.page{display:none;animation:in .28s ease}
-.page.on{display:block}
-@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-section{padding:32px 0}
-.eyebrow{font:600 12px 'Inter';letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.lead{color:var(--muted);font-size:16.5px}
+      .page {
+        display: none;
+        animation: in 0.28s ease;
+      }
+      .page.on {
+        display: block;
+      }
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      section {
+        padding: 32px 0;
+      }
+      .eyebrow {
+        font: 600 12px "Inter";
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+      .lead {
+        color: var(--muted);
+        font-size: 16.5px;
+      }
 
-.hero{padding-top:28px}
-.avatar{width:100px;height:100px;border:var(--bd);border-radius:50%;background:var(--sky);
-  display:grid;place-items:center;box-shadow:6px 6px 0 var(--ink);margin-bottom:18px;overflow:hidden}
-h1 mark{background:var(--butter);padding:0 6px;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.status{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);border-radius:999px;
-  background:var(--mint);padding:5px 13px;font:600 13px 'Inter';margin-bottom:15px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--ink)}
+      .hero {
+        padding-top: 28px;
+      }
+      .avatar {
+        width: 100px;
+        height: 100px;
+        border: var(--bd);
+        border-radius: 50%;
+        background: var(--sky);
+        display: grid;
+        place-items: center;
+        box-shadow: 6px 6px 0 var(--ink);
+        margin-bottom: 18px;
+        overflow: hidden;
+      }
+      h1 mark {
+        background: var(--butter);
+        padding: 0 6px;
+        border-radius: 6px;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        background: var(--mint);
+        padding: 5px 13px;
+        font: 600 13px "Inter";
+        margin-bottom: 15px;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--ink);
+      }
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:24px}
-.stat{border:var(--bd);border-radius:12px;background:var(--card);box-shadow:4px 4px 0 var(--ink);padding:12px 6px;text-align:center}
-.stat b{display:block;font-family:'Baloo 2';font-size:25px;line-height:1.1}
-.stat span{font-size:11px;color:var(--muted);font-weight:500;line-height:1.3;display:block}
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 11px;
+        margin-top: 24px;
+      }
+      .stat {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 12px 6px;
+        text-align: center;
+      }
+      .stat b {
+        display: block;
+        font-family: "Baloo 2";
+        font-size: 25px;
+        line-height: 1.1;
+      }
+      .stat span {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 500;
+        line-height: 1.3;
+        display: block;
+      }
 
-/* CV strip */
-.cvbox{border:var(--bd);border-radius:var(--r);background:var(--butter);box-shadow:6px 6px 0 var(--ink);padding:18px;margin-top:24px}
-.cvbox h3{font-size:19px;display:flex;align-items:center;gap:10px}
-.cvbox p{font-size:14.3px;margin:8px 0 14px;font-weight:500}
-.cvrow{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.cvrow .btn{width:100%;padding:11px 8px;font-size:14.5px;box-shadow:4px 4px 0 var(--ink);border-radius:11px}
-.cvrow .btn:active{transform:translate(4px,4px)}
+      /* CV strip */
+      .cvbox {
+        border: var(--bd);
+        border-radius: var(--r);
+        background: var(--butter);
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 18px;
+        margin-top: 24px;
+      }
+      .cvbox h3 {
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .cvbox p {
+        font-size: 14.3px;
+        margin: 8px 0 14px;
+        font-weight: 500;
+      }
+      .cvrow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+      }
+      .cvrow .btn {
+        width: 100%;
+        padding: 11px 8px;
+        font-size: 14.5px;
+        box-shadow: 4px 4px 0 var(--ink);
+        border-radius: 11px;
+      }
+      .cvrow .btn:active {
+        transform: translate(4px, 4px);
+      }
 
-.kube{border:var(--bd);border-radius:var(--r);background:var(--grape);color:#fff;box-shadow:6px 6px 0 var(--ink);padding:20px;margin-top:22px}
-.kube h3{color:#fff;font-size:21px;display:flex;align-items:center;gap:10px}
-.kube h3 .i{stroke:#fff;width:24px;height:24px}
-.kube p{font-size:14.5px;opacity:.94;margin-top:8px}
-.kube .btn{margin-top:16px;width:100%;background:var(--butter);color:var(--ink);box-shadow:5px 5px 0 var(--ink)}
+      .kube {
+        border: var(--bd);
+        border-radius: var(--r);
+        background: var(--grape);
+        color: #fff;
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 20px;
+        margin-top: 22px;
+      }
+      .kube h3 {
+        color: #fff;
+        font-size: 21px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .kube h3 .i {
+        stroke: #fff;
+        width: 24px;
+        height: 24px;
+      }
+      .kube p {
+        font-size: 14.5px;
+        opacity: 0.94;
+        margin-top: 8px;
+      }
+      .kube .btn {
+        margin-top: 16px;
+        width: 100%;
+        background: var(--butter);
+        color: var(--ink);
+        box-shadow: 5px 5px 0 var(--ink);
+      }
 
-/* timeline */
-.tl{position:relative;padding-left:34px;margin-top:20px}
-.tl::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:3px;background:var(--ink)}
-.job{position:relative;margin-bottom:26px}
-.job::before{content:"";position:absolute;left:-33px;top:5px;width:19px;height:19px;border:var(--bd);border-radius:50%;background:var(--butter)}
-.job.now::before{background:var(--coral)}
-.job .when{font:600 12.5px 'Inter';color:var(--muted)}
-.job h3{margin:2px 0 2px}
-.job .co{font-weight:600;color:var(--grape);font-size:14.5px}
-.job ul{margin:11px 0 0 17px;font-size:14.5px;color:var(--muted)}
-.job li{margin-bottom:6px}
+      /* timeline */
+      .tl {
+        position: relative;
+        padding-left: 34px;
+        margin-top: 20px;
+      }
+      .tl::before {
+        content: "";
+        position: absolute;
+        left: 9px;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--ink);
+      }
+      .job {
+        position: relative;
+        margin-bottom: 26px;
+      }
+      .job::before {
+        content: "";
+        position: absolute;
+        left: -33px;
+        top: 5px;
+        width: 19px;
+        height: 19px;
+        border: var(--bd);
+        border-radius: 50%;
+        background: var(--butter);
+      }
+      .job.now::before {
+        background: var(--coral);
+      }
+      .job .when {
+        font: 600 12.5px "Inter";
+        color: var(--muted);
+      }
+      .job h3 {
+        margin: 2px 0 2px;
+      }
+      .job .co {
+        font-weight: 600;
+        color: var(--grape);
+        font-size: 14.5px;
+      }
+      .job ul {
+        margin: 11px 0 0 17px;
+        font-size: 14.5px;
+        color: var(--muted);
+      }
+      .job li {
+        margin-bottom: 6px;
+      }
 
-.skillbox{border:var(--bd);border-radius:12px;background:var(--card);box-shadow:4px 4px 0 var(--ink);padding:14px;margin-bottom:13px}
-.skillbox h3{font-size:16px;display:flex;align-items:center;gap:9px}
+      .skillbox {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 14px;
+        margin-bottom: 13px;
+      }
+      .skillbox h3 {
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
 
-/* certs */
-.kbprog{border:var(--bd);border-radius:var(--r);background:var(--card);box-shadow:6px 6px 0 var(--ink);padding:17px;margin-top:16px}
-.pips{display:flex;gap:7px;margin-top:12px}
-.pip{flex:1;height:15px;border:2.5px solid var(--ink);border-radius:999px;background:var(--mint);
-  display:grid;place-items:center}
-.pip .i{width:9px;height:9px;stroke-width:3.5}
-.certs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-.cert{border:var(--bd);border-radius:14px;background:var(--card);box-shadow:4px 4px 0 var(--ink);
-  padding:14px 11px;text-align:center;color:var(--ink);display:block;transition:transform .08s,box-shadow .08s}
-.cert:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
-.hex{width:52px;height:52px;margin:0 auto 8px;display:block}
-.cert b{display:block;font-family:'Baloo 2';font-size:20px;line-height:1.1}
-.cert .full{font-size:11px;color:var(--muted);line-height:1.35;display:block;margin-top:3px;min-height:29px}
-.cert .vf{font:600 11px 'Inter';color:var(--grape);display:inline-flex;align-items:center;gap:4px;margin-top:8px}
-.cert .vf .i{width:12px;height:12px;stroke:var(--grape);stroke-width:2.5}
+      /* certs */
+      .kbprog {
+        border: var(--bd);
+        border-radius: var(--r);
+        background: var(--card);
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 17px;
+        margin-top: 16px;
+      }
+      .pips {
+        display: flex;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .pip {
+        flex: 1;
+        height: 15px;
+        border: 2.5px solid var(--ink);
+        border-radius: 999px;
+        background: var(--mint);
+        display: grid;
+        place-items: center;
+      }
+      .pip .i {
+        width: 9px;
+        height: 9px;
+        stroke-width: 3.5;
+      }
+      .certs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .cert {
+        border: var(--bd);
+        border-radius: 14px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 14px 11px;
+        text-align: center;
+        color: var(--ink);
+        display: block;
+        transition:
+          transform 0.08s,
+          box-shadow 0.08s;
+      }
+      .cert:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      .hex {
+        width: 52px;
+        height: 52px;
+        margin: 0 auto 8px;
+        display: block;
+      }
+      .cert b {
+        display: block;
+        font-family: "Baloo 2";
+        font-size: 20px;
+        line-height: 1.1;
+      }
+      .cert .full {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.35;
+        display: block;
+        margin-top: 3px;
+        min-height: 29px;
+      }
+      .cert .vf {
+        font: 600 11px "Inter";
+        color: var(--grape);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 8px;
+      }
+      .cert .vf .i {
+        width: 12px;
+        height: 12px;
+        stroke: var(--grape);
+        stroke-width: 2.5;
+      }
 
-/* portfolio filters */
-.filters{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;margin:0 -20px;padding-left:20px;padding-right:20px;-webkit-overflow-scrolling:touch}
-.filters::-webkit-scrollbar{display:none}
-.chip{white-space:nowrap;border:var(--bd);border-radius:999px;background:var(--card);
-  box-shadow:3px 3px 0 var(--ink);padding:7px 14px;font:600 13.5px 'Inter';color:var(--ink);cursor:pointer;flex:none}
-.chip.on{background:var(--grape);color:#fff}
-.groupname{font:600 12px 'Inter';letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+      /* portfolio filters */
+      .filters {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 0 12px;
+        margin: 0 -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .filters::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        white-space: nowrap;
+        border: var(--bd);
+        border-radius: 999px;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--ink);
+        padding: 7px 14px;
+        font: 600 13.5px "Inter";
+        color: var(--ink);
+        cursor: pointer;
+        flex: none;
+      }
+      .chip.on {
+        background: var(--grape);
+        color: #fff;
+      }
+      .groupname {
+        font: 600 12px "Inter";
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 20px 0 10px;
+      }
 
-.acc{border:var(--bd);border-radius:12px;background:var(--card);box-shadow:4px 4px 0 var(--ink);margin-bottom:12px;overflow:hidden}
-.acc>button{width:100%;display:flex;align-items:center;gap:11px;background:none;border:none;
-  padding:13px;font:700 15.5px 'Baloo 2';color:var(--ink);cursor:pointer;text-align:left}
-.acc .count{margin-left:auto;font:600 11.5px 'Inter';border:2px solid var(--ink);border-radius:999px;padding:1px 8px;background:var(--paper)}
-.acc .chev{transition:transform .2s;margin-left:6px}
-.acc.open .chev{transform:rotate(180deg)}
-.acc .body{display:none;padding:0 13px 13px;border-top:3px solid var(--ink)}
-.acc.open .body{display:block;padding-top:11px}
-.lk{display:flex;align-items:center;gap:9px;padding:9px 0;font-size:14.3px;font-weight:500;
-  color:var(--ink);border-bottom:2px dashed rgba(22,22,29,.15)}
-.lk:last-child{border-bottom:none}
-.kind{font:600 10.5px 'Inter';border:2px solid var(--ink);border-radius:999px;padding:1px 8px;flex:none}
-.k-note{background:var(--butter)} .k-git{background:var(--mint)} .k-dia{background:var(--sky)}
-.warnbox{border:var(--bd);border-radius:12px;background:var(--butter);padding:13px;font-size:14px;
-  font-weight:500;box-shadow:4px 4px 0 var(--ink);margin-bottom:16px}
+      .acc {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        margin-bottom: 12px;
+        overflow: hidden;
+      }
+      .acc > button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: none;
+        border: none;
+        padding: 13px;
+        font: 700 15.5px "Baloo 2";
+        color: var(--ink);
+        cursor: pointer;
+        text-align: left;
+      }
+      .acc .count {
+        margin-left: auto;
+        font: 600 11.5px "Inter";
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        padding: 1px 8px;
+        background: var(--paper);
+      }
+      .acc .chev {
+        transition: transform 0.2s;
+        margin-left: 6px;
+      }
+      .acc.open .chev {
+        transform: rotate(180deg);
+      }
+      .acc .body {
+        display: none;
+        padding: 0 13px 13px;
+        border-top: 3px solid var(--ink);
+      }
+      .acc.open .body {
+        display: block;
+        padding-top: 11px;
+      }
+      .lk {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 0;
+        font-size: 14.3px;
+        font-weight: 500;
+        color: var(--ink);
+        border-bottom: 2px dashed rgba(22, 22, 29, 0.15);
+      }
+      .lk:last-child {
+        border-bottom: none;
+      }
+      .kind {
+        font: 600 10.5px "Inter";
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        padding: 1px 8px;
+        flex: none;
+      }
+      .k-note {
+        background: var(--butter);
+      }
+      .k-git {
+        background: var(--mint);
+      }
+      .k-dia {
+        background: var(--sky);
+      }
+      .warnbox {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--butter);
+        padding: 13px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 4px 4px 0 var(--ink);
+        margin-bottom: 16px;
+      }
 
-.card{padding:18px;margin-bottom:17px;display:block;color:var(--ink)}
-.card p{font-size:14.8px;color:var(--muted);margin-top:9px}
-.meta{display:flex;gap:9px;font:600 12.5px 'Inter';color:var(--muted);margin-top:11px;align-items:center;flex-wrap:wrap}
-.readtime{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--ink);border-radius:999px;
-  background:var(--paper);padding:2px 9px;color:var(--ink)}
-.readtime .i{width:12px;height:12px;stroke-width:2.5}
+      .card {
+        padding: 18px;
+        margin-bottom: 17px;
+        display: block;
+        color: var(--ink);
+      }
+      .card p {
+        font-size: 14.8px;
+        color: var(--muted);
+        margin-top: 9px;
+      }
+      .meta {
+        display: flex;
+        gap: 9px;
+        font: 600 12.5px "Inter";
+        color: var(--muted);
+        margin-top: 11px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .readtime {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        background: var(--paper);
+        padding: 2px 9px;
+        color: var(--ink);
+      }
+      .readtime .i {
+        width: 12px;
+        height: 12px;
+        stroke-width: 2.5;
+      }
 
-/* terminal */
-.term{border:var(--bd);border-radius:var(--r);background:#16161D;box-shadow:6px 6px 0 var(--ink);
-  overflow:hidden;margin-top:18px}
-.term .top{display:flex;align-items:center;gap:7px;padding:10px 13px;border-bottom:3px solid #3a3a48}
-.term .top i{width:12px;height:12px;border-radius:50%;display:block;border:2px solid #16161D}
-.term .top span{font:500 11.5px 'JetBrains Mono';color:#8b8b9c;margin-left:6px}
-.term pre{padding:14px 15px 17px;font:400 13px/1.85 'JetBrains Mono';color:#E8E6DF;
-  white-space:pre-wrap;word-break:break-word}
-.term .p{color:var(--mint)} .term .c{color:var(--butter)} .term .d{color:#8b8b9c}
-.cursor{display:inline-block;width:8px;height:15px;background:var(--mint);vertical-align:-2px;animation:bl 1.1s step-end infinite}
-@keyframes bl{50%{opacity:0}}
+      /* terminal */
+      .term {
+        border: var(--bd);
+        border-radius: var(--r);
+        background: #16161d;
+        box-shadow: 6px 6px 0 var(--ink);
+        overflow: hidden;
+        margin-top: 18px;
+      }
+      .term .top {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 13px;
+        border-bottom: 3px solid #3a3a48;
+      }
+      .term .top i {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: block;
+        border: 2px solid #16161d;
+      }
+      .term .top span {
+        font: 500 11.5px "JetBrains Mono";
+        color: #8b8b9c;
+        margin-left: 6px;
+      }
+      .term pre {
+        padding: 14px 15px 17px;
+        font: 400 13px/1.85 "JetBrains Mono";
+        color: #e8e6df;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .term .p {
+        color: var(--mint);
+      }
+      .term .c {
+        color: var(--butter);
+      }
+      .term .d {
+        color: #8b8b9c;
+      }
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 15px;
+        background: var(--mint);
+        vertical-align: -2px;
+        animation: bl 1.1s step-end infinite;
+      }
+      @keyframes bl {
+        50% {
+          opacity: 0;
+        }
+      }
 
-/* principles */
-.prin{display:flex;gap:13px;border:var(--bd);border-radius:12px;background:var(--card);
-  box-shadow:4px 4px 0 var(--ink);padding:15px;margin-bottom:13px}
-.num{width:38px;height:38px;flex:none;border:var(--bd);border-radius:11px;display:grid;place-items:center;
-  font-family:'Baloo 2';font-weight:800;font-size:18px;box-shadow:2px 2px 0 var(--ink)}
-.prin h3{font-size:16.5px;margin-bottom:4px}
-.prin p{font-size:14.3px;color:var(--muted)}
+      /* principles */
+      .prin {
+        display: flex;
+        gap: 13px;
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 15px;
+        margin-bottom: 13px;
+      }
+      .num {
+        width: 38px;
+        height: 38px;
+        flex: none;
+        border: var(--bd);
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-family: "Baloo 2";
+        font-weight: 800;
+        font-size: 18px;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      .prin h3 {
+        font-size: 16.5px;
+        margin-bottom: 4px;
+      }
+      .prin p {
+        font-size: 14.3px;
+        color: var(--muted);
+      }
 
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mini{border:var(--bd);border-radius:12px;background:var(--card);box-shadow:4px 4px 0 var(--ink);padding:13px}
-.mini b{font-family:'Baloo 2';font-size:15px;display:flex;align-items:center;gap:7px}
-.mini span{font-size:12.5px;color:var(--muted);display:block;margin-top:3px}
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .mini {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 13px;
+      }
+      .mini b {
+        font-family: "Baloo 2";
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .mini span {
+        font-size: 12.5px;
+        color: var(--muted);
+        display: block;
+        margin-top: 3px;
+      }
 
-label{display:block;font:600 14px 'Inter';margin:0 0 6px}
-input,textarea{width:100%;border:var(--bd);border-radius:12px;background:var(--card);padding:12px 14px;
-  font:400 16px 'Inter';color:var(--ink);margin-bottom:15px;box-shadow:3px 3px 0 var(--ink)}
-input:focus,textarea:focus{outline:none;background:#fff;box-shadow:3px 3px 0 var(--grape);border-color:var(--grape)}
-textarea{min-height:118px;resize:vertical}
-.socials{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:18px}
-.soc{display:flex;align-items:center;gap:9px;border:var(--bd);border-radius:12px;background:var(--card);
-  box-shadow:4px 4px 0 var(--ink);padding:12px;font:600 13.5px 'Inter';color:var(--ink)}
-.soc:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
-.note{border:var(--bd);border-radius:12px;background:var(--mint);padding:14px;font-weight:500;
-  font-size:14.5px;margin-top:18px;box-shadow:4px 4px 0 var(--ink)}
+      label {
+        display: block;
+        font: 600 14px "Inter";
+        margin: 0 0 6px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        padding: 12px 14px;
+        font: 400 16px "Inter";
+        color: var(--ink);
+        margin-bottom: 15px;
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        background: #fff;
+        box-shadow: 3px 3px 0 var(--grape);
+        border-color: var(--grape);
+      }
+      textarea {
+        min-height: 118px;
+        resize: vertical;
+      }
+      .socials {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+        margin-top: 18px;
+      }
+      .soc {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 12px;
+        font: 600 13.5px "Inter";
+        color: var(--ink);
+      }
+      .soc:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      .note {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--mint);
+        padding: 14px;
+        font-weight: 500;
+        font-size: 14.5px;
+        margin-top: 18px;
+        box-shadow: 4px 4px 0 var(--ink);
+      }
 
-nav{border-top:none;padding:0 0 10px}
-.tabs{display:flex;gap:7px;overflow-x:auto;max-width:560px;margin:0 auto;flex-wrap:nowrap;
-  padding:2px 20px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{display:inline-flex;flex-direction:row;align-items:center;gap:6px;white-space:nowrap;flex:none;
-  background:var(--card);border:var(--bd);box-shadow:3px 3px 0 var(--ink);border-radius:999px;
-  font:600 13px 'Inter';color:var(--ink);cursor:pointer;padding:6px 12px;
-  transition:transform .08s,box-shadow .08s}
-.tab .ic{display:grid;place-items:center}
-.tab .i{stroke:var(--ink);width:16px;height:16px}
-.tab:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
-.tab.on{background:var(--grape);color:#fff}
-.tab.on .i{stroke:#fff}
-@media (min-width:640px){
-  .tabs{overflow:visible}
-}
+      nav {
+        border-top: none;
+        padding: 0 0 10px;
+      }
+      .tabs {
+        display: flex;
+        gap: 7px;
+        overflow-x: auto;
+        max-width: 560px;
+        margin: 0 auto;
+        flex-wrap: nowrap;
+        padding: 2px 20px 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .tab {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+        flex: none;
+        background: var(--card);
+        border: var(--bd);
+        box-shadow: 3px 3px 0 var(--ink);
+        border-radius: 999px;
+        font: 600 13px "Inter";
+        color: var(--ink);
+        cursor: pointer;
+        padding: 6px 12px;
+        transition:
+          transform 0.08s,
+          box-shadow 0.08s;
+      }
+      .tab .ic {
+        display: grid;
+        place-items: center;
+      }
+      .tab .i {
+        stroke: var(--ink);
+        width: 16px;
+        height: 16px;
+      }
+      .tab:active {
+        transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      .tab.on {
+        background: var(--grape);
+        color: #fff;
+      }
+      .tab.on .i {
+        stroke: #fff;
+      }
+      @media (min-width: 640px) {
+        .tabs {
+          overflow: visible;
+        }
+      }
 
-.divider{height:3px;background:var(--ink);border-radius:2px}
-footer{text-align:center;font-size:13px;color:var(--muted);padding:24px 0 8px;line-height:1.8}
+      .divider {
+        height: 3px;
+        background: var(--ink);
+        border-radius: 2px;
+      }
+      footer {
+        text-align: center;
+        font-size: 13px;
+        color: var(--muted);
+        padding: 24px 0 8px;
+        line-height: 1.8;
+      }
 
-/* wrappers that only become grids on wide screens — plain flow on mobile */
-.edugrid{display:grid;gap:14px;margin-top:14px}
+      /* wrappers that only become grids on wide screens — plain flow on mobile */
+      .edugrid {
+        display: grid;
+        gap: 14px;
+        margin-top: 14px;
+      }
 
-/* ---- desktop ----------------------------------------------------------
+      /* ---- desktop ----------------------------------------------------------
    The template was authored mobile-first at 560px. Everything below is
    additive: it only opens up once there is room, so the phone layout is
    exactly as it was. */
-@media (min-width:900px){
-  .wrap{max-width:1040px;padding:0 32px}
-  .tabs{max-width:1040px;padding:2px 32px 6px}
-  h1{font-size:44px} h2{font-size:30px} h3{font-size:19.5px}
-  section{padding:44px 0}
-  .lead{font-size:17.5px}
+      @media (min-width: 900px) {
+        .wrap {
+          max-width: 1040px;
+          padding: 0 32px;
+        }
+        .tabs {
+          max-width: 1040px;
+          padding: 2px 32px 6px;
+        }
+        h1 {
+          font-size: 44px;
+        }
+        h2 {
+          font-size: 30px;
+        }
+        h3 {
+          font-size: 19.5px;
+        }
+        section {
+          padding: 44px 0;
+        }
+        .lead {
+          font-size: 17.5px;
+        }
 
-  /* hero: portrait beside the pitch instead of stacked */
-  .herotop{display:grid;grid-template-columns:170px 1fr;gap:34px;align-items:center}
-  .herotop .avatar{width:170px;height:170px;margin-bottom:0}
-  .herotop .avatar svg{width:170px;height:170px}
-  .herotop h1{margin-top:2px}
+        /* hero: portrait beside the pitch instead of stacked */
+        .herotop {
+          display: grid;
+          grid-template-columns: 170px 1fr;
+          gap: 34px;
+          align-items: center;
+        }
+        .herotop .avatar {
+          width: 170px;
+          height: 170px;
+          margin-bottom: 0;
+        }
+        .herotop .avatar svg {
+          width: 170px;
+          height: 170px;
+        }
+        .herotop h1 {
+          margin-top: 2px;
+        }
 
-  /* CV and Kubestronaut sit side by side */
-  .hero2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin-top:24px}
-  .hero2 .cvbox,.hero2 .kube{margin-top:0;height:100%}
+        /* CV and Kubestronaut sit side by side */
+        .hero2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 22px;
+          align-items: start;
+          margin-top: 24px;
+        }
+        .hero2 .cvbox,
+        .hero2 .kube {
+          margin-top: 0;
+          height: 100%;
+        }
 
-  .stats{gap:16px}
-  .stat b{font-size:30px} .stat span{font-size:12px}
+        .stats {
+          gap: 16px;
+        }
+        .stat b {
+          font-size: 30px;
+        }
+        .stat span {
+          font-size: 12px;
+        }
 
-  .skillgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-  .skillgrid .skillbox{margin-bottom:0}
+        .skillgrid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 13px;
+        }
+        .skillgrid .skillbox {
+          margin-bottom: 0;
+        }
 
-  /* accordions two-up; the domain headings span the full row */
-  .accgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
-  .accgrid .groupname{grid-column:1/-1;margin:16px 0 0}
-  .accgrid .acc{margin-bottom:0}
-  .filters{margin:0;padding-left:0;padding-right:0}
+        /* accordions two-up; the domain headings span the full row */
+        .accgrid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          align-items: start;
+        }
+        .accgrid .groupname {
+          grid-column: 1/-1;
+          margin: 16px 0 0;
+        }
+        .accgrid .acc {
+          margin-bottom: 0;
+        }
+        .filters {
+          margin: 0;
+          padding-left: 0;
+          padding-right: 0;
+        }
 
-  .certs{grid-template-columns:repeat(4,1fr)}
-  .socials{grid-template-columns:repeat(3,1fr)}
-  .grid2{grid-template-columns:repeat(4,1fr)}
+        .certs {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .socials {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .grid2 {
+          grid-template-columns: repeat(4, 1fr);
+        }
 
-  .pringrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-  .pringrid .prin{margin-bottom:0}
-  .edugrid{grid-template-columns:1fr 1fr}
+        .pringrid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 13px;
+        }
+        .pringrid .prin {
+          margin-bottom: 0;
+        }
+        .edugrid {
+          grid-template-columns: 1fr 1fr;
+        }
 
-  /* long-form things stay at a readable measure rather than filling 1040px */
-  .tl{max-width:780px}
-  #cform{max-width:660px}
-  .term{max-width:780px}
-  .card p{max-width:70ch}
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-:focus-visible{outline:3px solid var(--grape);outline-offset:3px}
-</style>
-</head>
-<body>
+        /* long-form things stay at a readable measure rather than filling 1040px */
+        .tl {
+          max-width: 780px;
+        }
+        #cform {
+          max-width: 660px;
+        }
+        .term {
+          max-width: 780px;
+        }
+        .card p {
+          max-width: 70ch;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+      :focus-visible {
+        outline: 3px solid var(--grape);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <svg style="display: none" aria-hidden="true">
+      <symbol id="i-k8s" viewBox="0 0 24 24">
+        <path d="M12 2l8.5 4.5v9L12 20l-8.5-4.5v-9z" />
+        <circle cx="12" cy="11" r="3" />
+        <path
+          d="M12 2v6M12 14v6M20.5 6.5L15 9.8M3.5 6.5L9 9.8M20.5 15.5L15 12.2M3.5 15.5L9 12.2"
+        />
+      </symbol>
+      <symbol id="i-mesh" viewBox="0 0 24 24">
+        <circle cx="12" cy="5" r="2.4" />
+        <circle cx="5" cy="17" r="2.4" />
+        <circle cx="19" cy="17" r="2.4" />
+        <path d="M12 7.4v7.2M10.6 6.9L6.4 15.1M13.4 6.9l4.2 8.2M7.4 17h9.2" />
+        <circle cx="12" cy="16" r="1.4" />
+      </symbol>
+      <symbol id="i-iac" viewBox="0 0 24 24">
+        <path d="M3 20h18M6 20V8l7-4v16M6 12h7M17 20v-7l-4-2" />
+        <path d="M15 15h4" />
+      </symbol>
+      <symbol id="i-cicd" viewBox="0 0 24 24">
+        <path d="M20 12a8 8 0 1 1-2.6-5.9" />
+        <path d="M20 3v4h-4" />
+        <circle cx="12" cy="12" r="2.2" />
+      </symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24">
+        <path
+          d="M6.5 18a4 4 0 0 1-.3-8 5.5 5.5 0 0 1 10.6-1.3A3.8 3.8 0 0 1 18.5 18z"
+        />
+      </symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24">
+        <path d="M3 20h18M7 20v-6M12 20V7M17 20v-9" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="4.5" y="10" width="15" height="10" rx="2.5" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+        <circle cx="12" cy="15" r="1.3" />
+      </symbol>
+      <symbol id="i-msg" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="14" rx="2.5" />
+        <path d="M3 9h18M8 5v14M13 12h5M13 15.5h3" />
+      </symbol>
+      <symbol id="i-linux" viewBox="0 0 24 24">
+        <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
+        <path d="M7 9l3 2.5L7 14M12.5 15h5" />
+      </symbol>
+      <symbol id="i-code" viewBox="0 0 24 24">
+        <path d="M8.5 8L4 12l4.5 4M15.5 8l4.5 4-4.5 4M13.5 5l-3 14" />
+      </symbol>
+      <symbol id="i-gate" viewBox="0 0 24 24">
+        <path d="M4 20V6l8-3 8 3v14M4 20h16M9 20v-7h6v7" />
+        <path d="M12 10v1" />
+      </symbol>
+      <symbol id="i-key" viewBox="0 0 24 24">
+        <circle cx="8" cy="12" r="3.5" />
+        <path d="M11.5 12H21M18 12v3.5M15 12v2.5" />
+      </symbol>
+      <symbol id="i-cow" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="6" rx="2" />
+        <rect x="3" y="14" width="18" height="6" rx="2" />
+        <path d="M7 7h.01M7 17h.01" />
+      </symbol>
+      <symbol id="i-radio" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="2" />
+        <path
+          d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"
+        />
+      </symbol>
+      <symbol id="i-link" viewBox="0 0 24 24">
+        <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7L11.5 6.8" />
+        <path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5" />
+      </symbol>
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3 11l9-7 9 7M6 10v10h12V10" />
+        <path d="M10 20v-5h4v5" />
+      </symbol>
+      <symbol id="i-tool" viewBox="0 0 24 24">
+        <path
+          d="M15 4a5 5 0 0 0-4.5 7.1L4 17.6 6.4 20l6.5-6.5A5 5 0 1 0 15 4z"
+        />
+        <circle cx="16" cy="8" r="1.3" />
+      </symbol>
+      <symbol id="i-puzzle" viewBox="0 0 24 24">
+        <path
+          d="M10 4h4v2.5a1.8 1.8 0 1 0 3.5 0V4H20v5.5h-2.5a1.8 1.8 0 1 0 0 3.5H20V20h-6v-2.5a1.8 1.8 0 1 0-3.5 0V20H4v-6h2.5a1.8 1.8 0 1 0 0-3.5H4V4z"
+        />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="M15.5 4.5l4 4L8 20H4v-4z" />
+        <path d="M13.5 6.5l4 4" />
+      </symbol>
+      <symbol id="i-people" viewBox="0 0 24 24">
+        <circle cx="9" cy="8" r="3.2" />
+        <path d="M3 20a6 6 0 0 1 12 0" />
+        <path d="M16 5.5a3.2 3.2 0 0 1 0 6M17.5 20a6 6 0 0 0-2.2-4.6" />
+      </symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24">
+        <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
+        <path d="M3.5 7l8.5 6 8.5-6" />
+      </symbol>
+      <symbol id="i-down" viewBox="0 0 24 24">
+        <path d="M12 4v11M7.5 11L12 15.5 16.5 11M4.5 19.5h15" />
+      </symbol>
+      <symbol id="i-ext" viewBox="0 0 24 24">
+        <path d="M14 4h6v6M20 4l-8.5 8.5" />
+        <path
+          d="M18 14v5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10"
+        />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M5 12.5l4.5 4.5L19 7" />
+      </symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M12 7v5.2l3.2 2" />
+      </symbol>
+      <symbol id="i-doc" viewBox="0 0 24 24">
+        <path
+          d="M13 3H7a1.8 1.8 0 0 0-1.8 1.8v14.4A1.8 1.8 0 0 0 7 21h10a1.8 1.8 0 0 0 1.8-1.8V9z"
+        />
+        <path d="M13 3v6h5.8M8.5 13h7M8.5 16.5h5" />
+      </symbol>
+      <symbol id="i-cap" viewBox="0 0 24 24">
+        <path d="M12 4L2.5 8.5 12 13l9.5-4.5z" />
+        <path
+          d="M6.5 10.7V16c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5.3M21.5 8.5V14"
+        />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path
+          d="M3.5 12h17M12 3.5c2.5 2.5 2.5 14 0 17M12 3.5c-2.5 2.5-2.5 14 0 17"
+        />
+      </symbol>
+      <symbol id="i-badge" viewBox="0 0 24 24">
+        <circle cx="12" cy="9" r="5.5" />
+        <path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5" />
+      </symbol>
+      <symbol id="i-brief" viewBox="0 0 24 24">
+        <rect x="3" y="7" width="18" height="13" rx="2.5" />
+        <path
+          d="M8.5 7V5.5A1.5 1.5 0 0 1 10 4h4a1.5 1.5 0 0 1 1.5 1.5V7M3 12h18"
+        />
+      </symbol>
+      <symbol id="i-fox" viewBox="0 0 24 24">
+        <path d="M12 20L3.5 13l1.8-8L8 11h8l2.7-6 1.8 8z" />
+      </symbol>
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path d="M4 5.5A2 2 0 0 1 6 3.5h13V18H6a2 2 0 0 0-2 2z" />
+        <path d="M8 8h7" />
+      </symbol>
+      <symbol id="i-glove" viewBox="0 0 24 24">
+        <path d="M6 9a3.5 3.5 0 0 1 3.5-3.5h4A4.5 4.5 0 0 1 18 10v3H6z" />
+        <path d="M6 13h12v3.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 16.5z" />
+        <path d="M18 9.5a2 2 0 0 1 0 4M9 18v2h6v-2" />
+      </symbol>
+      <symbol id="i-dive" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="6.5" />
+        <path d="M15.8 15.8L21 21M8.5 11h5M11 8.5v5" />
+      </symbol>
+      <symbol id="i-wa" viewBox="0 0 24 24">
+        <path d="M3.5 20.5l1.4-4.6A8.2 8.2 0 1 1 8 19.1z" />
+        <path
+          d="M9 9c0 3 3 6 6 6 1 0 1.5-1 1.5-1L15 12.8l-1.4.7a6.4 6.4 0 0 1-2.1-2.1l.7-1.4L10.8 8.5S9 8.4 9 9z"
+          stroke-width="1.6"
+        />
+      </symbol>
+      <symbol id="i-rocket" viewBox="0 0 24 24">
+        <path
+          d="M12 3s4.5 2.5 4.5 8c0 2.5-1 4.5-1 4.5h-7S7.5 13.5 7.5 11c0-5.5 4.5-8 4.5-8z"
+        />
+        <circle cx="12" cy="10" r="1.8" />
+        <path d="M8.5 15.5L6 19l3.5-1M15.5 15.5L18 19l-3.5-1" />
+      </symbol>
+    </svg>
 
-<svg style="display:none" aria-hidden="true">
-<symbol id="i-k8s" viewBox="0 0 24 24"><path d="M12 2l8.5 4.5v9L12 20l-8.5-4.5v-9z"/><circle cx="12" cy="11" r="3"/><path d="M12 2v6M12 14v6M20.5 6.5L15 9.8M3.5 6.5L9 9.8M20.5 15.5L15 12.2M3.5 15.5L9 12.2"/></symbol>
-<symbol id="i-mesh" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.4"/><circle cx="5" cy="17" r="2.4"/><circle cx="19" cy="17" r="2.4"/><path d="M12 7.4v7.2M10.6 6.9L6.4 15.1M13.4 6.9l4.2 8.2M7.4 17h9.2"/><circle cx="12" cy="16" r="1.4"/></symbol>
-<symbol id="i-iac" viewBox="0 0 24 24"><path d="M3 20h18M6 20V8l7-4v16M6 12h7M17 20v-7l-4-2"/><path d="M15 15h4"/></symbol>
-<symbol id="i-cicd" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 3v4h-4"/><circle cx="12" cy="12" r="2.2"/></symbol>
-<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.5 18a4 4 0 0 1-.3-8 5.5 5.5 0 0 1 10.6-1.3A3.8 3.8 0 0 1 18.5 18z"/></symbol>
-<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 20h18M7 20v-6M12 20V7M17 20v-9"/></symbol>
-<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.3"/></symbol>
-<symbol id="i-msg" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9h18M8 5v14M13 12h5M13 15.5h3"/></symbol>
-<symbol id="i-linux" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M7 9l3 2.5L7 14M12.5 15h5"/></symbol>
-<symbol id="i-code" viewBox="0 0 24 24"><path d="M8.5 8L4 12l4.5 4M15.5 8l4.5 4-4.5 4M13.5 5l-3 14"/></symbol>
-<symbol id="i-gate" viewBox="0 0 24 24"><path d="M4 20V6l8-3 8 3v14M4 20h16M9 20v-7h6v7"/><path d="M12 10v1"/></symbol>
-<symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="12" r="3.5"/><path d="M11.5 12H21M18 12v3.5M15 12v2.5"/></symbol>
-<symbol id="i-cow" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></symbol>
-<symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
-<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7L11.5 6.8"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5"/></symbol>
-<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></symbol>
-<symbol id="i-tool" viewBox="0 0 24 24"><path d="M15 4a5 5 0 0 0-4.5 7.1L4 17.6 6.4 20l6.5-6.5A5 5 0 1 0 15 4z"/><circle cx="16" cy="8" r="1.3"/></symbol>
-<symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M10 4h4v2.5a1.8 1.8 0 1 0 3.5 0V4H20v5.5h-2.5a1.8 1.8 0 1 0 0 3.5H20V20h-6v-2.5a1.8 1.8 0 1 0-3.5 0V20H4v-6h2.5a1.8 1.8 0 1 0 0-3.5H4V4z"/></symbol>
-<symbol id="i-pen" viewBox="0 0 24 24"><path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13.5 6.5l4 4"/></symbol>
-<symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M17.5 20a6 6 0 0 0-2.2-4.6"/></symbol>
-<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
-<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7.5 11L12 15.5 16.5 11M4.5 19.5h15"/></symbol>
-<symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8.5 8.5"/><path d="M18 14v5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
-<symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
-<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.2l3.2 2"/></symbol>
-<symbol id="i-doc" viewBox="0 0 24 24"><path d="M13 3H7a1.8 1.8 0 0 0-1.8 1.8v14.4A1.8 1.8 0 0 0 7 21h10a1.8 1.8 0 0 0 1.8-1.8V9z"/><path d="M13 3v6h5.8M8.5 13h7M8.5 16.5h5"/></symbol>
-<symbol id="i-cap" viewBox="0 0 24 24"><path d="M12 4L2.5 8.5 12 13l9.5-4.5z"/><path d="M6.5 10.7V16c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-5.3M21.5 8.5V14"/></symbol>
-<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.5 2.5 14 0 17M12 3.5c-2.5 2.5-2.5 14 0 17"/></symbol>
-<symbol id="i-badge" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5"/></symbol>
-<symbol id="i-brief" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7V5.5A1.5 1.5 0 0 1 10 4h4a1.5 1.5 0 0 1 1.5 1.5V7M3 12h18"/></symbol>
-<symbol id="i-fox" viewBox="0 0 24 24"><path d="M12 20L3.5 13l1.8-8L8 11h8l2.7-6 1.8 8z"/></symbol>
-<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2 2 0 0 1 6 3.5h13V18H6a2 2 0 0 0-2 2z"/><path d="M8 8h7"/></symbol>
-<symbol id="i-glove" viewBox="0 0 24 24"><path d="M6 9a3.5 3.5 0 0 1 3.5-3.5h4A4.5 4.5 0 0 1 18 10v3H6z"/><path d="M6 13h12v3.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 16.5z"/><path d="M18 9.5a2 2 0 0 1 0 4M9 18v2h6v-2"/></symbol>
-<symbol id="i-dive" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8L21 21M8.5 11h5M11 8.5v5"/></symbol>
-<symbol id="i-wa" viewBox="0 0 24 24"><path d="M3.5 20.5l1.4-4.6A8.2 8.2 0 1 1 8 19.1z"/><path d="M9 9c0 3 3 6 6 6 1 0 1.5-1 1.5-1L15 12.8l-1.4.7a6.4 6.4 0 0 1-2.1-2.1l.7-1.4L10.8 8.5S9 8.4 9 9z" stroke-width="1.6"/></symbol>
-<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 3s4.5 2.5 4.5 8c0 2.5-1 4.5-1 4.5h-7S7.5 13.5 7.5 11c0-5.5 4.5-8 4.5-8z"/><circle cx="12" cy="10" r="1.8"/><path d="M8.5 15.5L6 19l3.5-1M15.5 15.5L18 19l-3.5-1"/></symbol>
-</svg>
-
-<header>
-  <div class="wrap bar">
-    <div class="logo"><span class="blob">KS</span> Kyaw Sithu</div>
-  </div>
-  <nav>
-    <div class="tabs">
-      <button class="tab on" data-t="home" onclick="go('home')"><span class="ic"><svg class="i"><use href="#i-home"/></svg></span>Profile</button>
-      <button class="tab" data-t="skills" onclick="go('skills')"><span class="ic"><svg class="i"><use href="#i-tool"/></svg></span>Skills</button>
-      <button class="tab" data-t="portfolio" onclick="go('portfolio')"><span class="ic"><svg class="i"><use href="#i-puzzle"/></svg></span>Work</button>
-      <button class="tab" data-t="blog" onclick="go('blog')"><span class="ic"><svg class="i"><use href="#i-pen"/></svg></span>Blog</button>
-      <button class="tab" data-t="about" onclick="go('about')"><span class="ic"><svg class="i"><use href="#i-people"/></svg></span>About</button>
-      <button class="tab" data-t="contact" onclick="go('contact')"><span class="ic"><svg class="i"><use href="#i-mail"/></svg></span>Contact</button>
-    </div>
-  </nav>
-</header>
-
-<main class="wrap">
-
-<!-- ============ PROFILE ============ -->
-<div class="page on" id="p-home">
-  <section class="hero">
-    <div class="herotop">
-    <div class="avatar">
-      <svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true">
-        <circle cx="50" cy="37" r="18" fill="#FFD24C" stroke="#16161D" stroke-width="4"/>
-        <circle cx="43" cy="35" r="2.8" fill="#16161D"/><circle cx="57" cy="35" r="2.8" fill="#16161D"/>
-        <path d="M43 45 Q50 51 57 45" stroke="#16161D" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M22 100 Q22 64 50 64 Q78 64 78 100 Z" fill="#6C5CE7" stroke="#16161D" stroke-width="4"/>
-        <circle cx="50" cy="81" r="9" fill="none" stroke="#FFF6E9" stroke-width="3"/>
-        <path d="M50 72 L50 90 M42 76 L58 86 M58 76 L42 86" stroke="#FFF6E9" stroke-width="3" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <div class="status"><span class="dot"></span> Open to Platform &amp; DevOps roles</div>
-    <h1>I build Kubernetes platforms that stay <mark>boring in production</mark>.</h1>
-    <p class="lead" style="margin-top:14px">Platform/DevOps Engineer in Dubai. 9+ years across Telecoms, FinTech, Healthcare and ISP — turning architectural standards into repeatable, well-documented automation.</p>
-    </div>
-
-    <div class="stats">
-      <div class="stat"><b>9+</b><span>years engineering</span></div>
-      <div class="stat"><b>7</b><span>certifications</span></div>
-      <div class="stat"><b>4</b><span>industries</span></div>
-    </div>
-
-    <div class="hero2">
-    <div class="cvbox">
-      <h3><svg class="i" style="width:22px;height:22px"><use href="#i-doc"/></svg> Grab my CV</h3>
-      <p>Two versions, both PDF — one framed for platform engineering, one for DevOps. Pick whichever matches the role.</p>
-      <div class="cvrow">
-        <a class="btn btn-cta" href="/assets/kyaw-platform-engineer.pdf" download><svg class="i" style="width:16px;height:16px"><use href="#i-down"/></svg> Platform</a>
-        <a class="btn" href="/assets/kyaw_devops.pdf" download><svg class="i" style="width:16px;height:16px"><use href="#i-down"/></svg> DevOps</a>
+    <header>
+      <div class="wrap bar">
+        <div class="logo"><span class="blob">KS</span> Kyaw Sithu</div>
       </div>
-    </div>
-
-    <div class="kube">
-      <h3><svg class="i"><use href="#i-k8s"/></svg> CNCF Kubestronaut</h3>
-      <p>Elite CNCF status earned by passing all five core Kubernetes certifications — CKA, CKAD, CKS, KCNA and KCSA. Fewer than a thousand engineers worldwide hold it.</p>
-      <a class="btn" href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener">Verify on CNCF →</a>
-    </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="eyebrow">Career history</div>
-    <h2>Experience</h2>
-    <div class="tl">
-      <div class="job now">
-        <div class="when">Apr 2022 — Present · Dubai, UAE</div>
-        <h3>DevOps Engineer</h3>
-        <div class="co">Peg B Technology</div>
-        <ul>
-          <li>Design and operate production Kubernetes platforms on EKS and RKE2 for regulated fintech and telecom workloads.</li>
-          <li>Run Istio service mesh in production — mTLS between services, ingress/egress policy, and an ambient mesh evaluation.</li>
-          <li>Built GitOps delivery with Jenkins, GitHub Actions and Kustomize so environment promotion is a merge, not a ticket.</li>
-          <li>Standardised secrets on HashiCorp Vault and HCP, with Keycloak as the OIDC issuer behind Kong API Gateway.</li>
-          <li>Engineered the observability stack — Prometheus, Grafana and ELK with Fleet and APM agents across clusters.</li>
-          <li>Own Kafka reliability including documented primary ↔ DR switchover procedures.</li>
-          <li>Automate AWS infrastructure with Terraform, Ansible and Packer — SSM, S3, KMS and cross-account IAM.</li>
-        </ul>
-        <div class="tags"><span class="tag t-grape">Kubernetes</span><span class="tag t-mint">Istio</span><span class="tag t-sky">AWS</span><span class="tag t-butter">Vault</span></div>
-      </div>
-
-      <div class="job">
-        <div class="when">Jul 2020 — Apr 2022 · Myanmar</div>
-        <h3>System Engineer</h3>
-        <div class="co">GTMH Telecom</div>
-        <ul>
-          <li>Built and maintained private cloud infrastructure on VMware ESXi supporting telecom and fintech services.</li>
-          <li>Introduced containerisation with Docker and early Kubernetes workloads to replace bare-metal deployments.</li>
-          <li>Automated repetitive provisioning with Ansible and Bash, cutting manual build steps for new environments.</li>
-          <li>Ran monitoring and alerting with Zabbix and the ELK stack across the server estate.</li>
-          <li>Hardened Linux images and managed OS lifecycle for production hosts.</li>
-        </ul>
-        <div class="tags"><span class="tag t-butter">Private cloud</span><span class="tag t-mint">Ansible</span><span class="tag t-sky">VMware</span></div>
-      </div>
-
-      <div class="job">
-        <div class="when">Jul 2019 — Jul 2020 · Myanmar</div>
-        <h3>System Engineer</h3>
-        <div class="co">Fortune Broadband</div>
-        <ul>
-          <li>Operated ISP network and Linux server infrastructure serving broadband subscribers.</li>
-          <li>Deployed LibreNMS and Zabbix for network-wide visibility and faster fault isolation.</li>
-          <li>Handled escalated incidents across routing, DNS and service availability.</li>
-        </ul>
-        <div class="tags"><span class="tag t-sky">ISP</span><span class="tag t-coral">Networking</span></div>
-      </div>
-
-      <div class="job">
-        <div class="when">Jan 2018 — Jan 2019 · Myanmar</div>
-        <h3>System Support Engineer</h3>
-        <div class="co">Sysnet System PTE Ltd</div>
-        <ul>
-          <li>Deployed and supported healthcare systems on client sites as part of an SI team.</li>
-          <li>Managed Windows and Linux servers, backups and user access for hospital deployments.</li>
-        </ul>
-        <div class="tags"><span class="tag t-coral">Healthcare</span><span class="tag t-butter">SI</span></div>
-      </div>
-
-      <div class="job">
-        <div class="when">Dec 2016 — Jan 2018 · Myanmar</div>
-        <h3>Junior System Administrator</h3>
-        <div class="co">RITZ Public Company Limited</div>
-        <ul>
-          <li>Where it started — Linux administration, networking fundamentals and daily operations.</li>
-          <li>Wrote the first shell scripts that made me realise automation was the actual job.</li>
-        </ul>
-        <div class="tags"><span class="tag t-mint">Linux</span><span class="tag t-sky">Networking</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="eyebrow">Academic background</div>
-    <h2>Education</h2>
-    <div class="edugrid">
-      <div class="pop" style="padding:18px;display:flex;gap:14px;align-items:center">
-        <div class="tile tile-lg" style="background:var(--mint)"><svg class="i"><use href="#i-code"/></svg></div>
-        <div>
-          <h3>Bachelor of Computing <span class="tag t-mint" style="vertical-align:middle;font-size:11px">In progress</span></h3>
-          <div style="font-size:14px;color:var(--muted)">NCC Education · Strategy First University · Present</div>
+      <nav>
+        <div class="tabs">
+          <button class="tab on" data-t="home" onclick="go('home')">
+            <span class="ic"
+              ><svg class="i"><use href="#i-home" /></svg></span
+            >Profile
+          </button>
+          <button class="tab" data-t="skills" onclick="go('skills')">
+            <span class="ic"
+              ><svg class="i"><use href="#i-tool" /></svg></span
+            >Skills
+          </button>
+          <button class="tab" data-t="portfolio" onclick="go('portfolio')">
+            <span class="ic"
+              ><svg class="i"><use href="#i-puzzle" /></svg></span
+            >Work
+          </button>
+          <button class="tab" data-t="blog" onclick="go('blog')">
+            <span class="ic"
+              ><svg class="i"><use href="#i-pen" /></svg></span
+            >Blog
+          </button>
+          <button class="tab" data-t="about" onclick="go('about')">
+            <span class="ic"
+              ><svg class="i"><use href="#i-people" /></svg></span
+            >About
+          </button>
+          <button class="tab" data-t="contact" onclick="go('contact')">
+            <span class="ic"
+              ><svg class="i"><use href="#i-mail" /></svg></span
+            >Contact
+          </button>
         </div>
+      </nav>
+    </header>
+
+    <main class="wrap">
+      <!-- ============ PROFILE ============ -->
+      <div class="page on" id="p-home">
+        <section class="hero">
+          <div class="herotop">
+            <div class="avatar">
+              <svg
+                viewBox="0 0 100 100"
+                width="100"
+                height="100"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="50"
+                  cy="37"
+                  r="18"
+                  fill="#FFD24C"
+                  stroke="#16161D"
+                  stroke-width="4"
+                />
+                <circle cx="43" cy="35" r="2.8" fill="#16161D" />
+                <circle cx="57" cy="35" r="2.8" fill="#16161D" />
+                <path
+                  d="M43 45 Q50 51 57 45"
+                  stroke="#16161D"
+                  stroke-width="4"
+                  fill="none"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M22 100 Q22 64 50 64 Q78 64 78 100 Z"
+                  fill="#6C5CE7"
+                  stroke="#16161D"
+                  stroke-width="4"
+                />
+                <circle
+                  cx="50"
+                  cy="81"
+                  r="9"
+                  fill="none"
+                  stroke="#FFF6E9"
+                  stroke-width="3"
+                />
+                <path
+                  d="M50 72 L50 90 M42 76 L58 86 M58 76 L42 86"
+                  stroke="#FFF6E9"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="status">
+              <span class="dot"></span> Open to Platform &amp; DevOps roles
+            </div>
+            <h1>
+              I build Kubernetes platforms that stay
+              <mark>boring in production</mark>.
+            </h1>
+            <p class="lead" style="margin-top: 14px">
+              Platform/DevOps Engineer in Dubai. 9+ years across Telecoms,
+              FinTech, Healthcare and ISP — turning architectural standards into
+              repeatable, well-documented automation.
+            </p>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><b>9+</b><span>years engineering</span></div>
+            <div class="stat"><b>7</b><span>certifications</span></div>
+            <div class="stat"><b>4</b><span>industries</span></div>
+          </div>
+
+          <div class="hero2">
+            <div class="cvbox">
+              <h3>
+                <svg class="i" style="width: 22px; height: 22px">
+                  <use href="#i-doc" />
+                </svg>
+                Grab my CV
+              </h3>
+              <p>
+                Two versions, both PDF — one framed for platform engineering,
+                one for DevOps. Pick whichever matches the role.
+              </p>
+              <div class="cvrow">
+                <a
+                  class="btn btn-cta"
+                  href="/assets/kyaw-platform-engineer.pdf"
+                  download
+                  ><svg class="i" style="width: 16px; height: 16px">
+                    <use href="#i-down" />
+                  </svg>
+                  Platform</a
+                >
+                <a class="btn" href="/assets/kyaw_devops.pdf" download
+                  ><svg class="i" style="width: 16px; height: 16px">
+                    <use href="#i-down" />
+                  </svg>
+                  DevOps</a
+                >
+              </div>
+            </div>
+
+            <div class="kube">
+              <h3>
+                <svg class="i"><use href="#i-k8s" /></svg> CNCF Kubestronaut
+              </h3>
+              <p>
+                Elite CNCF status earned by passing all five core Kubernetes
+                certifications — CKA, CKAD, CKS, KCNA and KCSA. Fewer than a
+                thousand engineers worldwide hold it.
+              </p>
+              <a
+                class="btn"
+                href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu"
+                target="_blank"
+                rel="noopener"
+                >Verify on CNCF →</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="eyebrow">Career history</div>
+          <h2>Experience</h2>
+          <div class="tl">
+            <div class="job now">
+              <div class="when">Apr 2022 — Present · Dubai, UAE</div>
+              <h3>DevOps Engineer</h3>
+              <div class="co">Peg B Technology</div>
+              <ul>
+                <li>
+                  Design and operate production Kubernetes platforms on EKS and
+                  RKE2 for regulated fintech and telecom workloads.
+                </li>
+                <li>
+                  Run Istio service mesh in production — mTLS between services,
+                  ingress/egress policy, and an ambient mesh evaluation.
+                </li>
+                <li>
+                  Built GitOps delivery with Jenkins, GitHub Actions and
+                  Kustomize so environment promotion is a merge, not a ticket.
+                </li>
+                <li>
+                  Standardised secrets on HashiCorp Vault and HCP, with Keycloak
+                  as the OIDC issuer behind Kong API Gateway.
+                </li>
+                <li>
+                  Engineered the observability stack — Prometheus, Grafana and
+                  ELK with Fleet and APM agents across clusters.
+                </li>
+                <li>
+                  Own Kafka reliability including documented primary ↔ DR
+                  switchover procedures.
+                </li>
+                <li>
+                  Automate AWS infrastructure with Terraform, Ansible and Packer
+                  — SSM, S3, KMS and cross-account IAM.
+                </li>
+              </ul>
+              <div class="tags">
+                <span class="tag t-grape">Kubernetes</span
+                ><span class="tag t-mint">Istio</span
+                ><span class="tag t-sky">AWS</span
+                ><span class="tag t-butter">Vault</span>
+              </div>
+            </div>
+
+            <div class="job">
+              <div class="when">Jul 2020 — Apr 2022 · Myanmar</div>
+              <h3>System Engineer</h3>
+              <div class="co">GTMH Telecom</div>
+              <ul>
+                <li>
+                  Built and maintained private cloud infrastructure on VMware
+                  ESXi supporting telecom and fintech services.
+                </li>
+                <li>
+                  Introduced containerisation with Docker and early Kubernetes
+                  workloads to replace bare-metal deployments.
+                </li>
+                <li>
+                  Automated repetitive provisioning with Ansible and Bash,
+                  cutting manual build steps for new environments.
+                </li>
+                <li>
+                  Ran monitoring and alerting with Zabbix and the ELK stack
+                  across the server estate.
+                </li>
+                <li>
+                  Hardened Linux images and managed OS lifecycle for production
+                  hosts.
+                </li>
+              </ul>
+              <div class="tags">
+                <span class="tag t-butter">Private cloud</span
+                ><span class="tag t-mint">Ansible</span
+                ><span class="tag t-sky">VMware</span>
+              </div>
+            </div>
+
+            <div class="job">
+              <div class="when">Jul 2019 — Jul 2020 · Myanmar</div>
+              <h3>System Engineer</h3>
+              <div class="co">Fortune Broadband</div>
+              <ul>
+                <li>
+                  Operated ISP network and Linux server infrastructure serving
+                  broadband subscribers.
+                </li>
+                <li>
+                  Deployed LibreNMS and Zabbix for network-wide visibility and
+                  faster fault isolation.
+                </li>
+                <li>
+                  Handled escalated incidents across routing, DNS and service
+                  availability.
+                </li>
+              </ul>
+              <div class="tags">
+                <span class="tag t-sky">ISP</span
+                ><span class="tag t-coral">Networking</span>
+              </div>
+            </div>
+
+            <div class="job">
+              <div class="when">Jan 2018 — Jan 2019 · Myanmar</div>
+              <h3>System Support Engineer</h3>
+              <div class="co">Sysnet System PTE Ltd</div>
+              <ul>
+                <li>
+                  Deployed and supported healthcare systems on client sites as
+                  part of an SI team.
+                </li>
+                <li>
+                  Managed Windows and Linux servers, backups and user access for
+                  hospital deployments.
+                </li>
+              </ul>
+              <div class="tags">
+                <span class="tag t-coral">Healthcare</span
+                ><span class="tag t-butter">SI</span>
+              </div>
+            </div>
+
+            <div class="job">
+              <div class="when">Dec 2016 — Jan 2018 · Myanmar</div>
+              <h3>Junior System Administrator</h3>
+              <div class="co">RITZ Public Company Limited</div>
+              <ul>
+                <li>
+                  Where it started — Linux administration, networking
+                  fundamentals and daily operations.
+                </li>
+                <li>
+                  Wrote the first shell scripts that made me realise automation
+                  was the actual job.
+                </li>
+              </ul>
+              <div class="tags">
+                <span class="tag t-mint">Linux</span
+                ><span class="tag t-sky">Networking</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="eyebrow">Academic background</div>
+          <h2>Education</h2>
+          <div class="edugrid">
+            <div
+              class="pop"
+              style="
+                padding: 18px;
+                display: flex;
+                gap: 14px;
+                align-items: center;
+              "
+            >
+              <div class="tile tile-lg" style="background: var(--mint)">
+                <svg class="i"><use href="#i-code" /></svg>
+              </div>
+              <div>
+                <h3>
+                  Bachelor of Computing
+                  <span
+                    class="tag t-mint"
+                    style="vertical-align: middle; font-size: 11px"
+                    >In progress</span
+                  >
+                </h3>
+                <div style="font-size: 14px; color: var(--muted)">
+                  NCC Education · Strategy First University · Present
+                </div>
+              </div>
+            </div>
+            <div
+              class="pop"
+              style="
+                padding: 18px;
+                display: flex;
+                gap: 14px;
+                align-items: center;
+              "
+            >
+              <div class="tile tile-lg" style="background: var(--butter)">
+                <svg class="i"><use href="#i-cap" /></svg>
+              </div>
+              <div>
+                <h3>BA (English)</h3>
+                <div style="font-size: 14px; color: var(--muted)">
+                  University of Dagon, Yangon · 2014 – 2019
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-      <div class="pop" style="padding:18px;display:flex;gap:14px;align-items:center">
-        <div class="tile tile-lg" style="background:var(--butter)"><svg class="i"><use href="#i-cap"/></svg></div>
-        <div>
-          <h3>BA (English)</h3>
-          <div style="font-size:14px;color:var(--muted)">University of Dagon, Yangon · 2014 – 2019</div>
-        </div>
+
+      <!-- ============ SKILLS + CERTS ============ -->
+      <div class="page" id="p-skills">
+        <section>
+          <div class="eyebrow">Core competencies</div>
+          <h2>Skills &amp; technologies</h2>
+          <p class="lead" style="margin: 10px 0 20px">
+            Grouped by what they actually do, not by vendor.
+          </p>
+
+          <div class="skillgrid">
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-k8s" /></svg
+                ></span>
+                Kubernetes &amp; orchestration
+              </h3>
+              <div class="tags">
+                <span class="tag t-grape">K8s (CKA)</span
+                ><span class="tag">Rancher</span><span class="tag">Helm</span
+                ><span class="tag">Kustomize</span><span class="tag">EKS</span
+                ><span class="tag">RKE2</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--mint)"
+                  ><svg class="i"><use href="#i-mesh" /></svg
+                ></span>
+                Service mesh &amp; networking
+              </h3>
+              <div class="tags">
+                <span class="tag t-mint">Istio (ICA)</span
+                ><span class="tag">NGINX</span
+                ><span class="tag">CNI plugins</span
+                ><span class="tag">Ingress/Egress</span
+                ><span class="tag">mTLS</span><span class="tag">Consul</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-iac" /></svg
+                ></span>
+                Infrastructure as code
+              </h3>
+              <div class="tags">
+                <span class="tag t-sky">Terraform</span
+                ><span class="tag">Ansible</span><span class="tag">Packer</span
+                ><span class="tag">Helm charts</span
+                ><span class="tag">Manifests</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--coral)"
+                  ><svg class="i"><use href="#i-cicd" /></svg
+                ></span>
+                CI/CD &amp; GitOps
+              </h3>
+              <div class="tags">
+                <span class="tag t-coral">Jenkins</span
+                ><span class="tag">GitHub Actions</span
+                ><span class="tag">GitOps</span><span class="tag">Gitea</span
+                ><span class="tag">Bitbucket</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-cloud" /></svg
+                ></span>
+                Cloud platforms
+              </h3>
+              <div class="tags">
+                <span class="tag t-butter">AWS</span
+                ><span class="tag">Huawei Cloud</span
+                ><span class="tag">Hybrid-cloud</span
+                ><span class="tag">VMware ESXi</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-chart" /></svg
+                ></span>
+                Observability &amp; monitoring
+              </h3>
+              <div class="tags">
+                <span class="tag t-grape">Prometheus</span
+                ><span class="tag">Grafana</span
+                ><span class="tag">ELK Stack</span
+                ><span class="tag">Zabbix</span
+                ><span class="tag">LibreNMS</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--mint)"
+                  ><svg class="i"><use href="#i-lock" /></svg
+                ></span>
+                Security &amp; identity
+              </h3>
+              <div class="tags">
+                <span class="tag t-mint">HashiCorp Vault</span
+                ><span class="tag">HCP</span><span class="tag">Keycloak</span
+                ><span class="tag">OIDC</span
+                ><span class="tag">Kong API GW</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-msg" /></svg
+                ></span>
+                Data &amp; messaging
+              </h3>
+              <div class="tags">
+                <span class="tag t-sky">Kafka</span
+                ><span class="tag">Kafka Connect</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--coral)"
+                  ><svg class="i"><use href="#i-linux" /></svg
+                ></span>
+                Linux &amp; containers
+              </h3>
+              <div class="tags">
+                <span class="tag t-coral">RHCSA</span
+                ><span class="tag">Docker</span
+                ><span class="tag">Security hardening</span
+                ><span class="tag">OS imaging</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-code" /></svg
+                ></span>
+                Programming &amp; scripting
+              </h3>
+              <div class="tags">
+                <span class="tag t-butter">Python</span
+                ><span class="tag">Bash</span
+                ><span class="tag">Shell scripting</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="eyebrow">Professional credentials</div>
+          <h2>Certifications</h2>
+
+          <div class="kbprog">
+            <h3
+              style="
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                font-size: 17px;
+              "
+            >
+              <svg class="i" style="width: 21px; height: 21px">
+                <use href="#i-k8s" />
+              </svg>
+              Kubestronaut progress
+            </h3>
+            <div
+              style="font-size: 13.5px; color: var(--muted); margin-top: 5px"
+            >
+              All 5 core Kubernetes certifications · complete
+            </div>
+            <div class="pips">
+              <span class="pip"
+                ><svg class="i"><use href="#i-check" /></svg
+              ></span>
+              <span class="pip"
+                ><svg class="i"><use href="#i-check" /></svg
+              ></span>
+              <span class="pip"
+                ><svg class="i"><use href="#i-check" /></svg
+              ></span>
+              <span class="pip"
+                ><svg class="i"><use href="#i-check" /></svg
+              ></span>
+              <span class="pip"
+                ><svg class="i"><use href="#i-check" /></svg
+              ></span>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                font: 600 10.5px &quot;Inter&quot;;
+                color: var(--muted);
+                margin-top: 6px;
+              "
+            >
+              <span>CKA</span><span>CKAD</span><span>CKS</span><span>KCNA</span
+              ><span>KCSA</span>
+            </div>
+          </div>
+
+          <p class="lead" style="margin: 20px 0 0; font-size: 15px">
+            Every badge below is clickable and independently verifiable.
+          </p>
+
+          <div class="certs">
+            <a
+              class="cert"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#6C5CE7"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g
+                  stroke="#fff"
+                  stroke-width="2.4"
+                  fill="none"
+                  stroke-linecap="round"
+                >
+                  <path d="M30 17l11 6.3v12.4L30 42l-11-6.3V23.3z" />
+                  <circle cx="30" cy="29.5" r="3.4" />
+                </g>
+              </svg>
+              <b>CKA</b
+              ><span class="full">Certified Kubernetes Administrator</span>
+              <span class="vf"
+                >Credly <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+
+            <a
+              class="cert"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#4EA8F5"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g
+                  stroke="#16161D"
+                  stroke-width="2.6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M25 22l-6 7.5 6 7.5M35 22l6 7.5-6 7.5" />
+                </g>
+              </svg>
+              <b>CKAD</b
+              ><span class="full"
+                >Certified Kubernetes Application Developer</span
+              >
+              <span class="vf"
+                >Credly <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+
+            <a
+              class="cert"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#2EC4A6"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g stroke="#16161D" stroke-width="2.6" fill="none">
+                  <rect x="22" y="28" width="16" height="12" rx="3" />
+                  <path d="M25.5 28v-3.5a4.5 4.5 0 0 1 9 0V28" />
+                </g>
+              </svg>
+              <b>CKS</b
+              ><span class="full"
+                >Certified Kubernetes Security Specialist</span
+              >
+              <span class="vf"
+                >Credly <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+
+            <a
+              class="cert"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#FFD24C"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g
+                  stroke="#16161D"
+                  stroke-width="2.6"
+                  fill="none"
+                  stroke-linecap="round"
+                >
+                  <path
+                    d="M23 38a5.5 5.5 0 0 1-.4-11 7.5 7.5 0 0 1 14.5-1.8A5.2 5.2 0 0 1 38 38z"
+                  />
+                </g>
+              </svg>
+              <b>KCNA</b
+              ><span class="full">Kubernetes and Cloud Native Associate</span>
+              <span class="vf"
+                >Credly <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+
+            <a
+              class="cert"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#FF7A45"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g
+                  stroke="#16161D"
+                  stroke-width="2.6"
+                  fill="none"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M30 20l10 4v8c0 5.5-4.5 9.5-10 11-5.5-1.5-10-5.5-10-11v-8z"
+                  />
+                  <path d="M26 31l3 3 5.5-5.5" stroke-linecap="round" />
+                </g>
+              </svg>
+              <b>KCSA</b
+              ><span class="full"
+                >Kubernetes and Cloud Native Security Associate</span
+              >
+              <span class="vf"
+                >Credly <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+
+            <a
+              class="cert"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#FFF6E9"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g stroke="#16161D" stroke-width="2.6" fill="none">
+                  <circle cx="30" cy="21" r="3" />
+                  <circle cx="21" cy="38" r="3" />
+                  <circle cx="39" cy="38" r="3" />
+                  <path d="M30 24v6M27.5 23l-5 12M32.5 23l5 12M24 38h12" />
+                </g>
+              </svg>
+              <b>ICA</b><span class="full">Istio Certified Associate</span>
+              <span class="vf"
+                >Credly <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+
+            <a
+              class="cert"
+              href="https://rhtapps.redhat.com/verify?certId=210-230-223"
+              target="_blank"
+              rel="noopener"
+              style="grid-column: span 2"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#EE0000"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g
+                  stroke="#fff"
+                  stroke-width="2.6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M19 30c0-4 5-7 11-7s11 3 11 7-5 8-11 8-11-4-11-8z" />
+                  <path d="M23 27c2-3 12-3 14 0" />
+                </g>
+              </svg>
+              <b>RHCSA</b
+              ><span class="full">Red Hat Certified System Administrator</span>
+              <span class="vf"
+                >Verify at Red Hat
+                <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
+          </div>
+
+          <div class="btn-row">
+            <a
+              class="btn btn-sm"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+              ><svg class="i" style="width: 16px; height: 16px">
+                <use href="#i-badge" />
+              </svg>
+              All Credly badges</a
+            >
+            <a
+              class="btn btn-sm"
+              href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu"
+              target="_blank"
+              rel="noopener"
+              ><svg class="i" style="width: 16px; height: 16px">
+                <use href="#i-k8s" />
+              </svg>
+              CNCF profile</a
+            >
+          </div>
+        </section>
       </div>
-    </div>
-  </section>
-</div>
 
-<!-- ============ SKILLS + CERTS ============ -->
-<div class="page" id="p-skills">
-  <section>
-    <div class="eyebrow">Core competencies</div>
-    <h2>Skills &amp; technologies</h2>
-    <p class="lead" style="margin:10px 0 20px">Grouped by what they actually do, not by vendor.</p>
+      <!-- ============ PORTFOLIO ============ -->
+      <div class="page" id="p-portfolio">
+        <section>
+          <div class="eyebrow">Projects &amp; research</div>
+          <h2>Portfolio &amp; diagrams</h2>
+          <p class="lead" style="margin: 10px 0 14px">
+            Documented research, architecture diagrams and hands-on
+            implementations. Filter by domain, then tap a topic.
+          </p>
 
-    <div class="skillgrid">
-    <div class="skillbox"><h3><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-k8s"/></svg></span> Kubernetes &amp; orchestration</h3>
-      <div class="tags"><span class="tag t-grape">K8s (CKA)</span><span class="tag">Rancher</span><span class="tag">Helm</span><span class="tag">Kustomize</span><span class="tag">EKS</span><span class="tag">RKE2</span></div></div>
+          <div class="filters">
+            <button class="chip on" data-f="all" onclick="filt(this)">
+              All · 13
+            </button>
+            <button class="chip" data-f="platform" onclick="filt(this)">
+              Platform
+            </button>
+            <button class="chip" data-f="cloud" onclick="filt(this)">
+              Cloud &amp; IaC
+            </button>
+            <button class="chip" data-f="net" onclick="filt(this)">
+              Networking &amp; API GW
+            </button>
+            <button class="chip" data-f="sec" onclick="filt(this)">
+              Security &amp; identity
+            </button>
+            <button class="chip" data-f="data" onclick="filt(this)">
+              Data &amp; observability
+            </button>
+          </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--mint)"><svg class="i"><use href="#i-mesh"/></svg></span> Service mesh &amp; networking</h3>
-      <div class="tags"><span class="tag t-mint">Istio (ICA)</span><span class="tag">NGINX</span><span class="tag">CNI plugins</span><span class="tag">Ingress/Egress</span><span class="tag">mTLS</span><span class="tag">Consul</span></div></div>
+          <div class="warnbox">
+            Credentials, tokens and external links in these projects are
+            invalidated — they exist for demonstration and documentation only.
+          </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-iac"/></svg></span> Infrastructure as code</h3>
-      <div class="tags"><span class="tag t-sky">Terraform</span><span class="tag">Ansible</span><span class="tag">Packer</span><span class="tag">Helm charts</span><span class="tag">Manifests</span></div></div>
+          <div class="accgrid">
+            <!-- PLATFORM -->
+            <div class="groupname" data-g="platform">
+              Platform &amp; delivery
+            </div>
+            <div class="acc" data-g="platform">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-k8s" /></svg
+                ></span>
+                Kubernetes &amp; EKS <span class="count">6</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/K8s-Kustomize-Minio-26a7346d5fdc80bf80afe0286659cc99"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> K8s Kustomize &amp;
+                  Minio</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/eks-roles-mapping-iam"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> EKS IAM roles
+                  mapping</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/k8s-kustomize-deep-dive"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> K8s Kustomize deep
+                  dive</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/2J5dC4WV8hn"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> EKS detailed
+                  diagram</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/64KXGLHiUn"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> K8s service accounts
+                  v1.22</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Single cluster —
+                  multi DC + Kafka</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--coral)"><svg class="i"><use href="#i-cicd"/></svg></span> CI/CD &amp; GitOps</h3>
-      <div class="tags"><span class="tag t-coral">Jenkins</span><span class="tag">GitHub Actions</span><span class="tag">GitOps</span><span class="tag">Gitea</span><span class="tag">Bitbucket</span></div></div>
+            <div class="acc" data-g="platform">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--coral)"
+                  ><svg class="i"><use href="#i-cicd" /></svg
+                ></span>
+                CI/CD &amp; GitOps <span class="count">3</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://www.notion.so/CI-CD-Complete-Documentation-2687346d5fdc81f38eb6c79cdc407cf2"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> CI/CD complete
+                  documentation</a
+                >
+                <a
+                  class="lk"
+                  href="https://www.notion.so/GithubWorkFlow-EKS-CICD-26a7346d5fdc8039a517ef901172c2aa"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> GitHub Workflow EKS
+                  CI/CD</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/8jzN9LHMCE7"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> GitOps detailed
+                  implementation</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-cloud"/></svg></span> Cloud platforms</h3>
-      <div class="tags"><span class="tag t-butter">AWS</span><span class="tag">Huawei Cloud</span><span class="tag">Hybrid-cloud</span><span class="tag">VMware ESXi</span></div></div>
+            <div class="acc" data-g="platform">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-cow" /></svg
+                ></span>
+                Rancher / RKE2 <span class="count">1</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/Rancher-RKE-2-2687346d5fdc813db7aaeeeb68acc9bb"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> Rancher RKE2
+                  documentation</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-chart"/></svg></span> Observability &amp; monitoring</h3>
-      <div class="tags"><span class="tag t-grape">Prometheus</span><span class="tag">Grafana</span><span class="tag">ELK Stack</span><span class="tag">Zabbix</span><span class="tag">LibreNMS</span></div></div>
+            <!-- CLOUD -->
+            <div class="groupname" data-g="cloud">
+              Cloud &amp; infrastructure as code
+            </div>
+            <div class="acc" data-g="cloud">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-cloud" /></svg
+                ></span>
+                AWS cloud <span class="count">6</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/AWS-ARN-DeepDive-26a7346d5fdc809fb91ac7a927848170"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> AWS ARN deep dive</a
+                >
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/aws-assume-role-deep-dive-26a7346d5fdc80db9613c6e45abf14a3"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> AWS assume role deep
+                  dive</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/aws-ssm-s3-kms-packer-architecture"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> SSM + S3 + KMS +
+                  Packer architecture</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/aws-ssm-with-nat-gateway"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> AWS SSM with NAT
+                  gateway</a
+                >
+                <a
+                  class="lk"
+                  href="https://app.excalidraw.com/s/9hD7S5FgGWN/20EHmCmwG79"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> AWS SSM solution</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/kji9QPjfN9"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> How assume roles
+                  work</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--mint)"><svg class="i"><use href="#i-lock"/></svg></span> Security &amp; identity</h3>
-      <div class="tags"><span class="tag t-mint">HashiCorp Vault</span><span class="tag">HCP</span><span class="tag">Keycloak</span><span class="tag">OIDC</span><span class="tag">Kong API GW</span></div></div>
+            <div class="acc" data-g="cloud">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-iac" /></svg
+                ></span>
+                Terraform <span class="count">4</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://gitlab.com/hellocloud4602633/terraform-vpc-peering"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> Terraform VPC
+                  peering</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/8mPALVeTysY"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> CLI driven
+                  workflow</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/4Ad7x0VzXfV"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> How TF provider
+                  works</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/666nZqgAoRW"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> TF provider
+                  explanation</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-msg"/></svg></span> Data &amp; messaging</h3>
-      <div class="tags"><span class="tag t-sky">Kafka</span><span class="tag">Kafka Connect</span></div></div>
+            <!-- NETWORKING -->
+            <div class="groupname" data-g="net">
+              Networking, mesh &amp; API gateway
+            </div>
+            <div class="acc" data-g="net">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--mint)"
+                  ><svg class="i"><use href="#i-mesh" /></svg
+                ></span>
+                Istio / service mesh <span class="count">3</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/ambient-mesh-deepdive"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> Ambient mesh deep
+                  dive</a
+                >
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/API-Sources-Whitelist-High-Level-Overview-Why-ISTIO-2687346d5fdc81848113f3e4c815ae68"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> Why Istio — API
+                  sources whitelist</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Ii06PUN6hU"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Who injects the Istio
+                  sidecar</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--coral)"><svg class="i"><use href="#i-linux"/></svg></span> Linux &amp; containers</h3>
-      <div class="tags"><span class="tag t-coral">RHCSA</span><span class="tag">Docker</span><span class="tag">Security hardening</span><span class="tag">OS imaging</span></div></div>
+            <div class="acc" data-g="net">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--coral)"
+                  ><svg class="i"><use href="#i-gate" /></svg
+                ></span>
+                Kong API gateway <span class="count">3</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/kong-api-gateway-architecture"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> Kong API gateway
+                  architecture</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/7Q9hdJVTban"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Kong API GW
+                  architecture</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/70GLvpWZURW"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Kong API GW auth with
+                  JWT</a
+                >
+              </div>
+            </div>
 
-    <div class="skillbox"><h3><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-code"/></svg></span> Programming &amp; scripting</h3>
-      <div class="tags"><span class="tag t-butter">Python</span><span class="tag">Bash</span><span class="tag">Shell scripting</span></div></div>
-    </div>
-  </section>
+            <div class="acc" data-g="net">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-link" /></svg
+                ></span>
+                Consul / EKS <span class="count">3</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/7p5pYfX1m50"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Consul datacenter on
+                  EKS</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Guild2lhV4"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Service registration
+                  &amp; connect</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/A326WwhNFAd"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Intentions &amp;
+                  traffic policy</a
+                >
+              </div>
+            </div>
 
-  <section>
-    <div class="eyebrow">Professional credentials</div>
-    <h2>Certifications</h2>
+            <div class="acc" data-g="net">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-radio" /></svg
+                ></span>
+                WebRTC / STUN / Cloudflare <span class="count">2</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://app.excalidraw.com/s/9hD7S5FgGWN/5ciC5HxRvTd"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> WebRTC
+                  troubleshooting — Cloudflare</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/5ciC5HxRvTd"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> STUN research</a
+                >
+              </div>
+            </div>
 
-    <div class="kbprog">
-      <h3 style="display:flex;align-items:center;gap:9px;font-size:17px"><svg class="i" style="width:21px;height:21px"><use href="#i-k8s"/></svg> Kubestronaut progress</h3>
-      <div style="font-size:13.5px;color:var(--muted);margin-top:5px">All 5 core Kubernetes certifications · complete</div>
-      <div class="pips">
-        <span class="pip"><svg class="i"><use href="#i-check"/></svg></span>
-        <span class="pip"><svg class="i"><use href="#i-check"/></svg></span>
-        <span class="pip"><svg class="i"><use href="#i-check"/></svg></span>
-        <span class="pip"><svg class="i"><use href="#i-check"/></svg></span>
-        <span class="pip"><svg class="i"><use href="#i-check"/></svg></span>
+            <!-- SECURITY -->
+            <div class="groupname" data-g="sec">Security &amp; identity</div>
+            <div class="acc" data-g="sec">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--mint)"
+                  ><svg class="i"><use href="#i-lock" /></svg
+                ></span>
+                HashiCorp Vault / HCP <span class="count">4</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/hcp-vault-cluster"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> HCP Vault cluster</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/hcp-aws-private-peer-architecture"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> HCP AWS private peer
+                  architecture</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/hc-vpc-cross-peering-from-scratch"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> HC VPC cross peering
+                  from scratch</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/SGFnwKLqta"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Vault HCP peering
+                  architecture</a
+                >
+              </div>
+            </div>
+
+            <div class="acc" data-g="sec">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-key" /></svg
+                ></span>
+                Keycloak / IDP / IAM <span class="count">4</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/eks-keycloak-oidc-issuer"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> EKS Keycloak OIDC
+                  issuer</a
+                >
+                <a
+                  class="lk"
+                  href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-git">GitLab</span> Keycloak SSO
+                  federation gateway</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/ALXcJGLCxpw"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> IDP with email
+                  existing flow</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/1NT5qqBZhmG"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> Keycloak auth code
+                  flow</a
+                >
+              </div>
+            </div>
+
+            <!-- DATA -->
+            <div class="groupname" data-g="data">Data &amp; observability</div>
+            <div class="acc" data-g="data">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-msg" /></svg
+                ></span>
+                Kafka <span class="count">2</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/KAFKA-Switch-Over-From-Primary-To-DR-DR-To-Primary-2687346d5fdc81bda04bd79f0dd67369"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> Kafka switchover —
+                  primary ↔ DR</a
+                >
+                <a
+                  class="lk"
+                  href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-dia">Diagram</span> K8s multi-DC with
+                  Kafka</a
+                >
+              </div>
+            </div>
+
+            <div class="acc" data-g="data">
+              <button onclick="acc(this)">
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-chart" /></svg
+                ></span>
+                ELK / observability <span class="count">1</span
+                ><svg class="i chev" style="width: 15px; height: 15px">
+                  <use href="#i-chev" />
+                </svg>
+              </button>
+              <div class="body">
+                <a
+                  class="lk"
+                  href="https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41"
+                  target="_blank"
+                  rel="noopener"
+                  ><span class="kind k-note">Notion</span> ELK Fleet &amp; APM
+                  agent integration</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-      <div style="display:flex;justify-content:space-between;font:600 10.5px 'Inter';color:var(--muted);margin-top:6px">
-        <span>CKA</span><span>CKAD</span><span>CKS</span><span>KCNA</span><span>KCSA</span>
+
+      <!-- ============ BLOG ============ -->
+      <div class="page" id="p-blog">
+        <section>
+          <div class="eyebrow">Writing</div>
+          <h2>Blog</h2>
+          <p class="lead" style="margin: 10px 0 20px">
+            Long-form deep dives — the kind of write-up I wish I had found when
+            I was building the thing.
+          </p>
+
+          <a class="pop card" href="/blog/keycloak-sso-gateway.html">
+            <span
+              class="tag t-mint"
+              style="display: inline-block; margin-bottom: 9px"
+              >Deep dive · Authentication</span
+            >
+            <h3>
+              Keycloak SSO and identity federation behind an nginx/njs API
+              gateway
+            </h3>
+            <p>
+              Can an application own 100% of its login UI while an identity
+              provider still owns 100% of the credentials? I built the thing to
+              find out, and traced every request to see what actually happens —
+              seven auth flows end to end.
+            </p>
+            <div class="meta">
+              <span>7 Aug 2026</span>
+              <span class="readtime"
+                ><svg class="i"><use href="#i-clock" /></svg> 12 min</span
+              >
+              <span class="tag t-butter">Keycloak 26</span>
+              <span class="tag t-sky">nginx + njs</span>
+            </div>
+          </a>
+
+          <div class="note">
+            <strong>More on the way.</strong> Istio ambient mesh, Vault on HCP
+            and the Kafka DR switchover are next in the queue. In the meantime,
+            the deep-dive notes and diagrams live under
+            <a
+              href="#"
+              onclick="
+                go('portfolio');
+                return false;
+              "
+              style="color: var(--ink); text-decoration: underline"
+              >Work</a
+            >.
+          </div>
+        </section>
       </div>
-    </div>
 
-    <p class="lead" style="margin:20px 0 0;font-size:15px">Every badge below is clickable and independently verifiable.</p>
+      <!-- ============ ABOUT ============ -->
+      <div class="page" id="p-about">
+        <section>
+          <div class="eyebrow">Who's typing</div>
+          <h2>About me</h2>
 
-    <div class="certs">
-      <a class="cert" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#6C5CE7" stroke="#16161D" stroke-width="3.5"/><g stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M30 17l11 6.3v12.4L30 42l-11-6.3V23.3z"/><circle cx="30" cy="29.5" r="3.4"/></g></svg>
-        <b>CKA</b><span class="full">Certified Kubernetes Administrator</span>
-        <span class="vf">Credly <svg class="i"><use href="#i-ext"/></svg></span></a>
-
-      <a class="cert" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#4EA8F5" stroke="#16161D" stroke-width="3.5"/><g stroke="#16161D" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M25 22l-6 7.5 6 7.5M35 22l6 7.5-6 7.5"/></g></svg>
-        <b>CKAD</b><span class="full">Certified Kubernetes Application Developer</span>
-        <span class="vf">Credly <svg class="i"><use href="#i-ext"/></svg></span></a>
-
-      <a class="cert" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#2EC4A6" stroke="#16161D" stroke-width="3.5"/><g stroke="#16161D" stroke-width="2.6" fill="none"><rect x="22" y="28" width="16" height="12" rx="3"/><path d="M25.5 28v-3.5a4.5 4.5 0 0 1 9 0V28"/></g></svg>
-        <b>CKS</b><span class="full">Certified Kubernetes Security Specialist</span>
-        <span class="vf">Credly <svg class="i"><use href="#i-ext"/></svg></span></a>
-
-      <a class="cert" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#FFD24C" stroke="#16161D" stroke-width="3.5"/><g stroke="#16161D" stroke-width="2.6" fill="none" stroke-linecap="round"><path d="M23 38a5.5 5.5 0 0 1-.4-11 7.5 7.5 0 0 1 14.5-1.8A5.2 5.2 0 0 1 38 38z"/></g></svg>
-        <b>KCNA</b><span class="full">Kubernetes and Cloud Native Associate</span>
-        <span class="vf">Credly <svg class="i"><use href="#i-ext"/></svg></span></a>
-
-      <a class="cert" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#FF7A45" stroke="#16161D" stroke-width="3.5"/><g stroke="#16161D" stroke-width="2.6" fill="none" stroke-linejoin="round"><path d="M30 20l10 4v8c0 5.5-4.5 9.5-10 11-5.5-1.5-10-5.5-10-11v-8z"/><path d="M26 31l3 3 5.5-5.5" stroke-linecap="round"/></g></svg>
-        <b>KCSA</b><span class="full">Kubernetes and Cloud Native Security Associate</span>
-        <span class="vf">Credly <svg class="i"><use href="#i-ext"/></svg></span></a>
-
-      <a class="cert" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#FFF6E9" stroke="#16161D" stroke-width="3.5"/><g stroke="#16161D" stroke-width="2.6" fill="none"><circle cx="30" cy="21" r="3"/><circle cx="21" cy="38" r="3"/><circle cx="39" cy="38" r="3"/><path d="M30 24v6M27.5 23l-5 12M32.5 23l5 12M24 38h12"/></g></svg>
-        <b>ICA</b><span class="full">Istio Certified Associate</span>
-        <span class="vf">Credly <svg class="i"><use href="#i-ext"/></svg></span></a>
-
-      <a class="cert" href="https://rhtapps.redhat.com/verify?certId=210-230-223" target="_blank" rel="noopener" style="grid-column:span 2">
-        <svg class="hex" viewBox="0 0 60 60"><polygon points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5" fill="#EE0000" stroke="#16161D" stroke-width="3.5"/><g stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 30c0-4 5-7 11-7s11 3 11 7-5 8-11 8-11-4-11-8z"/><path d="M23 27c2-3 12-3 14 0"/></g></svg>
-        <b>RHCSA</b><span class="full">Red Hat Certified System Administrator</span>
-        <span class="vf">Verify at Red Hat <svg class="i"><use href="#i-ext"/></svg></span></a>
-    </div>
-
-    <div class="btn-row">
-      <a class="btn btn-sm" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener"><svg class="i" style="width:16px;height:16px"><use href="#i-badge"/></svg> All Credly badges</a>
-      <a class="btn btn-sm" href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener"><svg class="i" style="width:16px;height:16px"><use href="#i-k8s"/></svg> CNCF profile</a>
-    </div>
-  </section>
-</div>
-
-<!-- ============ PORTFOLIO ============ -->
-<div class="page" id="p-portfolio">
-  <section>
-    <div class="eyebrow">Projects &amp; research</div>
-    <h2>Portfolio &amp; diagrams</h2>
-    <p class="lead" style="margin:10px 0 14px">Documented research, architecture diagrams and hands-on implementations. Filter by domain, then tap a topic.</p>
-
-    <div class="filters">
-      <button class="chip on" data-f="all" onclick="filt(this)">All · 13</button>
-      <button class="chip" data-f="platform" onclick="filt(this)">Platform</button>
-      <button class="chip" data-f="cloud" onclick="filt(this)">Cloud &amp; IaC</button>
-      <button class="chip" data-f="net" onclick="filt(this)">Networking &amp; API GW</button>
-      <button class="chip" data-f="sec" onclick="filt(this)">Security &amp; identity</button>
-      <button class="chip" data-f="data" onclick="filt(this)">Data &amp; observability</button>
-    </div>
-
-    <div class="warnbox">Credentials, tokens and external links in these projects are invalidated — they exist for demonstration and documentation only.</div>
-
-    <div class="accgrid">
-    <!-- PLATFORM -->
-    <div class="groupname" data-g="platform">Platform &amp; delivery</div>
-    <div class="acc" data-g="platform"><button onclick="acc(this)"><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-k8s"/></svg></span> Kubernetes &amp; EKS <span class="count">6</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://marred-network-70a.notion.site/K8s-Kustomize-Minio-26a7346d5fdc80bf80afe0286659cc99" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> K8s Kustomize &amp; Minio</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/eks-roles-mapping-iam" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> EKS IAM roles mapping</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/k8s-kustomize-deep-dive" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> K8s Kustomize deep dive</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/2J5dC4WV8hn" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> EKS detailed diagram</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/64KXGLHiUn" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> K8s service accounts v1.22</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Single cluster — multi DC + Kafka</a>
-      </div></div>
-
-    <div class="acc" data-g="platform"><button onclick="acc(this)"><span class="tile" style="background:var(--coral)"><svg class="i"><use href="#i-cicd"/></svg></span> CI/CD &amp; GitOps <span class="count">3</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://www.notion.so/CI-CD-Complete-Documentation-2687346d5fdc81f38eb6c79cdc407cf2" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> CI/CD complete documentation</a>
-        <a class="lk" href="https://www.notion.so/GithubWorkFlow-EKS-CICD-26a7346d5fdc8039a517ef901172c2aa" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> GitHub Workflow EKS CI/CD</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8jzN9LHMCE7" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> GitOps detailed implementation</a>
-      </div></div>
-
-    <div class="acc" data-g="platform"><button onclick="acc(this)"><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-cow"/></svg></span> Rancher / RKE2 <span class="count">1</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://marred-network-70a.notion.site/Rancher-RKE-2-2687346d5fdc813db7aaeeeb68acc9bb" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> Rancher RKE2 documentation</a>
-      </div></div>
-
-    <!-- CLOUD -->
-    <div class="groupname" data-g="cloud">Cloud &amp; infrastructure as code</div>
-    <div class="acc" data-g="cloud"><button onclick="acc(this)"><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-cloud"/></svg></span> AWS cloud <span class="count">6</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://marred-network-70a.notion.site/AWS-ARN-DeepDive-26a7346d5fdc809fb91ac7a927848170" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> AWS ARN deep dive</a>
-        <a class="lk" href="https://marred-network-70a.notion.site/aws-assume-role-deep-dive-26a7346d5fdc80db9613c6e45abf14a3" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> AWS assume role deep dive</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/aws-ssm-s3-kms-packer-architecture" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> SSM + S3 + KMS + Packer architecture</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/aws-ssm-with-nat-gateway" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> AWS SSM with NAT gateway</a>
-        <a class="lk" href="https://app.excalidraw.com/s/9hD7S5FgGWN/20EHmCmwG79" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> AWS SSM solution</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/kji9QPjfN9" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> How assume roles work</a>
-      </div></div>
-
-    <div class="acc" data-g="cloud"><button onclick="acc(this)"><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-iac"/></svg></span> Terraform <span class="count">4</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://gitlab.com/hellocloud4602633/terraform-vpc-peering" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> Terraform VPC peering</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8mPALVeTysY" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> CLI driven workflow</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/4Ad7x0VzXfV" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> How TF provider works</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/666nZqgAoRW" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> TF provider explanation</a>
-      </div></div>
-
-    <!-- NETWORKING -->
-    <div class="groupname" data-g="net">Networking, mesh &amp; API gateway</div>
-    <div class="acc" data-g="net"><button onclick="acc(this)"><span class="tile" style="background:var(--mint)"><svg class="i"><use href="#i-mesh"/></svg></span> Istio / service mesh <span class="count">3</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://gitlab.com/kyawsithu96/ambient-mesh-deepdive" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> Ambient mesh deep dive</a>
-        <a class="lk" href="https://marred-network-70a.notion.site/API-Sources-Whitelist-High-Level-Overview-Why-ISTIO-2687346d5fdc81848113f3e4c815ae68" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> Why Istio — API sources whitelist</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Ii06PUN6hU" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Who injects the Istio sidecar</a>
-      </div></div>
-
-    <div class="acc" data-g="net"><button onclick="acc(this)"><span class="tile" style="background:var(--coral)"><svg class="i"><use href="#i-gate"/></svg></span> Kong API gateway <span class="count">3</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://gitlab.com/kyawsithu96/kong-api-gateway-architecture" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> Kong API gateway architecture</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/7Q9hdJVTban" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Kong API GW architecture</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/70GLvpWZURW" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Kong API GW auth with JWT</a>
-      </div></div>
-
-    <div class="acc" data-g="net"><button onclick="acc(this)"><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-link"/></svg></span> Consul / EKS <span class="count">3</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/7p5pYfX1m50" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Consul datacenter on EKS</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/5Guild2lhV4" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Service registration &amp; connect</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/A326WwhNFAd" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Intentions &amp; traffic policy</a>
-      </div></div>
-
-    <div class="acc" data-g="net"><button onclick="acc(this)"><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-radio"/></svg></span> WebRTC / STUN / Cloudflare <span class="count">2</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://app.excalidraw.com/s/9hD7S5FgGWN/5ciC5HxRvTd" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> WebRTC troubleshooting — Cloudflare</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/5ciC5HxRvTd" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> STUN research</a>
-      </div></div>
-
-    <!-- SECURITY -->
-    <div class="groupname" data-g="sec">Security &amp; identity</div>
-    <div class="acc" data-g="sec"><button onclick="acc(this)"><span class="tile" style="background:var(--mint)"><svg class="i"><use href="#i-lock"/></svg></span> HashiCorp Vault / HCP <span class="count">4</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://gitlab.com/kyawsithu96/hcp-vault-cluster" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> HCP Vault cluster</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/hcp-aws-private-peer-architecture" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> HCP AWS private peer architecture</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/hc-vpc-cross-peering-from-scratch" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> HC VPC cross peering from scratch</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/SGFnwKLqta" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Vault HCP peering architecture</a>
-      </div></div>
-
-    <div class="acc" data-g="sec"><button onclick="acc(this)"><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-key"/></svg></span> Keycloak / IDP / IAM <span class="count">4</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://gitlab.com/kyawsithu96/eks-keycloak-oidc-issuer" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> EKS Keycloak OIDC issuer</a>
-        <a class="lk" href="https://gitlab.com/kyawsithu96/keycloak-sso-federation-gateway" target="_blank" rel="noopener"><span class="kind k-git">GitLab</span> Keycloak SSO federation gateway</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/ALXcJGLCxpw" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> IDP with email existing flow</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/1NT5qqBZhmG" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> Keycloak auth code flow</a>
-      </div></div>
-
-    <!-- DATA -->
-    <div class="groupname" data-g="data">Data &amp; observability</div>
-    <div class="acc" data-g="data"><button onclick="acc(this)"><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-msg"/></svg></span> Kafka <span class="count">2</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://marred-network-70a.notion.site/KAFKA-Switch-Over-From-Primary-To-DR-DR-To-Primary-2687346d5fdc81bda04bd79f0dd67369" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> Kafka switchover — primary ↔ DR</a>
-        <a class="lk" href="https://link.excalidraw.com/l/9hD7S5FgGWN/8F1PcxVKygw" target="_blank" rel="noopener"><span class="kind k-dia">Diagram</span> K8s multi-DC with Kafka</a>
-      </div></div>
-
-    <div class="acc" data-g="data"><button onclick="acc(this)"><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-chart"/></svg></span> ELK / observability <span class="count">1</span><svg class="i chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>
-      <div class="body">
-        <a class="lk" href="https://marred-network-70a.notion.site/ELK-Fleet-APM-Agent-Integration-2687346d5fdc81cbb121db468f191d41" target="_blank" rel="noopener"><span class="kind k-note">Notion</span> ELK Fleet &amp; APM agent integration</a>
-      </div></div>
-    </div>
-  </section>
-</div>
-
-<!-- ============ BLOG ============ -->
-<div class="page" id="p-blog">
-  <section>
-    <div class="eyebrow">Writing</div>
-    <h2>Blog</h2>
-    <p class="lead" style="margin:10px 0 20px">Long-form deep dives — the kind of write-up I wish I had found when I was building the thing.</p>
-
-    <a class="pop card" href="/blog/keycloak-sso-gateway.html">
-      <span class="tag t-mint" style="display:inline-block;margin-bottom:9px">Deep dive · Authentication</span>
-      <h3>Keycloak SSO and identity federation behind an nginx/njs API gateway</h3>
-      <p>Can an application own 100% of its login UI while an identity provider still owns 100% of the credentials? I built the thing to find out, and traced every request to see what actually happens — seven auth flows end to end.</p>
-      <div class="meta">
-        <span>7 Aug 2026</span>
-        <span class="readtime"><svg class="i"><use href="#i-clock"/></svg> 12 min</span>
-        <span class="tag t-butter">Keycloak 26</span>
-        <span class="tag t-sky">nginx + njs</span>
-      </div>
-    </a>
-
-    <div class="note">
-      <strong>More on the way.</strong> Istio ambient mesh, Vault on HCP and the Kafka DR switchover are next in the queue. In the meantime, the deep-dive notes and diagrams live under <a href="#" onclick="go('portfolio');return false" style="color:var(--ink);text-decoration:underline">Work</a>.
-    </div>
-  </section>
-</div>
-
-<!-- ============ ABOUT ============ -->
-<div class="page" id="p-about">
-  <section>
-    <div class="eyebrow">Who's typing</div>
-    <h2>About me</h2>
-
-    <div class="term">
-      <div class="top">
-        <i style="background:#FF7A45"></i><i style="background:#FFD24C"></i><i style="background:#2EC4A6"></i>
-        <span>kyawsithu@dubai — zsh</span>
-      </div>
-<pre><span class="p">➜</span> <span class="c">whoami</span>
+          <div class="term">
+            <div class="top">
+              <i style="background: #ff7a45"></i
+              ><i style="background: #ffd24c"></i
+              ><i style="background: #2ec4a6"></i>
+              <span>kyawsithu@dubai — zsh</span>
+            </div>
+            <pre><span class="p">➜</span> <span class="c">whoami</span>
 Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
 
 <span class="p">➜</span> <span class="cursor"></span></pre>
-    </div>
+          </div>
 
-    <div class="btn-row">
-      <a class="btn btn-sm btn-cta" href="/assets/kyaw-platform-engineer.pdf" download><svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg> Platform CV</a>
-      <a class="btn btn-sm" href="/assets/kyaw_devops.pdf" download><svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg> DevOps CV</a>
-      <a class="btn btn-sm" href="https://www.linkedin.com/in/thereisnokst/" target="_blank" rel="noopener"><svg class="i" style="width:15px;height:15px"><use href="#i-brief"/></svg> LinkedIn</a>
-    </div>
+          <div class="btn-row">
+            <a
+              class="btn btn-sm btn-cta"
+              href="/assets/kyaw-platform-engineer.pdf"
+              download
+              ><svg class="i" style="width: 15px; height: 15px">
+                <use href="#i-down" />
+              </svg>
+              Platform CV</a
+            >
+            <a class="btn btn-sm" href="/assets/kyaw_devops.pdf" download
+              ><svg class="i" style="width: 15px; height: 15px">
+                <use href="#i-down" />
+              </svg>
+              DevOps CV</a
+            >
+            <a
+              class="btn btn-sm"
+              href="https://www.linkedin.com/in/thereisnokst/"
+              target="_blank"
+              rel="noopener"
+              ><svg class="i" style="width: 15px; height: 15px">
+                <use href="#i-brief" />
+              </svg>
+              LinkedIn</a
+            >
+          </div>
 
-    <div class="grid2" style="margin-top:18px">
-      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-globe"/></svg> Based in</b><span>Dubai, UAE — open to Singapore and worldwide</span></div>
-      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-msg"/></svg> Languages</b><span>English · Burmese</span></div>
-      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-book"/></svg> Degrees</b><span>BA (English) · Bachelor of Computing, in progress</span></div>
-      <div class="mini"><b><svg class="i" style="width:16px;height:16px"><use href="#i-rocket"/></svg> Currently</b><span>Deep-diving PAM, AuthN/AuthZ, multi-cloud infra &amp; API gateways</span></div>
-    </div>
-  </section>
+          <div class="grid2" style="margin-top: 18px">
+            <div class="mini">
+              <b
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-globe" />
+                </svg>
+                Based in</b
+              ><span>Dubai, UAE — open to Singapore and worldwide</span>
+            </div>
+            <div class="mini">
+              <b
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-msg" />
+                </svg>
+                Languages</b
+              ><span>English · Burmese</span>
+            </div>
+            <div class="mini">
+              <b
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-book" />
+                </svg>
+                Degrees</b
+              ><span>BA (English)<br />Bachelor of Computing, in progress</span>
+            </div>
+            <div class="mini">
+              <b
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-rocket" />
+                </svg>
+                Currently</b
+              ><span
+                >Deep-diving PAM, AuthN/AuthZ, multi-cloud infra &amp; API
+                gateways</span
+              >
+            </div>
+          </div>
+        </section>
 
-  <section>
-    <div class="eyebrow">How I work</div>
-    <h2>Four principles</h2>
+        <section>
+          <div class="eyebrow">How I work</div>
+          <h2>Four principles</h2>
 
-    <div class="pringrid">
-    <div class="prin">
-      <div class="num" style="background:var(--butter)">1</div>
-      <div><h3>Heartwork</h3><p>Not just hard work. I care how the thing turns out after I hand it over — whether the next engineer can read it, run it and fix it without calling me.</p></div>
-    </div>
-    <div class="prin">
-      <div class="num" style="background:var(--mint)">2</div>
-      <div><h3>Passionate</h3><p>I chase the problems I find genuinely interesting, and it shows in the work. Most of the research on this site was done because I wanted to know, not because a ticket asked.</p></div>
-    </div>
-    <div class="prin">
-      <div class="num" style="background:var(--sky)">3</div>
-      <div><h3>Deep dive</h3><p>Surface-level answers don't stick. I trace a request end to end until I understand what actually happens — then write it down so the next person can skip the digging.</p></div>
-    </div>
-    <div class="prin">
-      <div class="num" style="background:var(--coral)">4</div>
-      <div><h3>Flexible</h3><p>I came up as a traditional system engineer — racks, ESXi, hand-built servers — and moved into DevOps and platform work. Tools change; being willing to relearn is the actual skill.</p></div>
-    </div>
-    </div>
-  </section>
+          <div class="pringrid">
+            <div class="prin">
+              <div class="num" style="background: var(--butter)">1</div>
+              <div>
+                <h3>Heartwork</h3>
+                <p>
+                  Not just hard work. I care how the thing turns out after I
+                  hand it over — whether the next engineer can read it, run it
+                  and fix it without calling me.
+                </p>
+              </div>
+            </div>
+            <div class="prin">
+              <div class="num" style="background: var(--mint)">2</div>
+              <div>
+                <h3>Passionate</h3>
+                <p>
+                  I chase the problems I find genuinely interesting, and it
+                  shows in the work. Most of the research on this site was done
+                  because I wanted to know, not because a ticket asked.
+                </p>
+              </div>
+            </div>
+            <div class="prin">
+              <div class="num" style="background: var(--sky)">3</div>
+              <div>
+                <h3>Deep dive</h3>
+                <p>
+                  Surface-level answers don't stick. I trace a request end to
+                  end until I understand what actually happens — then write it
+                  down so the next person can skip the digging.
+                </p>
+              </div>
+            </div>
+            <div class="prin">
+              <div class="num" style="background: var(--coral)">4</div>
+              <div>
+                <h3>Flexible</h3>
+                <p>
+                  I came up as a traditional system engineer — racks, ESXi,
+                  hand-built servers — and moved into DevOps and platform work.
+                  Tools change; being willing to relearn is the actual skill.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-  <section>
-    <div class="eyebrow">Community</div>
-    <h2>Beyond work</h2>
-    <p class="lead" style="margin:10px 0 18px">Built and run independently — giving back to the Myanmar expat community in Dubai.</p>
+        <section>
+          <div class="eyebrow">Community</div>
+          <h2>Beyond work</h2>
+          <p class="lead" style="margin: 10px 0 18px">
+            Built and run independently — giving back to the Myanmar expat
+            community in Dubai.
+          </p>
 
-    <div class="pop" style="padding:18px;margin-bottom:17px">
-      <h3 style="display:flex;align-items:center;gap:10px"><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-people"/></svg></span> Dubai IT Community</h3>
-      <div class="tags"><span class="tag t-sky">Moderator</span><span class="tag">Dubai, UAE</span><span class="tag">Since 2022</span></div>
-      <p style="font-size:14.5px;color:var(--muted);margin-top:12px">Active moderator in a Dubai-based IT professionals group, contributing knowledge and community support. Since 2022 the Myanmar IT community in Dubai has grown a lot — members are connecting, finding jobs and building careers. A small but meaningful impact on people's lives in a foreign country.</p>
-      <a class="btn btn-sm" style="margin-top:14px" href="https://www.facebook.com/share/g/1Ch3VBxtop/?mibextid=wwXIfr" target="_blank" rel="noopener"><svg class="i" style="width:15px;height:15px"><use href="#i-ext"/></svg> Join the group</a>
-    </div>
+          <div class="pop" style="padding: 18px; margin-bottom: 17px">
+            <h3 style="display: flex; align-items: center; gap: 10px">
+              <span class="tile" style="background: var(--sky)"
+                ><svg class="i"><use href="#i-people" /></svg
+              ></span>
+              Dubai IT Community
+            </h3>
+            <div class="tags">
+              <span class="tag t-sky">Moderator</span
+              ><span class="tag">Dubai, UAE</span
+              ><span class="tag">Since 2022</span>
+            </div>
+            <p style="font-size: 14.5px; color: var(--muted); margin-top: 12px">
+              Active moderator in a Dubai-based IT professionals group,
+              contributing knowledge and community support. Since 2022 the
+              Myanmar IT community in Dubai has grown a lot — members are
+              connecting, finding jobs and building careers. A small but
+              meaningful impact on people's lives in a foreign country.
+            </p>
+            <a
+              class="btn btn-sm"
+              style="margin-top: 14px"
+              href="https://www.facebook.com/share/g/1Ch3VBxtop/?mibextid=wwXIfr"
+              target="_blank"
+              rel="noopener"
+              ><svg class="i" style="width: 15px; height: 15px">
+                <use href="#i-ext" />
+              </svg>
+              Join the group</a
+            >
+          </div>
 
-    <div class="pop" style="padding:18px">
-      <h3 style="display:flex;align-items:center;gap:10px"><span class="tile" style="background:var(--mint)"><svg class="i"><use href="#i-globe"/></svg></span> Dubai Directory MM</h3>
-      <div class="tags"><span class="tag t-mint">Community</span><span class="tag t-butter">App paused</span><span class="tag"><strong>1,000+</strong> users</span><span class="tag"><strong>30</strong> businesses</span></div>
-      <p style="font-size:14.5px;color:var(--muted);margin-top:12px">A community platform and business directory for the Myanmar community in Dubai — connecting expats with local businesses, job resources and community support. Designed, built and operated as a personal initiative outside of work.</p>
-      <div class="warnbox" style="margin:14px 0 0;box-shadow:3px 3px 0 var(--ink)">The app is paused for a while — but the Facebook page is still active, and still helping people every day.</div>
-      <div class="btn-row" style="margin-top:16px">
-        <a class="btn btn-sm" href="https://www.facebook.com/dubaidirectorymm" target="_blank" rel="noopener"><svg class="i" style="width:15px;height:15px"><use href="#i-ext"/></svg> Facebook page</a>
-        <a class="btn btn-sm" href="https://dubaidirectorymm.com/" target="_blank" rel="noopener"><svg class="i" style="width:15px;height:15px"><use href="#i-globe"/></svg> Website</a>
-        <a class="btn btn-sm" href="https://play.google.com/store/apps/details?id=com.dubaidirectory.mm&hl=en" target="_blank" rel="noopener"><svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg> Google Play</a>
+          <div class="pop" style="padding: 18px">
+            <h3 style="display: flex; align-items: center; gap: 10px">
+              <span class="tile" style="background: var(--mint)"
+                ><svg class="i"><use href="#i-globe" /></svg
+              ></span>
+              Dubai Directory MM
+            </h3>
+            <div class="tags">
+              <span class="tag t-mint">Community</span
+              ><span class="tag t-butter">App paused</span
+              ><span class="tag"><strong>1,000+</strong> users</span
+              ><span class="tag"><strong>30</strong> businesses</span>
+            </div>
+            <p style="font-size: 14.5px; color: var(--muted); margin-top: 12px">
+              A community platform and business directory for the Myanmar
+              community in Dubai — connecting expats with local businesses, job
+              resources and community support. Designed, built and operated as a
+              personal initiative outside of work.
+            </p>
+            <div
+              class="warnbox"
+              style="margin: 14px 0 0; box-shadow: 3px 3px 0 var(--ink)"
+            >
+              The app is paused for a while — but the Facebook page is still
+              active, and still helping people every day.
+            </div>
+            <div class="btn-row" style="margin-top: 16px">
+              <a
+                class="btn btn-sm"
+                href="https://www.facebook.com/dubaidirectorymm"
+                target="_blank"
+                rel="noopener"
+                ><svg class="i" style="width: 15px; height: 15px">
+                  <use href="#i-ext" />
+                </svg>
+                Facebook page</a
+              >
+              <a
+                class="btn btn-sm"
+                href="https://dubaidirectorymm.com/"
+                target="_blank"
+                rel="noopener"
+                ><svg class="i" style="width: 15px; height: 15px">
+                  <use href="#i-globe" />
+                </svg>
+                Website</a
+              >
+              <a
+                class="btn btn-sm"
+                href="https://play.google.com/store/apps/details?id=com.dubaidirectory.mm&hl=en"
+                target="_blank"
+                rel="noopener"
+                ><svg class="i" style="width: 15px; height: 15px">
+                  <use href="#i-down" />
+                </svg>
+                Google Play</a
+              >
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
-  </section>
-</div>
 
-<!-- ============ CONTACT ============ -->
-<div class="page" id="p-contact">
-  <section>
-    <div class="eyebrow">Get in touch</div>
-    <h2>Contact me</h2>
-    <p class="lead" style="margin:10px 0 20px">Open to Platform Engineer, DevOps and Cloud-Native roles — based in Dubai, open to Singapore and worldwide.</p>
+      <!-- ============ CONTACT ============ -->
+      <div class="page" id="p-contact">
+        <section>
+          <div class="eyebrow">Get in touch</div>
+          <h2>Contact me</h2>
+          <p class="lead" style="margin: 10px 0 20px">
+            Open to Platform Engineer, DevOps and Cloud-Native roles — based in
+            Dubai, open to Singapore and worldwide.
+          </p>
 
-    <form id="cform" onsubmit="return sendMail(event)">
-      <label for="f-name">Your name</label>
-      <input id="f-name" name="name" type="text" required autocomplete="name" placeholder="Jane Doe">
+          <form id="cform" onsubmit="return sendMail(event);">
+            <label for="f-name">Your name</label>
+            <input
+              id="f-name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder="Jane Doe"
+            />
 
-      <label for="f-sub">Subject</label>
-      <input id="f-sub" name="subject" type="text" required placeholder="Platform Engineer role at …">
+            <label for="f-sub">Subject</label>
+            <input
+              id="f-sub"
+              name="subject"
+              type="text"
+              required
+              placeholder="Platform Engineer role at …"
+            />
 
-      <label for="f-msg">Message</label>
-      <textarea id="f-msg" name="message" required placeholder="Tell me a bit about the team and the stack."></textarea>
+            <label for="f-msg">Message</label>
+            <textarea
+              id="f-msg"
+              name="message"
+              required
+              placeholder="Tell me a bit about the team and the stack."
+            ></textarea>
 
-      <button class="btn btn-cta" type="submit" style="width:100%"><svg class="i" style="width:17px;height:17px"><use href="#i-mail"/></svg> Open in my mail app</button>
-    </form>
+            <button class="btn btn-cta" type="submit" style="width: 100%">
+              <svg class="i" style="width: 17px; height: 17px">
+                <use href="#i-mail" />
+              </svg>
+              Open in my mail app
+            </button>
+          </form>
 
-    <div class="note">This form opens your own mail client with the message pre-filled — nothing is sent to a third-party server. Prefer to write directly? <a href="mailto:kyawsithu@kst-devops.com" style="color:var(--ink);text-decoration:underline">kyawsithu@kst-devops.com</a></div>
+          <div class="note">
+            This form opens your own mail client with the message pre-filled —
+            nothing is sent to a third-party server. Prefer to write directly?
+            <a
+              href="mailto:kyawsithu@kst-devops.com"
+              style="color: var(--ink); text-decoration: underline"
+              >kyawsithu@kst-devops.com</a
+            >
+          </div>
 
-    <div class="socials">
-      <a class="soc" href="mailto:kyawsithu@kst-devops.com"><span class="tile" style="background:var(--coral)"><svg class="i"><use href="#i-mail"/></svg></span> Email</a>
-      <a class="soc" href="https://www.linkedin.com/in/thereisnokst/" target="_blank" rel="noopener"><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-brief"/></svg></span> LinkedIn</a>
-      <a class="soc" href="https://gitlab.com/users/kyawsithu96/projects" target="_blank" rel="noopener"><span class="tile" style="background:var(--butter)"><svg class="i"><use href="#i-fox"/></svg></span> GitLab</a>
-      <a class="soc" href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly" target="_blank" rel="noopener"><span class="tile" style="background:var(--mint)"><svg class="i"><use href="#i-badge"/></svg></span> Credly</a>
-      <a class="soc" href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu" target="_blank" rel="noopener"><span class="tile" style="background:var(--grape)"><svg class="i" style="stroke:#fff"><use href="#i-k8s"/></svg></span> Kubestronaut</a>
-      <a class="soc" href="https://www.facebook.com/share/g/1Ch3VBxtop/?mibextid=wwXIfr" target="_blank" rel="noopener"><span class="tile" style="background:var(--sky)"><svg class="i"><use href="#i-people"/></svg></span> Dubai IT group</a>
-    </div>
-  </section>
-</div>
+          <div class="socials">
+            <a class="soc" href="mailto:kyawsithu@kst-devops.com"
+              ><span class="tile" style="background: var(--coral)"
+                ><svg class="i"><use href="#i-mail" /></svg
+              ></span>
+              Email</a
+            >
+            <a
+              class="soc"
+              href="https://www.linkedin.com/in/thereisnokst/"
+              target="_blank"
+              rel="noopener"
+              ><span class="tile" style="background: var(--sky)"
+                ><svg class="i"><use href="#i-brief" /></svg
+              ></span>
+              LinkedIn</a
+            >
+            <a
+              class="soc"
+              href="https://gitlab.com/users/kyawsithu96/projects"
+              target="_blank"
+              rel="noopener"
+              ><span class="tile" style="background: var(--butter)"
+                ><svg class="i"><use href="#i-fox" /></svg
+              ></span>
+              GitLab</a
+            >
+            <a
+              class="soc"
+              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              target="_blank"
+              rel="noopener"
+              ><span class="tile" style="background: var(--mint)"
+                ><svg class="i"><use href="#i-badge" /></svg
+              ></span>
+              Credly</a
+            >
+            <a
+              class="soc"
+              href="https://www.cncf.io/training/kubestronaut/?_sft_lf-country=ae&p=kyaw-sithu&_sf_s=kyaw+sithu"
+              target="_blank"
+              rel="noopener"
+              ><span class="tile" style="background: var(--grape)"
+                ><svg class="i" style="stroke: #fff"><use href="#i-k8s" /></svg
+              ></span>
+              Kubestronaut</a
+            >
+            <a
+              class="soc"
+              href="https://www.facebook.com/share/g/1Ch3VBxtop/?mibextid=wwXIfr"
+              target="_blank"
+              rel="noopener"
+              ><span class="tile" style="background: var(--sky)"
+                ><svg class="i"><use href="#i-people" /></svg
+              ></span>
+              Dubai IT group</a
+            >
+          </div>
+        </section>
+      </div>
+    </main>
 
-</main>
+    <div class="wrap"><div class="divider"></div></div>
+    <footer class="wrap">
+      Kyaw Sithu · Platform/DevOps Engineer · Dubai, UAE<br />
+      <a href="mailto:kyawsithu@kst-devops.com">kyawsithu@kst-devops.com</a>
+    </footer>
 
-<div class="wrap"><div class="divider"></div></div>
-<footer class="wrap">
-  Kyaw Sithu · Platform/DevOps Engineer · Dubai, UAE<br>
-  <a href="mailto:kyawsithu@kst-devops.com">kyawsithu@kst-devops.com</a>
-</footer>
+    <script>
+      const PAGES = ["home", "skills", "portfolio", "blog", "about", "contact"];
 
-<script>
-const PAGES = ['home','skills','portfolio','blog','about','contact'];
+      function go(t, push) {
+        if (!PAGES.includes(t)) t = "home";
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.toggle("on", p.id === "p" + "-" + t));
+        document.querySelectorAll(".tab").forEach((b) => {
+          const on = b.dataset.t === t;
+          b.classList.toggle("on", on);
+          b.setAttribute("aria-current", on ? "page" : "false");
+        });
+        if (push !== false && location.hash.slice(1) !== t)
+          history.pushState({ t }, "", "#" + t);
+        window.scrollTo(0, 0);
+      }
 
-function go(t, push){
-  if(!PAGES.includes(t)) t = 'home';
-  document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'p'+'-'+t));
-  document.querySelectorAll('.tab').forEach(b => {
-    const on = b.dataset.t === t;
-    b.classList.toggle('on', on);
-    b.setAttribute('aria-current', on ? 'page' : 'false');
-  });
-  if(push !== false && location.hash.slice(1) !== t) history.pushState({t}, '', '#'+t);
-  window.scrollTo(0, 0);
-}
+      function filt(el) {
+        const f = el.dataset.f;
+        document
+          .querySelectorAll(".chip")
+          .forEach((c) => c.classList.toggle("on", c === el));
+        document.querySelectorAll("[data-g]").forEach((n) => {
+          n.style.display = f === "all" || n.dataset.g === f ? "" : "none";
+        });
+      }
 
-function filt(el){
-  const f = el.dataset.f;
-  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === el));
-  document.querySelectorAll('[data-g]').forEach(n => {
-    n.style.display = (f === 'all' || n.dataset.g === f) ? '' : 'none';
-  });
-}
+      function acc(btn) {
+        const box = btn.parentElement;
+        const open = box.classList.toggle("open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
 
-function acc(btn){
-  const box = btn.parentElement;
-  const open = box.classList.toggle('open');
-  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-}
+      function sendMail(e) {
+        e.preventDefault();
+        const name = document.getElementById("f-name").value.trim();
+        const sub = document.getElementById("f-sub").value.trim();
+        const msg = document.getElementById("f-msg").value.trim();
+        const body = msg + "\n\n— " + name;
+        location.href =
+          "mailto:kyawsithu@kst-devops.com" +
+          "?subject=" +
+          encodeURIComponent(sub) +
+          "&body=" +
+          encodeURIComponent(body);
+        return false;
+      }
 
-function sendMail(e){
-  e.preventDefault();
-  const name = document.getElementById('f-name').value.trim();
-  const sub  = document.getElementById('f-sub').value.trim();
-  const msg  = document.getElementById('f-msg').value.trim();
-  const body = msg + '\n\n— ' + name;
-  location.href = 'mailto:kyawsithu@kst-devops.com'
-    + '?subject=' + encodeURIComponent(sub)
-    + '&body='    + encodeURIComponent(body);
-  return false;
-}
+      // accordion buttons start collapsed and announce it
+      document
+        .querySelectorAll(".acc > button")
+        .forEach((b) => b.setAttribute("aria-expanded", "false"));
 
-// accordion buttons start collapsed and announce it
-document.querySelectorAll('.acc > button').forEach(b => b.setAttribute('aria-expanded','false'));
-
-// deep links: /#blog, /#contact …
-window.addEventListener('popstate', () => go(location.hash.slice(1) || 'home', false));
-go(location.hash.slice(1) || 'home', false);
-</script>
-</body>
+      // deep links: /#blog, /#contact …
+      window.addEventListener("popstate", () =>
+        go(location.hash.slice(1) || "home", false),
+      );
+      go(location.hash.slice(1) || "home", false);
+    </script>
+  </body>
 </html>
