@@ -63,6 +63,8 @@
         font-weight: 800;
         line-height: 1.15;
         letter-spacing: -0.01em;
+        /* even line lengths instead of one long line and one orphan word */
+        text-wrap: balance;
       }
       h1 {
         font-size: 33px;
@@ -290,12 +292,14 @@
       .lead {
         color: var(--muted);
         font-size: 16.5px;
+        text-wrap: pretty;
       }
 
       .hero {
         padding-top: 28px;
       }
       .avatar {
+        position: relative;
         width: 100px;
         height: 100px;
         border: var(--bd);
@@ -306,6 +310,16 @@
         box-shadow: 6px 6px 0 var(--ink);
         margin-bottom: 18px;
         overflow: hidden;
+      }
+      /* the photo covers the cartoon when it loads; object-position sits high
+         so a head-and-shoulders shot is not cropped at the chin */
+      .avatar-photo {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 22%;
       }
       h1 mark {
         background: var(--butter);
@@ -384,6 +398,9 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 11px;
+      }
+      .cvrow.one {
+        grid-template-columns: 1fr;
       }
       .cvrow .btn {
         width: 100%;
@@ -1378,6 +1395,14 @@
         <section class="hero">
           <div class="herotop">
             <div class="avatar">
+              <!-- drop a square photo at /assets/profile.jpg and it takes over
+                   this frame; if it is missing the cartoon below stays. -->
+              <img
+                class="avatar-photo"
+                src="/assets/profile.jpg"
+                alt="Kyaw Sithu"
+                onerror="this.remove()"
+              />
               <svg
                 viewBox="0 0 100 100"
                 width="100"
@@ -1452,24 +1477,16 @@
                 Grab my CV
               </h3>
               <p>
-                Two versions, both PDF — one framed for platform engineering,
-                one for DevOps. Pick whichever matches the role.
+                One page of what I actually do — Kubernetes platforms, service
+                mesh, GitOps and the automation around them. PDF, updated
+                August 2026.
               </p>
-              <div class="cvrow">
-                <a
-                  class="btn btn-cta"
-                  href="/assets/kyaw-platform-engineer.pdf"
-                  download
+              <div class="cvrow one">
+                <a class="btn btn-cta" href="/assets/kyaw-sithu-cv.pdf" download
                   ><svg class="i" style="width: 16px; height: 16px">
                     <use href="#i-down" />
                   </svg>
-                  Platform</a
-                >
-                <a class="btn" href="/assets/kyaw_devops.pdf" download
-                  ><svg class="i" style="width: 16px; height: 16px">
-                    <use href="#i-down" />
-                  </svg>
-                  DevOps</a
+                  Download CV</a
                 >
               </div>
             </div>
@@ -1694,166 +1711,6 @@
 
       <!-- ============ SKILLS + CERTS ============ -->
       <div class="page" id="p-skills">
-        <section>
-          <div class="eyebrow">Core competencies</div>
-          <h2>Skills &amp; technologies</h2>
-          <p class="lead" style="margin: 10px 0 20px">
-            Grouped by what they actually do, not by vendor.
-          </p>
-
-          <div class="skillgrid">
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--grape)"
-                  ><svg class="i" style="stroke: #fff">
-                    <use href="#i-k8s" /></svg
-                ></span>
-                Kubernetes &amp; orchestration
-              </h3>
-              <div class="tags">
-                <span class="tag t-grape">K8s (CKA)</span
-                ><span class="tag">Rancher</span><span class="tag">Helm</span
-                ><span class="tag">Kustomize</span><span class="tag">EKS</span
-                ><span class="tag">RKE2</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--mint)"
-                  ><svg class="i"><use href="#i-mesh" /></svg
-                ></span>
-                Service mesh &amp; networking
-              </h3>
-              <div class="tags">
-                <span class="tag t-mint">Istio (ICA)</span
-                ><span class="tag">NGINX</span
-                ><span class="tag">CNI plugins</span
-                ><span class="tag">Ingress/Egress</span
-                ><span class="tag">mTLS</span><span class="tag">Consul</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--sky)"
-                  ><svg class="i"><use href="#i-iac" /></svg
-                ></span>
-                Infrastructure as code
-              </h3>
-              <div class="tags">
-                <span class="tag t-sky">Terraform</span
-                ><span class="tag">Ansible</span><span class="tag">Packer</span
-                ><span class="tag">Helm charts</span
-                ><span class="tag">Manifests</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--coral)"
-                  ><svg class="i"><use href="#i-cicd" /></svg
-                ></span>
-                CI/CD &amp; GitOps
-              </h3>
-              <div class="tags">
-                <span class="tag t-coral">Jenkins</span
-                ><span class="tag">GitHub Actions</span
-                ><span class="tag">GitOps</span><span class="tag">Gitea</span
-                ><span class="tag">Bitbucket</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--butter)"
-                  ><svg class="i"><use href="#i-cloud" /></svg
-                ></span>
-                Cloud platforms
-              </h3>
-              <div class="tags">
-                <span class="tag t-butter">AWS</span
-                ><span class="tag">Huawei Cloud</span
-                ><span class="tag">Hybrid-cloud</span
-                ><span class="tag">VMware ESXi</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--grape)"
-                  ><svg class="i" style="stroke: #fff">
-                    <use href="#i-chart" /></svg
-                ></span>
-                Observability &amp; monitoring
-              </h3>
-              <div class="tags">
-                <span class="tag t-grape">Prometheus</span
-                ><span class="tag">Grafana</span
-                ><span class="tag">ELK Stack</span
-                ><span class="tag">Zabbix</span
-                ><span class="tag">LibreNMS</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--mint)"
-                  ><svg class="i"><use href="#i-lock" /></svg
-                ></span>
-                Security &amp; identity
-              </h3>
-              <div class="tags">
-                <span class="tag t-mint">HashiCorp Vault</span
-                ><span class="tag">HCP</span><span class="tag">Keycloak</span
-                ><span class="tag">OIDC</span
-                ><span class="tag">Kong API GW</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--sky)"
-                  ><svg class="i"><use href="#i-msg" /></svg
-                ></span>
-                Data &amp; messaging
-              </h3>
-              <div class="tags">
-                <span class="tag t-sky">Kafka</span
-                ><span class="tag">Kafka Connect</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--coral)"
-                  ><svg class="i"><use href="#i-linux" /></svg
-                ></span>
-                Linux &amp; containers
-              </h3>
-              <div class="tags">
-                <span class="tag t-coral">RHCSA</span
-                ><span class="tag">Docker</span
-                ><span class="tag">Security hardening</span
-                ><span class="tag">OS imaging</span>
-              </div>
-            </div>
-
-            <div class="skillbox">
-              <h3>
-                <span class="tile" style="background: var(--butter)"
-                  ><svg class="i"><use href="#i-code" /></svg
-                ></span>
-                Programming &amp; scripting
-              </h3>
-              <div class="tags">
-                <span class="tag t-butter">Python</span
-                ><span class="tag">Bash</span
-                ><span class="tag">Shell scripting</span>
-              </div>
-            </div>
-          </div>
-        </section>
 
         <section>
           <div class="eyebrow">Professional credentials</div>
@@ -2142,6 +1999,166 @@
               </svg>
               CNCF profile</a
             >
+          </div>
+        </section>
+        <section>
+          <div class="eyebrow">Core competencies</div>
+          <h2>Skills &amp; technologies</h2>
+          <p class="lead" style="margin: 10px 0 20px">
+            Grouped by what they actually do, not by vendor.
+          </p>
+
+          <div class="skillgrid">
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-k8s" /></svg
+                ></span>
+                Kubernetes &amp; orchestration
+              </h3>
+              <div class="tags">
+                <span class="tag t-grape">K8s (CKA)</span
+                ><span class="tag">Rancher</span><span class="tag">Helm</span
+                ><span class="tag">Kustomize</span><span class="tag">EKS</span
+                ><span class="tag">RKE2</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--mint)"
+                  ><svg class="i"><use href="#i-mesh" /></svg
+                ></span>
+                Service mesh &amp; networking
+              </h3>
+              <div class="tags">
+                <span class="tag t-mint">Istio (ICA)</span
+                ><span class="tag">NGINX</span
+                ><span class="tag">CNI plugins</span
+                ><span class="tag">Ingress/Egress</span
+                ><span class="tag">mTLS</span><span class="tag">Consul</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-iac" /></svg
+                ></span>
+                Infrastructure as code
+              </h3>
+              <div class="tags">
+                <span class="tag t-sky">Terraform</span
+                ><span class="tag">Ansible</span><span class="tag">Packer</span
+                ><span class="tag">Helm charts</span
+                ><span class="tag">Manifests</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--coral)"
+                  ><svg class="i"><use href="#i-cicd" /></svg
+                ></span>
+                CI/CD &amp; GitOps
+              </h3>
+              <div class="tags">
+                <span class="tag t-coral">Jenkins</span
+                ><span class="tag">GitHub Actions</span
+                ><span class="tag">GitOps</span><span class="tag">Gitea</span
+                ><span class="tag">Bitbucket</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-cloud" /></svg
+                ></span>
+                Cloud platforms
+              </h3>
+              <div class="tags">
+                <span class="tag t-butter">AWS</span
+                ><span class="tag">Huawei Cloud</span
+                ><span class="tag">Hybrid-cloud</span
+                ><span class="tag">VMware ESXi</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--grape)"
+                  ><svg class="i" style="stroke: #fff">
+                    <use href="#i-chart" /></svg
+                ></span>
+                Observability &amp; monitoring
+              </h3>
+              <div class="tags">
+                <span class="tag t-grape">Prometheus</span
+                ><span class="tag">Grafana</span
+                ><span class="tag">ELK Stack</span
+                ><span class="tag">Zabbix</span
+                ><span class="tag">LibreNMS</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--mint)"
+                  ><svg class="i"><use href="#i-lock" /></svg
+                ></span>
+                Security &amp; identity
+              </h3>
+              <div class="tags">
+                <span class="tag t-mint">HashiCorp Vault</span
+                ><span class="tag">HCP</span><span class="tag">Keycloak</span
+                ><span class="tag">OIDC</span
+                ><span class="tag">Kong API GW</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--sky)"
+                  ><svg class="i"><use href="#i-msg" /></svg
+                ></span>
+                Data &amp; messaging
+              </h3>
+              <div class="tags">
+                <span class="tag t-sky">Kafka</span
+                ><span class="tag">Kafka Connect</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--coral)"
+                  ><svg class="i"><use href="#i-linux" /></svg
+                ></span>
+                Linux &amp; containers
+              </h3>
+              <div class="tags">
+                <span class="tag t-coral">RHCSA</span
+                ><span class="tag">Docker</span
+                ><span class="tag">Security hardening</span
+                ><span class="tag">OS imaging</span>
+              </div>
+            </div>
+
+            <div class="skillbox">
+              <h3>
+                <span class="tile" style="background: var(--butter)"
+                  ><svg class="i"><use href="#i-code" /></svg
+                ></span>
+                Programming &amp; scripting
+              </h3>
+              <div class="tags">
+                <span class="tag t-butter">Python</span
+                ><span class="tag">Bash</span
+                ><span class="tag">Shell scripting</span>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -2794,18 +2811,12 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
           <div class="btn-row">
             <a
               class="btn btn-sm btn-cta"
-              href="/assets/kyaw-platform-engineer.pdf"
+              href="/assets/kyaw-sithu-cv.pdf"
               download
               ><svg class="i" style="width: 15px; height: 15px">
                 <use href="#i-down" />
               </svg>
-              Platform CV</a
-            >
-            <a class="btn btn-sm" href="/assets/kyaw_devops.pdf" download
-              ><svg class="i" style="width: 15px; height: 15px">
-                <use href="#i-down" />
-              </svg>
-              DevOps CV</a
+              Download CV</a
             >
             <a
               class="btn btn-sm"

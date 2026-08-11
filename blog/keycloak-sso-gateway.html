@@ -44,10 +44,8 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
+        /* flat paper, like the profile — no polka texture */
         background: var(--cream);
-        /* soft polka texture, very faint */
-        background-image: radial-gradient(rgba(22, 22, 29, 0.055) 1.5px, transparent 1.5px);
-        background-size: 22px 22px;
         color: var(--ink);
         font-family: Inter, system-ui, sans-serif;
         font-size: 16.5px;
@@ -57,34 +55,50 @@
       a { color: var(--grape); text-decoration: none; font-weight: 700; }
       a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
 
-      /* ---- nav ---- */
+      /* ---- nav: same bar as the profile page ---- */
       nav {
         position: sticky; top: 0; z-index: 20;
-        background: var(--sun);
+        background: var(--cream);
         border-bottom: 3px solid var(--ink);
       }
       .nav-inner {
-        max-width: 1100px; margin: 0 auto; padding: 12px 24px;
+        max-width: 1040px; margin: 0 auto; padding: 0 32px;
+        height: 56px;
         display: flex; align-items: center; justify-content: space-between; gap: 16px;
       }
       .nav-logo {
-        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 700; font-size: 17px;
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        font-size: 18px; line-height: 1;
+        display: flex; align-items: center; gap: 10px;
       }
+      /* the round KS blob from the profile header */
       .nav-logo span {
-        background: var(--grape); color: #fff; border: 2px solid var(--ink);
-        border-radius: 8px; padding: 1px 7px; display: inline-block; transform: rotate(-3deg);
+        width: 34px; height: 34px; flex: none;
+        background: var(--sun); color: var(--ink);
+        border: 3px solid var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; line-height: 1; letter-spacing: .02em;
+        box-shadow: 2px 2px 0 var(--ink);
       }
+      /* styled as a profile nav tab rather than a thin outline pill */
       .nav-back {
-        color: var(--ink); font-size: 14px;
-        background: var(--paper); border: 2px solid var(--ink);
-        border-radius: 999px; padding: 4px 14px; box-shadow: var(--shadow-sm);
+        color: var(--ink); font-size: 13px; font-weight: 600;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
+        transition: transform .08s, box-shadow .08s;
       }
-      .nav-back:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+      .nav-back:hover, .nav-back:active {
+        text-decoration: none; transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        .nav-inner { padding: 0 16px; }
+      }
 
       /* ---- layout ---- */
-      .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 110px; }
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px 110px; }
       article { max-width: 760px; }
-      .full { max-width: 1100px; }
+      .full { max-width: 1040px; }
 
       header.post { padding: 54px 0 34px; }
       .eyebrow {
@@ -273,7 +287,7 @@
     <nav>
       <div class="nav-inner">
         <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
-        <a class="nav-back" href="/">← Back to profile</a>
+        <a class="nav-back" href="/#blog">← Back to profile</a>
       </div>
     </nav>
 
