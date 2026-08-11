@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#FFD24C" stroke="#16161D" stroke-width="6"/>
+  <text x="32" y="45" text-anchor="middle"
+        font-family="'Baloo 2', Verdana, sans-serif" font-size="34" font-weight="800"
+        fill="#16161D" letter-spacing="-1">KS</text>
+</svg>

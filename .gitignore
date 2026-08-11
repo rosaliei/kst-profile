@@ -1,2 +1,4 @@
-data
-data/
+# Explicit case matters: `data/` matched Data/ only because macOS is
+# case-insensitive. On Linux (CI, another machine) it would not, and the
+# working notes below would start getting committed.
+Data/
