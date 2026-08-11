@@ -878,33 +878,28 @@
         margin-top: 3px;
       }
 
-      label {
-        display: block;
-        font: 600 14px "Inter";
-        margin: 0 0 6px;
-      }
-      input,
-      textarea {
-        width: 100%;
+      /* the one thing to do on this page */
+      .mailbox {
         border: var(--bd);
-        border-radius: 12px;
-        background: var(--card);
-        padding: 12px 14px;
-        font: 400 16px "Inter";
-        color: var(--ink);
-        margin-bottom: 15px;
-        box-shadow: 3px 3px 0 var(--ink);
+        border-radius: var(--r);
+        background: var(--butter);
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 20px;
       }
-      input:focus,
-      textarea:focus {
-        outline: none;
-        background: #fff;
-        box-shadow: 3px 3px 0 var(--grape);
-        border-color: var(--grape);
+      .mailbox h3 {
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
-      textarea {
-        min-height: 118px;
-        resize: vertical;
+      .mailbox p {
+        font-size: 14.5px;
+        font-weight: 500;
+        margin: 9px 0 16px;
+      }
+      .mailbox .btn {
+        width: 100%;
+        word-break: break-word;
       }
       .socials {
         display: grid;
@@ -1155,7 +1150,7 @@
         .tl {
           max-width: 780px;
         }
-        #cform {
+        .mailbox {
           max-width: 660px;
         }
         .term {
@@ -3040,50 +3035,28 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             Dubai, open to Singapore and worldwide.
           </p>
 
-          <form id="cform" onsubmit="return sendMail(event);">
-            <label for="f-name">Your name</label>
-            <input
-              id="f-name"
-              name="name"
-              type="text"
-              required
-              autocomplete="name"
-              placeholder="Emrys"
-            />
-
-            <label for="f-sub">Subject</label>
-            <input
-              id="f-sub"
-              name="subject"
-              type="text"
-              required
-              placeholder="Platform Engineer role at …"
-            />
-
-            <label for="f-msg">Message</label>
-            <textarea
-              id="f-msg"
-              name="message"
-              required
-              placeholder="Tell me a bit about the team and the stack."
-            ></textarea>
-
-            <button class="btn btn-cta" type="submit" style="width: 100%">
-              <svg class="i" style="width: 17px; height: 17px">
+          <div class="mailbox">
+            <h3>
+              <svg class="i" style="width: 22px; height: 22px">
                 <use href="#i-mail" />
               </svg>
-              Open in my mail app
-            </button>
-          </form>
+              Just email me
+            </h3>
+            <p>
+              No form to fill in — write to me directly and I read every message.
+              Tell me about the team and the stack, and I will come back to you.
+            </p>
+            <a class="btn btn-cta" href="mailto:kyawsithu@kst-devops.com"
+              ><svg class="i" style="width: 17px; height: 17px">
+                <use href="#i-mail" />
+              </svg>
+              kyawsithu@kst-devops.com</a
+            >
+          </div>
 
           <div class="note">
-            This form opens your own mail client with the message pre-filled —
-            nothing is sent to a third-party server. Prefer to write directly?
-            <a
-              href="mailto:kyawsithu@kst-devops.com"
-              style="color: var(--ink); text-decoration: underline"
-              >kyawsithu@kst-devops.com</a
-            >
+            Prefer LinkedIn? That works too — the links below all reach me, and
+            LinkedIn is usually the fastest for a first hello.
           </div>
 
           <div class="socials">
@@ -3186,21 +3159,6 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
         const box = btn.parentElement;
         const open = box.classList.toggle("open");
         btn.setAttribute("aria-expanded", open ? "true" : "false");
-      }
-
-      function sendMail(e) {
-        e.preventDefault();
-        const name = document.getElementById("f-name").value.trim();
-        const sub = document.getElementById("f-sub").value.trim();
-        const msg = document.getElementById("f-msg").value.trim();
-        const body = msg + "\n\n— " + name;
-        location.href =
-          "mailto:kyawsithu@kst-devops.com" +
-          "?subject=" +
-          encodeURIComponent(sub) +
-          "&body=" +
-          encodeURIComponent(body);
-        return false;
       }
 
       // accordion buttons start collapsed and announce it
