@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boundary and Microsoft Entra ID: SSO was the easy half — Kyaw Sithu</title>
+    <meta
+      name="description"
+      content="Wiring HashiCorp Boundary to Microsoft Entra ID with OIDC. The authentication worked quickly; the authorization did not. Scopes, grant scopes, two error messages and a full trace of the authorization code flow."
+    />
+    <link rel="canonical" href="https://kst-devops.com/blog/boundary-entra-id-sso.html" />
+    <meta property="og:title" content="Boundary and Microsoft Entra ID: SSO was the easy half" />
+    <meta
+      property="og:description"
+      content="Single sign-on took an afternoon. Being able to reach anything took a lot longer — and the reason was a grant scope, not the identity provider."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://kst-devops.com/blog/boundary-entra-id-sso.html"
+    />
+    <meta property="og:site_name" content="Kyaw Sithu" />
+    <meta
+      property="og:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Boundary and Microsoft Entra ID: SSO was the easy half"
+    />
+    <meta
+      name="twitter:description"
+      content="Single sign-on took an afternoon. Being able to reach anything took a lot longer."
+    />
+    <meta
+      name="twitter:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FFF6E9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* same tokens as the profile page */
+        --cream: #fff6e9;
+        --paper: #fffdf7;
+        --ink: #16161d;
+        --ink-soft: #5a5a66;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --teal: #2ec4a6;
+        --sun: #ffd24c;
+        --sky: #4ea8f5;
+        /* light tints — these sit behind ink-coloured text */
+        --lilac: #cdc5f7;
+        --mint: #b6f0e4;
+        --dash: rgba(22, 22, 29, 0.16);
+        --shadow: 6px 6px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        /* flat paper, like the profile — no polka texture */
+        background: var(--cream);
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16.5px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--grape); text-decoration: none; font-weight: 700; }
+      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
+
+      /* ---- nav: same bar as the profile page ---- */
+      nav {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--cream);
+        border-bottom: 3px solid var(--ink);
+      }
+      .nav-inner {
+        max-width: 1040px; margin: 0 auto; padding: 0 32px;
+        height: 56px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .nav-logo {
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        font-size: 18px; line-height: 1;
+        display: flex; align-items: center; gap: 10px;
+      }
+      /* the round KS blob from the profile header */
+      .nav-logo span {
+        width: 34px; height: 34px; flex: none;
+        background: var(--sun); color: var(--ink);
+        border: 3px solid var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; line-height: 1; letter-spacing: .02em;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      /* styled as a profile nav tab rather than a thin outline pill */
+      .nav-back {
+        color: var(--ink); font-size: 13px; font-weight: 600;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
+        transition: transform .08s, box-shadow .08s;
+      }
+      .nav-back:hover, .nav-back:active {
+        text-decoration: none; transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        .nav-inner { padding: 0 16px; }
+      }
+
+      /* ---- layout ---- */
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px 110px; }
+      article { max-width: 760px; }
+      .full { max-width: 1040px; }
+
+      header.post { padding: 54px 0 34px; }
+      .eyebrow {
+        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        box-shadow: var(--shadow-sm);
+      }
+      h1 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
+      }
+      .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
+      .meta {
+        margin-top: 26px; font-size: 14px; color: var(--ink-soft);
+        display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      }
+
+      h2 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
+      }
+      h2::after {
+        content: ""; display: block; width: 74px; height: 6px; margin-top: 8px;
+        background: var(--teal); border-radius: 999px;
+      }
+      h3 {
+        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-size: 20px; margin: 38px 0 12px;
+      }
+      p { margin: 0 0 18px; }
+      ul, ol { margin: 0 0 18px 24px; }
+      li { margin-bottom: 10px; }
+      strong { font-weight: 700; }
+
+      code {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #f1eeff; border: 2px solid #d6ceff;
+        border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
+      }
+      pre {
+        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
+      }
+      pre code {
+        background: none; border: 0; padding: 0; color: var(--ink);
+        font-size: 13.5px; line-height: 1.7;
+      }
+
+      /* ---- figures: sticker cards ---- */
+      figure { margin: 30px 0 36px; }
+      figure img {
+        width: 100%; height: auto; display: block;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
+      }
+      figcaption {
+        margin-top: 14px; font-size: 16.5px; line-height: 1.6;
+        color: var(--ink); max-width: 760px;
+      }
+
+      .board {
+        display: inline-block; margin-top: 6px; font-size: 14.5px;
+        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
+      }
+      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+
+      /* ---- callouts ---- */
+      .note {
+        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
+      }
+      .note p:last-child { margin-bottom: 0; }
+      .note.warn { background: #fff0c9; }
+
+      /* ---- tables ---- */
+      .tw {
+        overflow-x: auto; margin: 0 0 28px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 15px; }
+      th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+      th {
+        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
+        letter-spacing: .05em; background: var(--mint);
+        border-bottom: 3px solid var(--ink); color: var(--ink);
+      }
+      td { border-bottom: 2px dashed var(--dash); }
+      tr:last-child td { border-bottom: 0; }
+
+      /* ---- contents ---- */
+      .toc {
+        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
+      }
+      .toc h4 {
+        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
+        letter-spacing: .07em; margin-bottom: 12px;
+      }
+      .toc ol { margin: 0 0 0 22px; }
+      .toc li { margin-bottom: 6px; }
+
+      /* ---- flow pills ---- */
+      .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .pill {
+        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
+        transform: rotate(-1deg);
+      }
+
+      .author-card {
+        display: flex; gap: 18px; align-items: center;
+        margin-top: 28px; padding: 18px 22px; max-width: 720px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .author-loves {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 4px; color: var(--ink);
+      }
+      .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+      .author-humble {
+        margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
+        border-top: 2px dashed var(--dash); padding-top: 10px;
+      }
+
+      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
+      .meta time {
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 1px 11px; font-weight: 700; font-size: 13.5px;
+      }
+      .author-avatar {
+        flex: 0 0 auto; width: 72px; height: 72px;
+        /* the source is landscape, so crop to the moon rather than squash it */
+        object-fit: cover; object-position: 50% 45%;
+        border: 3px solid var(--ink); border-radius: 50%;
+        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      @media (max-width: 520px) {
+        .author-card { align-items: flex-start; }
+        .author-avatar { width: 56px; height: 56px; }
+      }
+
+
+      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
+      .share-title {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 12px; color: var(--ink);
+      }
+      .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
+      .share-btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
+        border: 3px solid var(--ink); border-radius: 999px;
+        padding: 8px 18px; box-shadow: var(--shadow-sm);
+      }
+      .share-btn svg { width: 18px; height: 18px; fill: currentColor; }
+      .share-btn.li { background: #0a66c2; }
+      .share-btn.fb { background: #1877f2; }
+      .share-btn:hover {
+        text-decoration: none; transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      footer.post {
+        margin-top: 70px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
+      }
+
+      @media (max-width: 640px) {
+        body { font-size: 16px; }
+        .wrap { padding: 0 16px 72px; }
+        header.post { padding: 34px 0 24px; }
+        :root { --shadow: 4px 4px 0 var(--ink); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-back:hover { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
+        <a class="nav-back" href="/#blog">← Back to profile</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <article>
+        <header class="post">
+          <div class="eyebrow">Deep dive · Identity &amp; access</div>
+          <h1>Boundary and Microsoft Entra ID: single sign-on was the easy half</h1>
+          <p class="standfirst">
+            I wired HashiCorp Boundary to Entra ID so engineers could reach a private VM
+            with their corporate login and no SSH key anywhere. Authentication worked
+            the same afternoon. Then I logged in successfully and could see absolutely
+            nothing — and that is the part worth writing down.
+          </p>
+          <div class="meta">
+            <span class="byline">by <strong>Kyaw Sithu</strong></span>
+            <span>·</span>
+            <time datetime="2026-08-15">15 August 2026</time>
+            <span>·</span>
+            <span>HCP Boundary · Microsoft Entra ID · OIDC</span>
+          </div>
+
+          <div class="author-card">
+            <img class="author-avatar" src="img/moon.jpg" alt="" width="72" height="72" />
+            <div>
+              <p class="author-loves">He who loves Mum, Ei, and Arsenal —<br />and is still chasing the moon.</p>
+              <p class="author-ace">
+                Proudly a
+                <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
+                candidate.
+              </p>
+              <p class="author-humble">
+                A note, humbly: I am not an expert, and none of this is a brag. It is all
+                about learning how to learn — and how to unlearn — and cherishing the
+                process somewhere along the way. If you got this far, I hope you learned
+                something too.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <div class="note">
+          <p>
+            Every identifier in this post is a placeholder. The tenant ID, application ID,
+            client secret, cluster address and worker IPs from my build have been replaced
+            with <code>&lt;angle-bracket&gt;</code> stand-ins, and the environment itself is
+            gone. Resource IDs like <code>u_mJjZAPrPGf</code> are kept because the shape of
+            an ID is the thing worth recognising in a log line.
+          </p>
+        </div>
+
+        <div class="toc">
+          <h4>Contents</h4>
+          <ol>
+            <li><a href="#shape">The shape of the thing</a></li>
+            <li><a href="#entra">The Entra side</a></li>
+            <li><a href="#boundary">The Boundary side</a></li>
+            <li><a href="#errors">Two errors that stopped me</a></li>
+            <li><a href="#scopes">Why login worked and nothing was visible</a></li>
+            <li><a href="#tracing">Tracing the whole flow</a></li>
+            <li><a href="#logs">What the client logs admitted</a></li>
+            <li><a href="#change">What I would do differently</a></li>
+          </ol>
+        </div>
+
+        <h2 id="shape">The shape of the thing</h2>
+        <p>
+          The goal was narrow and, I thought, boring: let an engineer reach a private VM
+          over SSH using their corporate identity, with no key material on their laptop
+          and no public IP on the target. Boundary is built exactly for that, and Entra ID
+          was already the identity provider, so the two should meet in the middle.
+        </p>
+        <p>
+          What makes Boundary interesting is that it splits the job in two. The
+          <strong>controller</strong> decides who you are and what you may reach. The
+          <strong>worker</strong> carries the actual packets. They are different machines,
+          in different networks, and the controller never sees your SSH session.
+        </p>
+
+        <figure>
+          <img src="img/entra-topology.svg" alt="Entra ID, the Boundary controller, a self-managed worker in a peered VNet, and the target VM" />
+          <figcaption>
+            HCP runs the controller. The self-managed worker sits in a private subnet with
+            no inbound path at all — it dials out to HCP and holds the connection open.
+            The target VM accepts SSH from exactly one address: the worker.
+          </figcaption>
+        </figure>
+
+        <p>
+          Two details in that picture cost me time later, so they are worth stating plainly
+          now. The worker has <strong>no public IP and no inbound rules</strong>; it
+          registers itself outbound. And the bastion in the public subnet exists for
+          roughly ten minutes — long enough to <code>scp</code> the worker binary across —
+          and is then destroyed. It is scaffolding, not architecture.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>Why a self-managed worker at all?</strong> HCP gives you managed workers
+            with public addresses. But my target lives in a private subnet in a peered
+            network, and I did not want to open a path from HCP's address space into it.
+            A worker inside the network is the smaller hole: it reaches the target locally,
+            and reaches HCP outbound through NAT.
+          </p>
+        </div>
+
+        <h2 id="entra">The Entra side</h2>
+        <p>
+          Boundary ships in the Entra application gallery, which sounds like it should make
+          this a two-click job. It does not, quite — the gallery entry creates the
+          enterprise application, but the OIDC wiring is still manual on both ends, and the
+          two ends have to agree on values that neither generates first. That circularity is
+          the awkward part of the setup.
+        </p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>What you copy</th><th>From</th><th>To</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Application (client) ID</strong></td>
+                <td>Entra → app → Overview</td>
+                <td>Boundary → auth method → Client ID</td>
+              </tr>
+              <tr>
+                <td><strong>Client secret</strong> (value, not ID)</td>
+                <td>Entra → Certificates &amp; secrets</td>
+                <td>Boundary → auth method → Client Secret</td>
+              </tr>
+              <tr>
+                <td><strong>OIDC metadata URL</strong>, trimmed</td>
+                <td>Entra → app → Endpoints</td>
+                <td>Boundary → auth method → Issuer</td>
+              </tr>
+              <tr>
+                <td><strong>Callback URL</strong></td>
+                <td>Boundary, after first save</td>
+                <td>Entra → Authentication → Redirect URIs</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Notice the last row goes the other way. Boundary will not show you the callback
+          URL until the auth method has been saved once, and Entra will not complete a login
+          until that URL is registered as a redirect URI. So the order is: fill in what you
+          can, save, copy the callback back into Entra, and only then try to log in.
+        </p>
+
+        <h3>The issuer is not the metadata URL</h3>
+        <p>
+          Entra hands you a link that ends in
+          <code>/.well-known/openid-configuration</code>. Boundary wants the
+          <em>issuer</em>, which is that URL with the well-known suffix removed:
+        </p>
+        <pre><code>Entra gives you:
+https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0/.well-known/openid-configuration
+
+Boundary's Issuer field wants:
+https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
+        <p>
+          Paste the full link and the auth method saves without complaint, then fails at
+          login with a discovery error. Boundary appends the well-known path itself; give it
+          the whole thing and it goes looking for
+          <code>…/.well-known/openid-configuration/.well-known/openid-configuration</code>.
+        </p>
+
+        <h3>The permission that decides whether any of this works</h3>
+        <p>
+          Under API permissions the app needs delegated Microsoft Graph scopes —
+          <code>openid</code>, <code>profile</code>, <code>email</code>,
+          <code>User.Read</code>. It is tempting to treat this as boilerplate and move on.
+          It is not boilerplate. This is the entire set of things Boundary is allowed to
+          learn about the person logging in: their sign-in name and their e-mail address,
+          and nothing else.
+        </p>
+        <div class="note warn">
+          <p>
+            Remove these and login does not degrade — it stops. Boundary asks for
+            <code>scope=openid</code> in the authorize request, and if the application is
+            not permitted to grant it, there is no token to come back with. I removed them
+            deliberately to see what would happen, which I recommend: it is a two-minute
+            experiment that makes the consent screen make sense forever after.
+          </p>
+        </div>
+        <p>
+          The flip side is the reassuring part. An engineer looking at that consent prompt
+          can see that this application reads a name and an e-mail. It cannot read their
+          mail, their files, or the directory.
+        </p>
+
+        <h3>Assigning users is a separate step</h3>
+        <p>
+          Creating the enterprise application does not give anyone access to it. Users must
+          be assigned to it explicitly, under the application's Users and groups blade. A
+          user who exists in the tenant, has a valid password and passes MFA will still be
+          refused if they are not on that list — which is the first of the two errors below.
+        </p>
+
+        <h2 id="boundary">The Boundary side</h2>
+        <p>
+          On the Boundary cluster the work is: create an org scope, add an OIDC auth method
+          inside it, paste the four values from the table, set the signing algorithm to
+          <code>RS256</code>, and set the API URL prefix to the cluster address.
+        </p>
+        <p>
+          Then — and this is the step that is easy to skip — <strong>make the auth method
+          primary for its scope, and change its state to active</strong>. A freshly created
+          auth method is inactive and non-primary. It will happily accept a login and then
+          refuse to do anything useful with it.
+        </p>
+
+        <h2 id="errors">Two errors that stopped me</h2>
+
+        <h3 class="flow-head"><span class="pill">Error 1</span> refusing to auto-create user</h3>
+        <p>
+          After a successful Entra login, the browser landed on Boundary's error page with
+          this — URL-decoded and wrapped, because it arrives as one long query string:
+        </p>
+        <pre><code>authmethod_service.(Service).authenticateOidcCallback:
+  Callback validation failed.: parameter violation: error #100:
+  oidc.Callback: iam.(Repository).LookupUserWithLogin:
+  user not found for account acctoidc_LikE4uBayy
+  and auth method is not primary for the scope
+  so refusing to auto-create user: search issue: error #1100</code></pre>
+        <p>
+          The important clause is in the middle: <em>auth method is not primary for the
+          scope</em>. Entra had authenticated the person correctly. Boundary had even minted
+          an account object for them — <code>acctoidc_LikE4uBayy</code> exists in that
+          message. What it would not do is create the <em>user</em> that the account maps
+          onto, because a non-primary auth method is not trusted to invent identities in
+          that scope.
+        </p>
+        <p>
+          The fix is one setting: mark the auth method primary for the org. What I like
+          about this error, in hindsight, is that it is honest. It says precisely what it
+          refused to do and precisely why. Most of the time I spent on it was spent
+          URL-decoding it.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Error 2</span> request state has expired</h3>
+        <pre><code>oidc.Callback: request state has expired:
+  state violation: error #198</code></pre>
+        <p>
+          This one is not a misconfiguration. The <code>state</code> parameter Boundary
+          generates has a lifetime, and I had left the Entra login tab open while going to
+          read something. By the time I typed the password the state was stale, and Boundary
+          correctly refused the callback. Log in again and it is gone.
+        </p>
+        <p>
+          Worth understanding rather than dismissing, though: <code>state</code> is what ties
+          the callback to the request that started it. A callback that arrives without a
+          matching live state is either a replay or a cross-site request, and rejecting it is
+          the protocol working.
+        </p>
+
+        <h2 id="scopes">Why login worked and nothing was visible</h2>
+        <p>
+          Here is where I lost real time, and it had nothing to do with Entra.
+        </p>
+        <p>
+          I logged in through Entra. Boundary created my user. The Principals tab showed me
+          attached to a role. The role granted <code>connect</code> on targets. And the
+          targets list was empty. Not permission-denied — <em>empty</em>, as though nothing
+          existed.
+        </p>
+
+        <figure>
+          <img src="img/entra-scopes.svg" alt="Boundary scope hierarchy: global containing org, org containing projects, resources only at project level" />
+          <figcaption>
+            Boundary nests scopes three deep, and each level holds different things.
+            Identity lives at the org. Targets live in projects underneath it.
+          </figcaption>
+        </figure>
+
+        <p>The rules that matter:</p>
+        <ul>
+          <li><strong>Global</strong> is created with the database and there is exactly one. Auth methods, users, groups and roles that apply everywhere.</li>
+          <li><strong>Org</strong> scopes sit directly under global and are the <em>identity</em> boundary — users, groups and roles are normally defined here.</li>
+          <li><strong>Project</strong> scopes sit under an org and are the <em>resource</em> boundary — host catalogs, hosts, targets and credential stores live only here, never at org or global.</li>
+          <li>Permissions flow <strong>downward</strong> only. An org-level role can be granted over its child projects; a project can never grant upward.</li>
+        </ul>
+
+        <p>
+          My mental model came from AWS IAM and Kubernetes RBAC, and it betrayed me in a
+          specific way. I assumed that granting a role at the org level meant "applies to the
+          org and everything in it". In Boundary a role has both a set of grants
+          <em>and</em> a set of <strong>grant scopes</strong>, and those are separate
+          choices. Mine was set to <code>this</code> — this scope, and no further.
+        </p>
+
+        <figure>
+          <img src="img/entra-grant-scope.svg" alt="Grant scope this versus this and children, and the resulting target visibility" />
+          <figcaption>
+            The same role, the same grants, the same user. The only difference is whether
+            the grant scope reaches the child projects where the targets actually are.
+          </figcaption>
+        </figure>
+
+        <p>
+          Adding <code>children</code> to the grant scope fixed it immediately. The role had
+          never been wrong. It was pointed at the scope that holds identities rather than the
+          scope that holds resources, and those are deliberately not the same place.
+        </p>
+
+        <div class="note">
+          <p>
+            The lesson generalises past Boundary: when a system separates
+            <em>who a rule is about</em> from <em>where a rule applies</em>, you have to set
+            both, and an empty list is the honest answer to "what may this user reach" when
+            the second one is missing. Empty is not a bug. Empty is the system telling you it
+            looked in the place you pointed it.
+          </p>
+        </div>
+
+        <h2 id="tracing">Tracing the whole flow</h2>
+        <p>
+          Once it worked, I went back and traced it properly, because a thing that works for
+          reasons you cannot name will break for reasons you cannot find.
+        </p>
+
+        <figure>
+          <img src="img/entra-oidc-flow.svg" alt="Authorization code flow between browser, Boundary controller and Entra ID" />
+          <figcaption>
+            The authorization code flow. Nine steps, two of which never touch the browser.
+          </figcaption>
+        </figure>
+
+        <p>The redirect Boundary builds, with the long values trimmed:</p>
+        <pre><code>GET https://login.microsoftonline.com/&lt;tenant-id&gt;/oauth2/v2.0/authorize
+  ?client_id=&lt;application-id&gt;
+  &amp;response_type=code
+  &amp;scope=openid
+  &amp;redirect_uri=https%3A%2F%2F&lt;cluster&gt;.boundary.hashicorp.cloud
+               %2Fv1%2Fauth-methods%2Foidc%3Aauthenticate%3Acallback
+  &amp;state=&lt;opaque, single-use, time-limited&gt;
+  &amp;nonce=&lt;opaque&gt;</code></pre>
+
+        <p>
+          Every field in that URL answers a question, and reading it this way is what made
+          the configuration stop feeling arbitrary:
+        </p>
+        <ul>
+          <li><code>client_id</code> — <em>who is asking?</em> This is why Boundary needs the application ID. Without an identity of its own, Entra has no idea which application's rules to apply.</li>
+          <li><code>redirect_uri</code> — <em>where do I send the answer?</em> This is why the callback URL has to be registered in Entra. An unregistered redirect is refused, which is what stops someone pointing your login at their server.</li>
+          <li><code>scope=openid</code> — <em>what am I asking for?</em> Just identity. This is the request that the API permissions either allow or do not.</li>
+          <li><code>state</code> — <em>is this the same conversation?</em> The parameter behind error 2.</li>
+          <li><code>nonce</code> — <em>is this token fresh?</em> It comes back inside the ID token, tying it to this one request.</li>
+        </ul>
+
+        <p>
+          Steps 7 and 8 are the ones people miss. The browser never sees the ID token. It
+          carries an authorization <em>code</em> back to Boundary, and Boundary then talks to
+          Entra directly — server to server — trading that code plus the client secret for
+          the token. That back channel is why a leaked <code>code</code> on its own is not
+          enough to impersonate anyone: without the secret, the exchange fails.
+        </p>
+
+        <div class="note">
+          <p>
+            This pattern is the OAuth 2.0 authorization code flow, and public clients add PKCE
+            on top of it to protect the same exchange when there is no secret to keep. It is
+            worth reading once properly rather than absorbing by osmosis, because every SSO
+            integration you ever do is a variation on it —
+            <a href="https://supertokens.com/blog/authorization-code-flow-with-pkce" target="_blank" rel="noopener">this write-up</a>
+            is a good one.
+          </p>
+        </div>
+
+        <h2 id="logs">What the client logs admitted</h2>
+        <p>
+          The Boundary desktop client has a debug log, and turning it on retroactively
+          explained the empty-list symptom better than any documentation did:
+        </p>
+        <pre><code>[debug] Search request took 1098 ms {
+  query: '(user_id = "u_mJjZAPrPGf") and (status = "active" or status = "pending")',
+  filter: '"/item/scope/parent_scope_id" == "o_sEDd9El2d0"',
+  resource: 'sessions'
+}
+[debug] Search request took 1143 ms {
+  query: '',
+  filter: '"/item/scope/parent_scope_id" == "o_sEDd9El2d0"',
+  resource: 'targets'
+}
+[debug] Search request took 2 ms {
+  query: '(target_id = "tssh_MKHBF4VwaM" or target_id = "tssh_kamaDARfM7")',
+  resource: 'sessions'
+}</code></pre>
+
+        <p>Three things fall out of that:</p>
+        <ul>
+          <li>
+            The <code>user_id</code> in the first query, <code>u_mJjZAPrPGf</code>, is the
+            same ID shown in the role's Principals tab. That is the proof that the Entra
+            login resolved to the right Boundary identity — worth checking early, because it
+            cleanly separates "authentication is broken" from "authorization is broken".
+          </li>
+          <li>
+            The second query is <strong>empty</strong>. An empty query means "give me
+            everything I am allowed to see". Before the grant scope fix, this same call came
+            back with nothing — which is exactly what a correctly functioning authorization
+            system should do when your grants do not reach the resources.
+          </li>
+          <li>
+            The third returns two target IDs. Those are the two I had been granted, and the
+            client resolves them in 2 ms because by then it is asking about things it already
+            knows exist.
+          </li>
+        </ul>
+
+        <p>
+          On the Entra side, the equivalent check is Monitoring &amp; health → Sign-in logs.
+          It answers the only question that matters when you are stuck: did the identity
+          provider think this login succeeded? If Entra says yes and Boundary shows you
+          nothing, you have stopped debugging SSO and started debugging RBAC, and the two
+          have almost nothing to do with each other.
+        </p>
+
+        <h2 id="change">What I would do differently</h2>
+        <p>
+          <strong>Test authorization separately from authentication, and in that order of
+          suspicion.</strong> "I logged in" and "I can reach something" are two systems. I
+          spent an hour re-checking client secrets for a problem that lived entirely in a
+          grant scope dropdown. The Entra sign-in log would have cleared authentication in
+          thirty seconds.
+        </p>
+        <p>
+          <strong>Turn the debug log on before you need it, not after.</strong> The empty
+          <code>targets</code> query is unambiguous once seen, and I could have seen it at
+          the start.
+        </p>
+        <p>
+          <strong>Set the auth method primary and active at creation time.</strong> Both
+          errors that stopped me were states the object ships in, not things I got wrong.
+        </p>
+        <p>
+          <strong>Delete the bastion.</strong> It exists to copy one binary. Mine outlived
+          its usefulness by several days because nothing forced the issue, and a
+          publicly-reachable SSH host with no remaining purpose is exactly the kind of thing
+          that quietly becomes permanent.
+        </p>
+        <p>
+          The thing I keep coming back to is how little of this was about Entra ID. The
+          identity provider integration is well-trodden and the errors are legible. What took
+          the time was a model I brought with me from somewhere else — that granting a role
+          at a level implies everything beneath it — and Boundary makes that assumption
+          explicit rather than default. Once you see why identity and resources are
+          deliberately separated into different scopes, the extra dropdown stops being an
+          annoyance and starts being the point.
+        </p>
+
+        <footer class="post">
+          <p>
+            Configuration reference for the Entra side:
+            <a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/hashicorp-tutorial" target="_blank" rel="noopener">learn.microsoft.com — HashiCorp Boundary tutorial</a>
+          </p>
+          <div class="share">
+            <p class="share-title">Found this useful? Pass it on 🌙</p>
+            <div class="share-row">
+              <a class="share-btn li" target="_blank" rel="noopener"
+                 href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-entra-id-sso.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Share on LinkedIn
+              </a>
+              <a class="share-btn fb" target="_blank" rel="noopener"
+                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-entra-id-sso.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+                Share on Facebook
+              </a>
+            </div>
+          </div>
+
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>

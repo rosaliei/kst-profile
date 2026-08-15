@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 940" width="1440" height="940"
+     font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16161D"/>
+    </marker>
+    <style>
+      .life { stroke:#16161D; stroke-width:3; stroke-dasharray:9 8; }
+      .msg  { stroke:#16161D; stroke-width:3; fill:none; marker-end:url(#a); }
+      .t    { font-size:18px; fill:#16161D; }
+      .tb   { font-size:19px; font-weight:700; fill:#16161D; }
+      .lbl  { font-size:17px; fill:#16161D; }
+      .sub  { font-size:15px; fill:#5A5A66; }
+      .sh   { fill:#16161D; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="940" fill="#FFF6E9"/>
+
+  <!-- actors -->
+  <g>
+    <rect x="78" y="43" width="250" height="66" rx="16" class="sh"/>
+    <rect x="70" y="35" width="250" height="66" rx="16" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="195" y="76" text-anchor="middle" class="tb">Browser</text>
+
+    <rect x="508" y="43" width="270" height="66" rx="16" class="sh"/>
+    <rect x="500" y="35" width="270" height="66" rx="16" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+    <text x="635" y="76" text-anchor="middle" class="tb">Boundary controller</text>
+
+    <rect x="978" y="43" width="270" height="66" rx="16" class="sh"/>
+    <rect x="970" y="35" width="270" height="66" rx="16" fill="#6C5CE7" stroke="#16161D" stroke-width="3"/>
+    <text x="1105" y="76" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">Microsoft Entra ID</text>
+  </g>
+
+  <line class="life" x1="195" y1="101" x2="195" y2="880"/>
+  <line class="life" x1="635" y1="101" x2="635" y2="880"/>
+  <line class="life" x1="1105" y1="101" x2="1105" y2="880"/>
+
+  <!-- 1 -->
+  <path class="msg" d="M195 165 L 625 165"/>
+  <text x="410" y="155" text-anchor="middle" class="lbl">1 · choose "microsoft-entra-id"</text>
+
+  <!-- 2 -->
+  <path class="msg" d="M635 232 L 205 232"/>
+  <text x="420" y="222" text-anchor="middle" class="lbl">2 · 302 to the authorize endpoint</text>
+  <rect x="228" y="248" width="820" height="96" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="248" y="276" font-size="15" fill="#5A5A66">GET login.microsoftonline.com/&lt;tenant&gt;/oauth2/v2.0/authorize</text>
+  <text x="248" y="300" font-size="15" fill="#5A5A66">?client_id=&lt;app-id&gt; &amp;response_type=code &amp;scope=openid</text>
+  <text x="248" y="324" font-size="15" fill="#5A5A66">&amp;redirect_uri=&lt;cluster&gt;/v1/auth-methods/oidc:authenticate:callback &amp;state=… &amp;nonce=…</text>
+
+  <!-- 3 -->
+  <path class="msg" d="M195 392 L 1095 392"/>
+  <rect x="385" y="366" width="522" height="24" fill="#FFF6E9"/>
+  <text x="645" y="382" text-anchor="middle" class="lbl">3 · browser follows the redirect — Boundary is not in this hop</text>
+
+  <!-- 4 -->
+  <path class="msg" d="M1105 452 L 205 452"/>
+  <rect x="509" y="426" width="292" height="24" fill="#FFF6E9"/>
+  <text x="655" y="442" text-anchor="middle" class="lbl">4 · Entra login page, MFA, consent</text>
+
+  <!-- 5 -->
+  <path class="msg" d="M195 512 L 1095 512"/>
+  <rect x="417" y="486" width="456" height="24" fill="#FFF6E9"/>
+  <text x="645" y="502" text-anchor="middle" class="lbl">5 · credentials submitted to Entra, never to Boundary</text>
+
+  <!-- 6 -->
+  <path class="msg" d="M1105 580 L 645 580"/>
+  <rect x="722" y="554" width="318" height="24" fill="#FFF6E9"/>
+  <text x="880" y="570" text-anchor="middle" class="lbl">6 · redirect back with ?code &amp; state</text>
+
+  <!-- 7 back-channel -->
+  <path class="msg" d="M645 648 L 1095 648"/>
+  <rect x="734" y="622" width="274" height="24" fill="#FFF6E9"/>
+  <text x="870" y="638" text-anchor="middle" class="lbl">7 · code + client secret → /token</text>
+  <path class="msg" d="M1105 706 L 645 706"/>
+  <rect x="752" y="680" width="238" height="24" fill="#FFF6E9"/>
+  <text x="870" y="696" text-anchor="middle" class="lbl">8 · ID token (JWT, RS256)</text>
+  <rect x="660" y="722" width="600" height="34" rx="17" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+  <text x="960" y="745" text-anchor="middle" font-size="15" font-weight="700" fill="#0C3B33">back channel — server to server, no browser involved</text>
+
+  <!-- 9 -->
+  <path class="msg" d="M625 800 L 205 800"/>
+  <text x="415" y="790" text-anchor="middle" class="lbl">9 · Boundary session token</text>
+  <text x="415" y="828" text-anchor="middle" class="sub">account auto-created, mapped to a Boundary user</text>
+
+  <text x="70" y="900" class="sub">Boundary needs the client ID to say who is asking, and the client secret to prove it at step 7. The password never crosses the middle lifeline.</text>
+</svg>

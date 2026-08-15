@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 760" width="1440" height="760"
+     font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16161D"/>
+    </marker>
+    <style>
+      .ink   { stroke:#16161D; stroke-width:3; fill:none; }
+      .card  { fill:#FFFDF7; stroke:#16161D; stroke-width:3; }
+      .zone  { fill:none; stroke:#16161D; stroke-width:3; stroke-dasharray:10 7; }
+      .sh    { fill:#16161D; }
+      .t     { font-size:19px; fill:#16161D; }
+      .tb    { font-size:20px; font-weight:700; fill:#16161D; }
+      .tl    { font-size:16px; fill:#5A5A66; }
+      .cap   { font-size:15px; fill:#5A5A66; }
+      .w     { font-size:19px; font-weight:700; fill:#FFFFFF; }
+      .flow  { stroke:#16161D; stroke-width:3; fill:none; marker-end:url(#ar); }
+    </style>
+  </defs>
+
+  <rect width="1440" height="760" fill="#FFF6E9"/>
+
+  <!-- Entra ID -->
+  <rect x="63" y="63" width="300" height="120" rx="18" class="sh"/>
+  <rect x="55" y="55" width="300" height="120" rx="18" fill="#6C5CE7" stroke="#16161D" stroke-width="3"/>
+  <text x="205" y="103" text-anchor="middle" class="w">Microsoft Entra ID</text>
+  <text x="205" y="132" text-anchor="middle" font-size="16" fill="#EDE9FF">identity provider</text>
+  <text x="205" y="156" text-anchor="middle" font-size="15" fill="#EDE9FF">issues the ID token</text>
+
+  <!-- Boundary control plane -->
+  <rect x="578" y="63" width="330" height="120" rx="18" class="sh"/>
+  <rect x="570" y="55" width="330" height="120" rx="18" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+  <text x="735" y="103" text-anchor="middle" class="tb">HCP Boundary controller</text>
+  <text x="735" y="132" text-anchor="middle" class="tl">holds orgs, users, roles</text>
+  <text x="735" y="156" text-anchor="middle" class="tl">never touches target traffic</text>
+
+  <!-- admin/user -->
+  <rect x="1128" y="63" width="250" height="120" rx="18" class="sh"/>
+  <rect x="1120" y="55" width="250" height="120" rx="18" class="card"/>
+  <text x="1245" y="103" text-anchor="middle" class="tb">Engineer</text>
+  <text x="1245" y="132" text-anchor="middle" class="tl">browser + Boundary</text>
+  <text x="1245" y="156" text-anchor="middle" class="tl">desktop client</text>
+
+  <!-- flows top row -->
+  <path class="flow" d="M1118 100 L 910 100"/>
+  <text x="1014" y="90" text-anchor="middle" class="cap">1 · log in</text>
+  <path class="flow" d="M568 118 L 360 118"/>
+  <text x="464" y="108" text-anchor="middle" class="cap">2 · redirect to OIDC</text>
+  <path class="flow" d="M360 150 L 568 150"/>
+  <text x="464" y="170" text-anchor="middle" class="cap">3 · callback + code</text>
+
+  <!-- boundary-vnet -->
+  <rect x="55" y="255" width="700" height="440" rx="20" class="zone"/>
+  <text x="80" y="292" class="tb">boundary-vnet</text>
+  <text x="238" y="292" class="tl">worker network</text>
+
+  <!-- public subnet -->
+  <rect x="85" y="320" width="300" height="345" rx="16" fill="#E4F2FF" stroke="#16161D" stroke-width="3"/>
+  <text x="105" y="352" class="t" font-weight="700">Public subnet</text>
+
+  <rect x="113" y="393" width="245" height="98" rx="14" class="sh"/>
+  <rect x="105" y="385" width="245" height="98" rx="14" class="card"/>
+  <text x="227" y="422" text-anchor="middle" class="t" font-weight="700">temp bastion</text>
+  <text x="227" y="447" text-anchor="middle" class="tl">scp the worker binary</text>
+  <text x="227" y="469" text-anchor="middle" class="tl">then delete it</text>
+
+  <rect x="113" y="533" width="245" height="88" rx="14" class="sh"/>
+  <rect x="105" y="525" width="245" height="88" rx="14" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+  <text x="227" y="558" text-anchor="middle" class="t" font-weight="700">NAT gateway</text>
+  <text x="227" y="586" text-anchor="middle" class="tl">worker egress only</text>
+
+  <!-- private subnet -->
+  <rect x="425" y="320" width="300" height="345" rx="16" fill="#E9FBF6" stroke="#16161D" stroke-width="3"/>
+  <text x="445" y="352" class="t" font-weight="700">Private subnet</text>
+
+  <rect x="453" y="403" width="245" height="150" rx="14" class="sh"/>
+  <rect x="445" y="395" width="245" height="150" rx="14" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+  <text x="567" y="432" text-anchor="middle" class="t" font-weight="700">self-managed</text>
+  <text x="567" y="458" text-anchor="middle" class="t" font-weight="700">worker</text>
+  <text x="567" y="490" text-anchor="middle" font-size="16" fill="#0C3B33">no public IP</text>
+  <text x="567" y="514" text-anchor="middle" font-size="16" fill="#0C3B33">dials out to HCP</text>
+  <text x="567" y="536" text-anchor="middle" font-size="16" fill="#0C3B33">proxies the session</text>
+
+  <!-- profile-vnet -->
+  <rect x="880" y="255" width="500" height="440" rx="20" class="zone"/>
+  <text x="905" y="292" class="tb">profile-vnet</text>
+  <text x="1048" y="292" class="tl">workload network</text>
+
+  <rect x="910" y="320" width="440" height="345" rx="16" fill="#FFF0F0" stroke="#16161D" stroke-width="3"/>
+  <text x="930" y="352" class="t" font-weight="700">Private subnet</text>
+
+  <rect x="963" y="403" width="345" height="150" rx="14" class="sh"/>
+  <rect x="955" y="395" width="345" height="150" rx="14" class="card"/>
+  <text x="1127" y="432" text-anchor="middle" class="t" font-weight="700">profile-instance</text>
+  <text x="1127" y="462" text-anchor="middle" font-size="16" fill="#5A5A66">inbound SSH only from</text>
+  <text x="1127" y="484" text-anchor="middle" font-size="16" fill="#5A5A66">the worker's address</text>
+  <text x="1127" y="512" text-anchor="middle" font-size="16" fill="#5A5A66">no outbound, nothing else in</text>
+
+  <!-- peering: drawn between the two subnet boxes so it reads as a link -->
+  <path class="ink" d="M725 470 L 910 470"/>
+  <rect x="760" y="453" width="115" height="34" rx="17" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+  <text x="817" y="476" text-anchor="middle" font-size="15" font-weight="700" fill="#16161D">peering</text>
+
+  <!-- worker dials out to the controller; kept left of profile-vnet -->
+  <path class="flow" d="M600 393 C 645 330, 700 245, 728 180"/>
+  <text x="620" y="210" text-anchor="end" class="cap">4 · worker dials out,</text>
+  <text x="620" y="232" text-anchor="end" class="cap">registers with HCP</text>
+
+  <!-- bastion to worker -->
+  <path class="flow" d="M352 434 L 440 434"/>
+
+  <!-- nat egress -->
+  <path class="ink" d="M445 500 L 360 560" stroke-dasharray="8 6"/>
+
+  <text x="55" y="735" class="cap">The controller brokers identity and permission. The worker carries the packets — the engineer never has a route to profile-instance, and profile-instance never has a route out.</text>
+</svg>

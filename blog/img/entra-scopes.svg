@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 720" width="1440" height="720"
+     font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16161D"/>
+    </marker>
+    <style>
+      .sh  { fill:#16161D; }
+      .tb  { font-size:23px; font-weight:700; fill:#16161D; }
+      .t   { font-size:18px; fill:#16161D; }
+      .sub { font-size:16px; fill:#5A5A66; }
+      .arw { stroke:#16161D; stroke-width:3; fill:none; marker-end:url(#a); }
+    </style>
+  </defs>
+
+  <rect width="1440" height="720" fill="#FFF6E9"/>
+
+  <!-- global -->
+  <rect x="68" y="58" width="1300" height="600" rx="22" class="sh"/>
+  <rect x="60" y="50" width="1300" height="600" rx="22" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <rect x="90" y="80" width="150" height="40" rx="20" fill="#16161D"/>
+  <text x="165" y="108" text-anchor="middle" font-size="19" font-weight="700" fill="#FFF6E9">global</text>
+  <text x="262" y="108" class="sub">exactly one, created with the database</text>
+  <text x="90" y="146" class="t">auth methods · users · groups · roles that apply everywhere</text>
+
+  <!-- org -->
+  <rect x="108" y="188" width="1220" height="440" rx="20" class="sh"/>
+  <rect x="100" y="180" width="1220" height="440" rx="20" fill="#EDE9FF" stroke="#16161D" stroke-width="3"/>
+  <rect x="130" y="210" width="230" height="40" rx="20" fill="#6C5CE7"/>
+  <text x="245" y="238" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">org · kst-org</text>
+  <text x="382" y="238" class="sub">the identity boundary</text>
+  <text x="130" y="276" class="t">users and roles are defined here — this is where the Entra auth method lands</text>
+
+  <!-- project A -->
+  <rect x="168" y="326" width="540" height="266" rx="18" class="sh"/>
+  <rect x="160" y="318" width="540" height="266" rx="18" fill="#E9FBF6" stroke="#16161D" stroke-width="3"/>
+  <rect x="190" y="348" width="250" height="38" rx="19" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+  <text x="315" y="375" text-anchor="middle" font-size="18" font-weight="700" fill="#0C3B33">project · infra</text>
+  <text x="460" y="375" class="sub">the resource boundary</text>
+
+  <rect x="190" y="410" width="230" height="66" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="305" y="440" text-anchor="middle" class="t" font-weight="700">targets</text>
+  <text x="305" y="463" text-anchor="middle" class="sub">tssh_MKHBF4VwaM</text>
+
+  <rect x="440" y="410" width="230" height="66" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="555" y="440" text-anchor="middle" class="t" font-weight="700">host catalogs</text>
+  <text x="555" y="463" text-anchor="middle" class="sub">hosts, host sets</text>
+
+  <rect x="190" y="496" width="480" height="66" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="430" y="526" text-anchor="middle" class="t" font-weight="700">credential stores</text>
+  <text x="430" y="549" text-anchor="middle" class="sub">only ever at project level — never at org, never at global</text>
+
+  <!-- project B -->
+  <rect x="748" y="326" width="540" height="266" rx="18" class="sh"/>
+  <rect x="740" y="318" width="540" height="266" rx="18" fill="#E4F2FF" stroke="#16161D" stroke-width="3"/>
+  <rect x="770" y="348" width="270" height="38" rx="19" fill="#4EA8F5" stroke="#16161D" stroke-width="3"/>
+  <text x="905" y="375" text-anchor="middle" font-size="18" font-weight="700" fill="#0A2E4D">project · profile-app</text>
+
+  <rect x="770" y="410" width="230" height="66" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="885" y="440" text-anchor="middle" class="t" font-weight="700">targets</text>
+  <text x="885" y="463" text-anchor="middle" class="sub">tssh_kamaDARfM7</text>
+
+  <rect x="1020" y="410" width="240" height="66" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="1140" y="440" text-anchor="middle" class="t" font-weight="700">profile-instance</text>
+  <text x="1140" y="463" text-anchor="middle" class="sub">the VM behind it</text>
+
+  <rect x="770" y="496" width="490" height="66" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="1015" y="526" text-anchor="middle" class="t" font-weight="700">a project can never grant upward</text>
+  <text x="1015" y="549" text-anchor="middle" class="sub">permission only ever flows down the tree</text>
+
+  <text x="60" y="694" class="sub">Identity lives at the org. The things you actually want to reach live one level further down. That gap is the whole problem.</text>
+</svg>

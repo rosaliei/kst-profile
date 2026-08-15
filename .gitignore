@@ -2,3 +2,8 @@
 # case-insensitive. On Linux (CI, another machine) it would not, and the
 # working notes below would start getting committed.
 Data/
+
+# Excalidraw working files: 9MB of embedded screenshots, and the source for the
+# Boundary post has a live client secret and tenant ID in plain text. The blog
+# renders redacted SVGs instead.
+*.excalidraw
