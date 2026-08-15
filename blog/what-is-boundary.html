@@ -258,25 +258,17 @@
         border-radius: 18px; box-shadow: var(--shadow);
       }
       .author-loves {
-        font-family: "Baloo 2", cursive; font-weight: 700;
-        font-size: 19px; line-height: 1.5; margin: 0 0 11px;
-        color: var(--ink); text-wrap: balance;
-      }
-      /* the three that get the marker pen */
-      .author-loves .love {
-        background: linear-gradient(
-          transparent 58%, rgba(255, 210, 76, .95) 58%,
-          rgba(255, 210, 76, .95) 93%, transparent 93%);
-        padding: 0 3px;
-        -webkit-box-decoration-break: clone; box-decoration-break: clone;
-      }
-      /* the second line is quieter, and it carries the moon */
-      .author-loves .chasing {
-        display: block; margin-top: 4px;
-        font-weight: 600; font-size: 17.5px; font-style: italic;
+        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-size: 17px; line-height: 1.5; margin: 0 0 8px;
         color: var(--ink);
       }
-      .author-loves .moon { font-style: normal; margin-left: 3px; }
+      /* second line sits a shade back, so the couplet has a soft landing */
+      .author-loves .chasing {
+        display: block;
+        font-weight: 500; font-size: 16.5px; font-style: italic;
+        color: var(--ink-soft);
+      }
+      .author-loves .moon { font-style: normal; margin-left: 4px; }
       .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
       .author-humble {
         margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
@@ -369,9 +361,7 @@
             <img class="author-avatar" src="img/moon.jpg" alt="" width="72" height="72" />
             <div>
               <p class="author-loves">
-                He who loves <span class="love">Mum</span>,
-                <span class="love">Ei</span>, and
-                <span class="love">Arsenal</span> —
+                He who loves Mum, Ei, and Arsenal —
                 <span class="chasing"
                   >and is still chasing the moon<span class="moon">🌙</span></span
                 >
