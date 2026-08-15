@@ -405,8 +405,8 @@
         <p>
           It is worth being precise about what was wrong before, because "we set up SSO"
           is not a reason to do anything. The reason is that the normal way of giving
-          engineers SSH access to private machines has four failure modes, and all four
-          are the kind that stay invisible until the day they matter.
+          engineers SSH access to private machines has two failure modes, and both are the
+          kind that stay invisible until the day they matter.
         </p>
 
         <h3>1 · The key outlives the person</h3>
@@ -425,37 +425,18 @@
           every machine.
         </p>
 
-        <h3>2 · The bastion is a permanent front door</h3>
+        <h3>2 · Nobody can answer who connected to what</h3>
         <p>
-          To reach a private subnet you put a jump host in a public one. It needs a public
-          IP and an open port, forever, for the small fraction of the week anyone uses it.
-          It gets patched less often than the things behind it, because it is "just" a jump
-          host. It is the single most attacked machine you own and the least interesting to
-          maintain.
-        </p>
-
-        <h3>3 · Network access is not the same as permission</h3>
-        <p>
-          The usual alternative is a VPN, which solves reachability by putting the laptop
-          <em>on the network</em>. But being on the network is enormously more access than
-          being allowed to SSH into one VM. A VPN answers "can these packets route", when
-          the question you actually wanted answered was "may this person open a shell on
-          that host". Those get conflated constantly, and the blast radius of a compromised
-          laptop is the difference between them.
-        </p>
-
-        <h3>4 · Nobody can answer who connected to what</h3>
-        <p>
-          Ask who opened a shell on a given host last Tuesday and, with keys and a bastion,
-          the honest answer is a grep through <code>auth.log</code> on machines that may have
-          been replaced since. There is no central record, because there was never a central
+          Ask who opened a shell on a given host last Tuesday and, with keys, the honest
+          answer is a grep through <code>auth.log</code> on machines that may have been
+          replaced since. There is no central record, because there was never a central
           decision — each host decided for itself, based on a file.
         </p>
 
         <div class="tw">
           <table>
             <thead>
-              <tr><th>Question</th><th>Keys + bastion</th><th>Boundary + Entra</th></tr>
+              <tr><th>Question</th><th>SSH keys</th><th>Boundary + Entra</th></tr>
             </thead>
             <tbody>
               <tr>
@@ -470,7 +451,7 @@
               </tr>
               <tr>
                 <td>Target's exposure</td>
-                <td>Reachable from the bastion, which is public</td>
+                <td>Whatever the network path allows</td>
                 <td>No public IP, one inbound source</td>
               </tr>
               <tr>
@@ -652,6 +633,15 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           refused if they are not on that list — which is the first of the two errors below.
         </p>
 
+        <figure>
+          <img src="img/entra-assign-users.png" alt="Entra Users and groups blade for the enterprise application, showing no assignments" />
+          <figcaption>
+            The state every new enterprise application starts in:
+            <em>No application assignments found</em>. The app exists, the users exist, and
+            not one of them can sign in to it.
+          </figcaption>
+        </figure>
+
         <h2 id="boundary">The Boundary side</h2>
         <p>
           On the Boundary cluster the work is: create an org scope, add an OIDC auth method
@@ -664,6 +654,15 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           auth method is inactive and non-primary. It will happily accept a login and then
           refuse to do anything useful with it.
         </p>
+
+        <figure>
+          <img src="img/entra-authmethod-state.png" alt="Boundary auth method page with the state dropdown open on Inactive, Private, Public" />
+          <figcaption>
+            The dropdown that decides whether any of the previous work counts.
+            <code>Inactive</code> is the default; <code>Public</code> is what lets people
+            pick it on the login screen.
+          </figcaption>
+        </figure>
 
         <h2 id="errors">Two errors that stopped me</h2>
 
@@ -752,6 +751,16 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           <li><strong>Project</strong> scopes sit under an org and are the <em>resource</em> boundary — host catalogs, hosts, targets and credential stores live only here, never at org or global.</li>
           <li>Permissions flow <strong>downward</strong> only. An org-level role can be granted over its child projects; a project can never grant upward.</li>
         </ul>
+
+        <figure>
+          <img src="img/entra-grant-templates.png" alt="Boundary grant templates listing named roles alongside their grant strings" />
+          <figcaption>
+            Grant templates spell out what a role can do —
+            <code>ids=*;type=target;actions=*</code> and friends. Every one of these
+            describes <em>actions</em>. Not one of them says <em>where</em> those actions
+            apply; that is the separate setting I missed.
+          </figcaption>
+        </figure>
 
         <p>
           My mental model came from AWS IAM and Kubernetes RBAC, and it betrayed me in a
@@ -898,104 +907,63 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
 
         <h2 id="extend">Where this goes next</h2>
         <p>
-          What I have is the floor, not the ceiling: identity-based access to two VMs, with
-          the roles maintained by hand. Everything below is a real next step rather than a
-          wishlist, and I have ordered them by how much they pay back relative to the effort.
+          What I have is the floor: identity-based access to two VMs, roles maintained by
+          hand. The table is the roadmap in summary — ordered by payback, not novelty.
         </p>
 
-        <h3 class="flow-head"><span class="pill">Next</span> Vault credential injection</h3>
-        <p>
-          This is the one that closes the gap I admitted above. Right now Boundary controls
-          <em>who may open a session</em>, but the target still trusts an SSH key that exists
-          somewhere. With a credential store attached to the project, Boundary asks Vault for
-          a credential at connect time and injects it into the session — the user never sees
-          it, never stores it, and it expires on its own.
-        </p>
-        <p>
-          Done properly with Vault's SSH secrets engine, the target stops trusting static
-          keys entirely and starts trusting a CA that signs short-lived certificates. At that
-          point "the key outlives the person" stops being possible, because there is no
-          longer a durable key to outlive anyone. I already run Vault on HCP, so this is
-          configuration rather than new infrastructure — which is exactly why it is first.
-        </p>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Step</th><th>What it changes</th><th>Cost</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Vault credential injection</strong></td>
+                <td>Boundary fetches a short-lived credential at connect time and injects it. With Vault's SSH secrets engine the target trusts a CA, not static keys — no durable key left to outlive anyone.</td>
+                <td>Config only; Vault already runs on HCP</td>
+              </tr>
+              <tr>
+                <td><strong>Entra groups → managed groups</strong></td>
+                <td>Roles bind to a group claim instead of named users. Onboarding and offboarding become one directory edit rather than two manual ones.</td>
+                <td>Add the <code>groups</code> claim; one managed group</td>
+              </tr>
+              <tr>
+                <td><strong>Conditional Access</strong></td>
+                <td>MFA, compliant-device and location policies apply to SSH automatically, because the login is an ordinary Entra sign-in.</td>
+                <td>Zero — policies already exist in the tenant</td>
+              </tr>
+              <tr>
+                <td><strong>Session recording</strong></td>
+                <td>Turns the audit answer from "a session was opened" into what actually ran inside it.</td>
+                <td>A bucket and a retention policy</td>
+              </tr>
+              <tr>
+                <td><strong>Dynamic host catalogs</strong></td>
+                <td>Hosts discovered from cloud tags rather than typed in, so the target list cannot silently drift from reality.</td>
+                <td>Cloud credentials for the catalog</td>
+              </tr>
+              <tr>
+                <td><strong>Worker tags</strong></td>
+                <td>A worker per network, sessions routed to one that can reach the target — the path to a single front door over a multi-cloud estate.</td>
+                <td>One more worker per network</td>
+              </tr>
+              <tr>
+                <td><strong>Terraform</strong></td>
+                <td>Scopes, roles and grants in code. Grant scope becomes a reviewable line in a diff instead of a dropdown nobody checks twice.</td>
+                <td>Rewrite of what I built by clicking</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <h3 class="flow-head"><span class="pill">Next</span> Entra groups instead of named users</h3>
         <p>
-          Today I assign a person to the enterprise application and add that person as a
-          principal on a role. That does not survive a growing team: every join and leave is
-          two manual edits in two systems, and manual edits get skipped.
-        </p>
-        <p>
-          Boundary supports managed groups on an OIDC auth method, matched against claims in
-          the token. Add the <code>groups</code> claim to the Entra app registration, create a
-          managed group that filters on the group ID, and attach the <em>group</em> to the
-          role. Access then follows directory membership: adding someone to
-          <code>platform-engineers</code> in Entra is the entire onboarding step, and removing
-          them is the entire offboarding step.
-        </p>
-
-        <h3 class="flow-head"><span class="pill">Next</span> Conditional Access — already paid for</h3>
-        <p>
-          This one costs nothing to adopt and I think it is the most under-appreciated
-          consequence of putting Entra in front. Because the login is a normal Entra
-          sign-in, every Conditional Access policy in the tenant applies to it: require MFA,
-          require a compliant or hybrid-joined device, block by country, step up on
-          risky-sign-in signals.
-        </p>
-        <p>
-          None of that is Boundary configuration and none of it is code. A policy scoped to
-          the Boundary enterprise application means SSH into production now inherits the same
-          device and MFA posture as e-mail. Getting that from an SSH key is not merely hard,
-          it is not a thing keys can express.
-        </p>
-
-        <h3 class="flow-head"><span class="pill">Later</span> Session recording</h3>
-        <p>
-          Boundary can record SSH sessions to object storage and play them back. The reason
-          to want it is less "catching people" and more that it makes an incident
-          reconstructable: what commands ran, in what order, on which host. It changes
-          the audit answer from "u_mJjZAPrPGf opened a session" to what actually happened
-          inside it. It needs a storage bucket and a retention policy decided by someone
-          other than me, which is why it is not first.
-        </p>
-
-        <h3 class="flow-head"><span class="pill">Later</span> Dynamic host catalogs</h3>
-        <p>
-          Both of my targets are static — a host, typed in. A dynamic host catalog queries
-          the cloud provider instead and builds host sets from tags, so a new VM carrying
-          <code>role=profile</code> becomes reachable the moment it exists, and a destroyed
-          one disappears without anybody tidying up.
-        </p>
-        <p>
-          This matters more than it sounds. Static targets rot: the list slowly stops
-          matching reality, and the failure is silent in the dangerous direction — entries
-          for machines that are gone, and no entries for machines that are running.
-        </p>
-
-        <h3 class="flow-head"><span class="pill">Later</span> The second cloud, properly</h3>
-        <p>
-          The target list in that screenshot has two rows, and the second one is
-          <code>profile-gcp-vm</code>. The Azure VM and the GCP VM sit behind the same org,
-          the same auth method and the same role, which is the point worth noticing: the
-          identity layer did not have to know there were two clouds.
-        </p>
-        <p>
-          What it does need is worker placement. A worker lives in a network, so reaching
-          into a second cloud properly means a second worker there, and <strong>worker
-          tags</strong> so a session is routed through one that can actually reach the
-          target. That turns Boundary into a single front door over a multi-cloud estate,
-          which is a much larger claim than "SSH without keys" and the reason I think this
-          is worth building on rather than replacing.
-        </p>
-
-        <h3 class="flow-head"><span class="pill">Later</span> All of it in Terraform</h3>
-        <p>
-          I built this by clicking, which was right for learning and wrong for keeping. The
-          Boundary provider covers scopes, auth methods, roles, grants, host catalogs and
-          targets. The part I most want in code is the grant scopes — the exact thing I got
-          wrong by hand, reviewable in a diff, where <code>this</code> versus
-          <code>this, children</code> is a visible one-line change rather than a dropdown
-          nobody looks at twice.
+          Two of those are worth a sentence more. <strong>Vault credential injection</strong>
+          is first because it closes the gap I admitted at the top — Boundary brokers the
+          connection today, but the target still trusts a key, and this is what removes it.
+          And <strong>the second cloud is already half-done</strong>: the target list in that
+          screenshot has <code>profile-gcp-vm</code> next to the Azure VM, behind the same
+          org, auth method and role. The identity layer never had to know there were two
+          clouds. Only the workers do.
         </p>
 
         <h2 id="change">What I would do differently</h2>
