@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boundary in Azure: the private worker, step by step — Kyaw Sithu</title>
+    <meta
+      name="description"
+      content="A beginner-friendly hands-on walkthrough: reach a private Azure VM over SSH with no key on your laptop, using a self-managed Boundary worker and an egress worker filter."
+    />
+    <link rel="canonical" href="https://kst-devops.com/blog/boundary-azure-egress.html" />
+    <meta property="og:title" content="Boundary in Azure: the private worker, step by step" />
+    <meta
+      property="og:description"
+      content="Reach a private Azure VM over SSH with no key on your laptop, and expose nothing of your own to the internet."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://kst-devops.com/blog/boundary-azure-egress.html"
+    />
+    <meta property="og:site_name" content="Kyaw Sithu" />
+    <meta
+      property="og:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Boundary in Azure: the private worker, step by step"
+    />
+    <meta
+      name="twitter:description"
+      content="Reach a private Azure VM over SSH with no key on your laptop."
+    />
+    <meta
+      name="twitter:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FFF6E9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* same tokens as the profile page */
+        --cream: #fff6e9;
+        --paper: #fffdf7;
+        --ink: #16161d;
+        --ink-soft: #5a5a66;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --teal: #2ec4a6;
+        --sun: #ffd24c;
+        --sky: #4ea8f5;
+        /* light tints — these sit behind ink-coloured text */
+        --lilac: #cdc5f7;
+        --mint: #b6f0e4;
+        --dash: rgba(22, 22, 29, 0.16);
+        --shadow: 6px 6px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        /* flat paper, like the profile — no polka texture */
+        background: var(--cream);
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16.5px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--grape); text-decoration: none; font-weight: 700; }
+      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
+
+      /* ---- nav: same bar as the profile page ---- */
+      nav {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--cream);
+        border-bottom: 3px solid var(--ink);
+      }
+      .nav-inner {
+        max-width: 1040px; margin: 0 auto; padding: 0 32px;
+        height: 56px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .nav-logo {
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        font-size: 18px; line-height: 1;
+        display: flex; align-items: center; gap: 10px;
+      }
+      /* the round KS blob from the profile header */
+      .nav-logo span {
+        width: 34px; height: 34px; flex: none;
+        background: var(--sun); color: var(--ink);
+        border: 3px solid var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; line-height: 1; letter-spacing: .02em;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      /* styled as a profile nav tab rather than a thin outline pill */
+      .nav-back {
+        color: var(--ink); font-size: 13px; font-weight: 600;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
+        transition: transform .08s, box-shadow .08s;
+      }
+      .nav-back:hover, .nav-back:active {
+        text-decoration: none; transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        .nav-inner { padding: 0 16px; }
+      }
+
+      /* ---- layout ---- */
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px 110px; }
+      article { max-width: 760px; }
+      .full { max-width: 1040px; }
+
+      header.post { padding: 54px 0 34px; }
+      .eyebrow {
+        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        box-shadow: var(--shadow-sm);
+      }
+      h1 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
+      }
+      .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
+      .meta {
+        margin-top: 26px; font-size: 14px; color: var(--ink-soft);
+        display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      }
+
+      h2 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
+      }
+      h2::after {
+        content: ""; display: block; width: 74px; height: 6px; margin-top: 8px;
+        background: var(--teal); border-radius: 999px;
+      }
+      h3 {
+        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-size: 20px; margin: 38px 0 12px;
+      }
+      p { margin: 0 0 18px; }
+      ul, ol { margin: 0 0 18px 24px; }
+      li { margin-bottom: 10px; }
+      strong { font-weight: 700; }
+
+      code {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #f1eeff; border: 2px solid #d6ceff;
+        border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
+      }
+      pre {
+        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
+      }
+      pre code {
+        background: none; border: 0; padding: 0; color: var(--ink);
+        font-size: 13.5px; line-height: 1.7;
+      }
+
+      /* ---- figures: sticker cards ---- */
+      figure { margin: 30px 0 36px; }
+      figure img {
+        width: 100%; height: auto; display: block;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
+      }
+      figcaption {
+        margin-top: 14px; font-size: 16.5px; line-height: 1.6;
+        color: var(--ink); max-width: 760px;
+      }
+
+      .board {
+        display: inline-block; margin-top: 6px; font-size: 14.5px;
+        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
+      }
+      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+
+      /* ---- callouts ---- */
+      .note {
+        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
+      }
+      .note p:last-child { margin-bottom: 0; }
+      .note.warn { background: #fff0c9; }
+
+      /* ---- tables ---- */
+      .tw {
+        overflow-x: auto; margin: 0 0 28px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 15px; }
+      th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+      th {
+        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
+        letter-spacing: .05em; background: var(--mint);
+        border-bottom: 3px solid var(--ink); color: var(--ink);
+      }
+      td { border-bottom: 2px dashed var(--dash); }
+      tr:last-child td { border-bottom: 0; }
+
+      /* ---- contents ---- */
+      .toc {
+        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
+      }
+      .toc h4 {
+        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
+        letter-spacing: .07em; margin-bottom: 12px;
+      }
+      .toc ol { margin: 0 0 0 22px; }
+      .toc li { margin-bottom: 6px; }
+
+      /* ---- flow pills ---- */
+      .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .pill {
+        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
+        transform: rotate(-1deg);
+      }
+
+      .author-card {
+        display: flex; gap: 18px; align-items: center;
+        margin-top: 28px; padding: 18px 22px; max-width: 720px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .author-loves {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 4px; color: var(--ink);
+      }
+      .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+      .author-humble {
+        margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
+        border-top: 2px dashed var(--dash); padding-top: 10px;
+      }
+
+      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
+      .meta time {
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 1px 11px; font-weight: 700; font-size: 13.5px;
+      }
+      .author-avatar {
+        flex: 0 0 auto; width: 72px; height: 72px;
+        /* the source is landscape, so crop to the moon rather than squash it */
+        object-fit: cover; object-position: 50% 45%;
+        border: 3px solid var(--ink); border-radius: 50%;
+        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      @media (max-width: 520px) {
+        .author-card { align-items: flex-start; }
+        .author-avatar { width: 56px; height: 56px; }
+      }
+
+
+      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
+      .share-title {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 12px; color: var(--ink);
+      }
+      .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
+      .share-btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
+        border: 3px solid var(--ink); border-radius: 999px;
+        padding: 8px 18px; box-shadow: var(--shadow-sm);
+      }
+      .share-btn svg { width: 18px; height: 18px; fill: currentColor; }
+      .share-btn.li { background: #0a66c2; }
+      .share-btn.fb { background: #1877f2; }
+      .share-btn:hover {
+        text-decoration: none; transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      footer.post {
+        margin-top: 70px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
+      }
+
+      @media (max-width: 640px) {
+        body { font-size: 16px; }
+        .wrap { padding: 0 16px 72px; }
+        header.post { padding: 34px 0 24px; }
+        :root { --shadow: 4px 4px 0 var(--ink); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-back:hover { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
+        <a class="nav-back" href="/#blog">← Back to profile</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <article>
+        <header class="post">
+          <div class="eyebrow">Walkthrough · Azure</div>
+          <h1>Boundary in Azure: the private worker, step by step</h1>
+          <p class="standfirst">
+            The gentlest of the three builds. We put a virtual machine in a private network
+            with no public address, and reach it over SSH from a laptop that holds no key —
+            without exposing a single thing of our own to the internet.
+          </p>
+          <div class="meta">
+            <span class="byline">by <strong>Kyaw Sithu</strong></span>
+            <span>·</span>
+            <time datetime="2026-08-16">16 August 2026</time>
+            <span>·</span>
+            <span>Beginner friendly · 2–3 hours</span>
+            <span>·</span>
+            <span><a href="/blog/what-is-boundary.html">Start with the guide →</a></span>
+          </div>
+        </header>
+
+        <div class="note warn">
+          <p>
+            <strong>New to Boundary?</strong> Read
+            <a href="/blog/what-is-boundary.html">What is HashiCorp Boundary?</a> first. It
+            explains the vocabulary used here — controller, worker, target, scope — in plain
+            words. This page assumes you have read it.
+          </p>
+          <p style="margin-bottom: 0">
+            <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/482NXdUV6gH" target="_blank" rel="noopener">Open the Azure board ↗</a>
+          </p>
+        </div>
+
+        <div class="toc">
+          <h4>Contents</h4>
+          <ol>
+            <li><a href="#building">What we are building</a></li>
+            <li><a href="#before">Before you start</a></li>
+            <li><a href="#networks">Step 1 · Two networks, joined</a></li>
+            <li><a href="#firewall">Step 2 · Firewall rules</a></li>
+            <li><a href="#vms">Step 3 · Three machines</a></li>
+            <li><a href="#worker">Step 4 · Install the worker</a></li>
+            <li><a href="#register">Step 5 · Register the worker</a></li>
+            <li><a href="#target">Step 6 · Credentials and a target</a></li>
+            <li><a href="#filter">Step 7 · The egress filter</a></li>
+            <li><a href="#connect">Step 8 · Connect, and prove it</a></li>
+            <li><a href="#gotchas">Azure gotchas</a></li>
+            <li><a href="#cleanup">Clean up</a></li>
+          </ol>
+        </div>
+
+        <h2 id="building">What we are building</h2>
+        <p>
+          Three virtual machines and two networks. In plain terms:
+        </p>
+        <ul>
+          <li>A <strong>target VM</strong> — the server we actually want to reach. It lives in a private subnet with no public address and no way out to the internet.</li>
+          <li>A <strong>worker VM</strong> — the courier. Also private, but it can reach the internet outbound through a NAT gateway so it can talk to HashiCorp's control plane.</li>
+          <li>A <strong>temporary jump host</strong> — used once, to copy the Boundary binary onto the worker, and then deleted.</li>
+        </ul>
+        <p>
+          Because our worker has no public address, our laptop cannot connect to it directly.
+          So the session travels
+          <strong>laptop → HashiCorp's managed worker → our worker → target</strong>. The
+          setting that tells Boundary which of our workers should make that final hop is
+          called an <strong>egress worker filter</strong>, and that is where the name of this
+          design comes from.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>Is it bad that HashiCorp's machines carry my traffic?</strong> For most
+            people, no. The traffic is encrypted end to end and they cannot read it. But if
+            you work somewhere that says session traffic must never transit infrastructure
+            you do not operate, this design will not pass — and the
+            <a href="/blog/boundary-gcp-ingress.html">Google Cloud walkthrough</a> shows the
+            alternative.
+          </p>
+        </div>
+
+        <h2 id="before">Before you start</h2>
+        <p>You need:</p>
+        <ul>
+          <li>An Azure account where you can create networks and virtual machines.</li>
+          <li>An HCP account with a Boundary cluster. The free tier is enough.</li>
+          <li>An SSH key pair on your laptop. If you do not have one: <code>ssh-keygen -t ed25519 -f ./boundary-azure</code></li>
+        </ul>
+
+        <div class="note warn">
+          <p>
+            <strong>Money.</strong> The NAT gateway is the expensive part here — it bills per
+            hour whether or not anything uses it. Three small VMs and a NAT gateway left
+            running for a month will cost real money. Set a budget alert now, and do the
+            <a href="#cleanup">clean-up step</a> when you finish.
+          </p>
+        </div>
+
+        <h2 id="networks">Step 1 · Two networks, joined</h2>
+        <p>
+          Everything in Azure lives in a <strong>resource group</strong>, which is just a
+          folder. Create one first — call it something like <code>boundary-lab</code> — and
+          put everything else inside it. Deleting the folder later deletes everything in it,
+          which makes clean-up a single action.
+        </p>
+
+        <h3>The boundary network</h3>
+        <p>
+          Create a virtual network (Azure's word for a private network; AWS calls it a VPC).
+          Give it two subnets:
+        </p>
+        <ul>
+          <li>A <strong>public subnet</strong> for the temporary jump host.</li>
+          <li>A <strong>private subnet</strong> for the worker.</li>
+        </ul>
+        <p>
+          Then create a <strong>NAT gateway</strong> and attach it to the private subnet.
+          This is what lets the worker reach the internet outbound — to download the binary
+          and to register with HCP — without anything on the internet being able to reach the
+          worker.
+        </p>
+
+        <h3>The profile network</h3>
+        <p>
+          A second virtual network, with one private subnet, for the target VM. No NAT
+          gateway here at all. This machine has no way to reach the internet and no way to
+          be reached from it, which is exactly what we want.
+        </p>
+
+        <h3>Join them with peering</h3>
+        <p>
+          Peering connects two networks so machines in one can talk to machines in the other.
+          Open the first network, go to Peerings, and add one pointing at the second.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>A pleasant Azure surprise.</strong> When you create the peering, Azure
+            adds the routes for you. In AWS you would now be editing route tables by hand on
+            both sides. Here there is nothing more to do — and you do not need a custom route
+            table for simple direct peering at all.
+          </p>
+        </div>
+
+        <h2 id="firewall">Step 2 · Firewall rules</h2>
+        <p>
+          In Azure the firewall is a <strong>network security group</strong>, usually
+          shortened to NSG. You attach it to a subnet or to a machine's network card.
+        </p>
+        <p>
+          The trick to getting these right is to write them in the direction traffic actually
+          flows. Here are the three sets, in order:
+        </p>
+
+        <pre><code>jump host NSG
+  inbound   SSH (22) from your own public IP address
+  outbound  SSH (22) to the worker
+
+worker NSG
+  inbound   SSH (22) from the jump host        (for setup only)
+  outbound  TCP 9202 to HCP's managed workers  (to register)
+  outbound  SSH (22) to the target VM          (the actual job)
+  deny      everything else, both directions
+
+target NSG
+  inbound   SSH (22) from the worker, and nothing else
+  outbound  nothing at all</code></pre>
+
+        <div class="note">
+          <p>
+            <strong>Read the worker's rules again.</strong> There is no inbound rule from the
+            internet. None. The worker reaches HCP by dialling <em>outward</em> and holding
+            that connection open — HCP never connects to it. This is the single most
+            important thing to understand about how Boundary workers behave, and it is why
+            this design exposes nothing.
+          </p>
+        </div>
+
+        <p>
+          Notice also that the target's outbound rule is "nothing". It does not need to reach
+          anything, so we say so. Free security, one dropdown.
+        </p>
+
+        <h2 id="vms">Step 3 · Three machines</h2>
+        <p>Create three virtual machines, all Ubuntu, all using the SSH key you generated:</p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Machine</th><th>Subnet</th><th>Public IP?</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>jump host</td><td>boundary / public</td><td>Yes</td><td>Copy the binary across. Deleted afterwards.</td></tr>
+              <tr><td>worker</td><td>boundary / private</td><td>No</td><td>Runs the Boundary worker service.</td></tr>
+              <tr><td>profile VM</td><td>profile / private</td><td>No</td><td>The server we want to reach.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          After creating them, attach the right NSG to each. In Azure this is done from the
+          machine's <strong>network interface</strong>, under Settings → Network security
+          group — not from the VM page itself, which is where most people look first.
+        </p>
+
+        <h2 id="worker">Step 4 · Install the worker</h2>
+        <p>
+          SSH into the jump host, then from there into the worker. Copy the Boundary binary
+          across with <code>scp</code>, or briefly allow the worker outbound internet access
+          and download it directly:
+        </p>
+
+        <pre><code>sudo apt-get update &amp;&amp; sudo apt-get install -y jq unzip
+
+wget -q "$(curl -fsSL \
+  "https://api.releases.hashicorp.com/v1/releases/boundary/latest?license_class=enterprise" \
+  | jq -r '.builds[] | select(.arch=="amd64" and .os=="linux") | .url')"
+
+unzip *.zip</code></pre>
+
+        <p>Now write the worker's configuration file:</p>
+
+        <pre><code># /home/azureuser/boundary/pki-worker.hcl
+
+hcp_boundary_cluster_id = "&lt;your-cluster-id&gt;"
+
+listener "tcp" {
+  address = "0.0.0.0:9202"
+  purpose = "proxy"
+}
+
+worker {
+  public_addr       = "192.168.9.4:9202"     # the worker's PRIVATE address
+  auth_storage_path = "/home/azureuser/boundary/worker1"
+  tags {
+    owner     = ["kst"]
+    cloud-env = ["azure"]
+    region    = ["uae-north"]
+  }
+}</code></pre>
+
+        <div class="note warn">
+          <p>
+            <strong>The most important line on this page.</strong>
+            <code>public_addr</code> is set to a <em>private</em> address. That is not a
+            mistake. It tells the controller where this worker can be reached — and since
+            your laptop cannot reach a private Azure address, the controller knows the
+            session must be relayed through HCP's managed workers instead. Put a real public
+            IP here and you get a completely different design, which is the
+            <a href="/blog/boundary-gcp-ingress.html">Google Cloud walkthrough</a>.
+          </p>
+        </div>
+
+        <p>
+          Give the tags some thought while you are here. They are labels, and later you will
+          write a filter that selects a worker <em>by</em> them. Adding a tag now is free;
+          adding one after targets already reference the worker is fiddly. Tag on things you
+          might one day want to select by: cloud, region, owner, environment.
+        </p>
+
+        <p>Then run it as a service rather than in your shell, so it survives you logging out:</p>
+
+        <pre><code>sudo mv boundary /usr/local/bin/
+sudo useradd --system --home /etc/boundary.d --shell /bin/false boundary
+sudo chown -R boundary:boundary /home/azureuser/boundary
+
+# /etc/systemd/system/boundary-worker.service
+[Unit]
+Description=Boundary PKI Worker
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=boundary
+Group=boundary
+ExecStart=/usr/local/bin/boundary server \
+  -config=/home/azureuser/boundary/pki-worker.hcl
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+        <pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now boundary-worker
+sudo journalctl -u boundary-worker -f</code></pre>
+
+        <h2 id="register">Step 5 · Register the worker</h2>
+        <p>
+          The log will say the node is <strong>not yet authorized</strong>. This is correct.
+          It is not an error, and nothing is broken.
+        </p>
+        <p>
+          Registration is a handshake with two halves. The worker writes a token into its
+          storage directory, and you paste that token into the controller to approve it:
+        </p>
+
+        <pre><code>cd /home/azureuser/boundary/worker1
+cat auth_request_token</code></pre>
+
+        <p>
+          Copy that value, open the Boundary admin console, go to Workers → New, and paste
+          it. Watch the worker's log as you do. You will see a line like this:
+        </p>
+
+        <pre><code>{"op":"reverseconn_ent.(*dialingListener).SetAddresses",
+ "data":{"address":"&lt;id&gt;.proxy.boundary.hashicorp.cloud:9202",
+         "msg":"dialing"}}</code></pre>
+
+        <p>
+          Read that carefully, because it is the whole architecture in one line. The worker is
+          <em>dialing</em>. It is opening a connection outward to HashiCorp and holding it
+          open, so that work can be pushed down it later. That is why the worker needs no
+          inbound firewall rule.
+        </p>
+
+        <h2 id="target">Step 6 · Credentials and a target</h2>
+        <p>Two things to create in the admin console, in this order.</p>
+
+        <h3>A credential store</h3>
+        <p>
+          This is where the SSH key for reaching the target VM lives. Create a static
+          credential store, then add a <strong>username and key pair</strong> credential
+          containing the private key that matches the target VM.
+        </p>
+
+        <div class="note warn">
+          <p>
+            <strong>An honest limitation.</strong> A static credential like this does not
+            rotate. It is a key sitting in Boundary, and if it leaks you are back to the
+            problem we were trying to escape. For anything real you would use HashiCorp Vault
+            as the credential store, so that a fresh short-lived credential is generated per
+            session. That is a bigger topic; I am flagging it so you do not mistake this for
+            the finished pattern.
+          </p>
+        </div>
+
+        <h3>A target</h3>
+        <p>
+          Create an SSH target. Give it the target VM's private address and port 22. Then
+          attach the credential you just made as an <strong>injected application
+          credential</strong>.
+        </p>
+        <p>
+          "Injected" means the worker uses the credential on your behalf and you never see
+          it. The alternative, "brokered", hands the credential to you to use yourself.
+          Injected is the one you want — it is the difference between "the system logs me in"
+          and "the system gives me a key".
+        </p>
+
+        <h2 id="filter">Step 7 · The egress filter</h2>
+        <p>
+          Now we tell Boundary which worker should make the final hop to the target. On the
+          target, set an <strong>egress worker filter</strong>:
+        </p>
+
+        <pre><code>"azure" in "/tags/cloud-env"</code></pre>
+
+        <p>
+          That reads as: use any worker whose <code>cloud-env</code> tag contains
+          <code>azure</code>. Which is the worker we built, because we tagged it that way in
+          step 4.
+        </p>
+        <p>
+          The full path is now decided:
+          <strong>laptop → HCP managed worker → our worker → target VM</strong>.
+        </p>
+
+        <h2 id="connect">Step 8 · Connect, and prove it</h2>
+        <p>Log in and connect:</p>
+
+        <pre><code>boundary authenticate password \
+  -auth-method-id=&lt;your-auth-method-id&gt; \
+  -login-name=&lt;your-user&gt;
+
+boundary connect ssh -target-id=&lt;your-target-id&gt;</code></pre>
+
+        <p>
+          If you land on a shell prompt on the target VM, it worked. But do not stop there —
+          the interesting part is proving <em>how</em> it worked. Run this on the target VM
+          itself:
+        </p>
+
+        <figure>
+          <img src="img/flow-proof-target-azure.png" alt="ss output on the Azure target showing sshd listening and an established connection from the worker" />
+          <figcaption>
+            <code>sudo ss -tanp | grep ':22'</code> on the target. There is an established
+            SSH connection, and it comes from the worker's private address. Nothing else. The
+            target has no idea Boundary exists — it just sees a neighbour connecting over
+            SSH.
+          </figcaption>
+        </figure>
+
+        <p>And on the worker, look at where <em>its</em> connections go:</p>
+
+        <pre><code>sudo ss -tnp state established '( dport = :9202 )'
+
+Local Address:Port        Peer Address:Port     Process
+10.0.201.4:42994          54.172.227.234:9202   boundary
+10.0.201.4:49314          54.172.227.234:9202   boundary
+10.0.201.4:50574          3.233.88.122:9202     boundary</code></pre>
+
+        <p>
+          Those peer addresses are HashiCorp's managed workers. Our worker dialled
+          <em>them</em>. Nobody dialled us. Read the two captures together and the design is
+          no longer a claim on a diagram — it is a fact you can see.
+        </p>
+        <p>
+          You can also confirm the login on the target the ordinary way, which is a nice
+          reminder that everything downstream of Boundary is completely normal:
+        </p>
+        <pre><code>sudo tail -f /var/log/auth.log</code></pre>
+
+        <h2 id="gotchas">Azure gotchas</h2>
+
+        <h3>The NSG rules you did not write</h3>
+        <p>
+          Every NSG comes with default rules that you cannot delete. They sit at low priority
+          underneath yours. If something is allowed that you thought you had denied, this is
+          usually why — you were reasoning only about the rules you added. Read the defaults
+          before layering on top of them.
+        </p>
+
+        <h3>There is no internet gateway to create</h3>
+        <p>
+          If you come from AWS you will go looking for an internet gateway resource and not
+          find one. Azure networks have outbound internet built in. You only create a NAT
+          gateway when you want outbound access from machines that have no public IP —
+          which is exactly our worker's case.
+        </p>
+
+        <h3>The NSG attaches to the network card</h3>
+        <p>
+          Not to the virtual machine. Look under the VM's network interface settings. This
+          catches everyone once.
+        </p>
+
+        <h3>Azure writes your peering routes for you</h3>
+        <p>
+          Worth stating as a positive, because it is a genuine difference. Create the
+          peering and the system routes appear. There is no route table step, and going
+          looking for one wastes time.
+        </p>
+
+        <h2 id="cleanup">Clean up</h2>
+        <p>
+          Delete the resource group. Everything you made in this walkthrough was inside it,
+          so one delete removes the VMs, the networks, the NAT gateway and the peering
+          together.
+        </p>
+        <p>
+          Then remove the worker from the Boundary admin console, and delete the target and
+          credential store. And delete the jump host as soon as the worker is installed —
+          it exists to copy one file across, and a public SSH machine with no remaining
+          purpose is exactly the kind of thing that quietly becomes permanent.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>Where to go next.</strong> If you want your own machines out of
+            HashiCorp's traffic path, do the
+            <a href="/blog/boundary-gcp-ingress.html">Google Cloud ingress walkthrough</a>.
+            If your target network has no route to the internet at all, the
+            <a href="/blog/boundary-aws-multihop.html">AWS multi-hop walkthrough</a> handles
+            that. And when you want to replace the password login with your company account,
+            that is <a href="/blog/boundary-entra-id-sso.html">Boundary and Entra ID</a>.
+          </p>
+        </div>
+
+        <footer class="post">
+          <p>
+            Every screen from this build, in the order I filled it in:
+            <a href="https://link.excalidraw.com/l/9hD7S5FgGWN/482NXdUV6gH" target="_blank" rel="noopener">the Azure board on Excalidraw</a>
+          </p>
+          <p>
+            Part of a series ·
+            <a href="/blog/what-is-boundary.html">Start here</a> ·
+            <a href="/blog/boundary-gcp-ingress.html">GCP ingress</a> ·
+            <a href="/blog/boundary-aws-multihop.html">AWS multi-hop</a>
+          </p>
+          <div class="share">
+            <p class="share-title">Found this useful? Pass it on 🌙</p>
+            <div class="share-row">
+              <a class="share-btn li" target="_blank" rel="noopener"
+                 href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-azure-egress.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Share on LinkedIn
+              </a>
+              <a class="share-btn fb" target="_blank" rel="noopener"
+                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-azure-egress.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+                Share on Facebook
+              </a>
+            </div>
+          </div>
+
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>

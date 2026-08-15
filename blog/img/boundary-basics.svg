@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 720" width="1440" height="720"
+     font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif">
+  <defs>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16161D"/>
+    </marker>
+    <style>
+      .sh { fill:#16161D; }
+      .t  { font-size:20px; font-weight:700; fill:#16161D; }
+      .s  { font-size:16px; fill:#5A5A66; }
+      .q  { font-size:16px; fill:#16161D; }
+      .a  { stroke:#16161D; stroke-width:3.5; fill:none; marker-end:url(#b); }
+      .num{ font-size:15px; font-weight:700; fill:#16161D; }
+    </style>
+  </defs>
+  <rect width="1440" height="720" fill="#FFF6E9"/>
+
+  <text x="60" y="62" font-size="24" font-weight="800" fill="#16161D">Boundary splits the job in two</text>
+  <text x="60" y="92" class="s">One part decides whether you are allowed. A different part carries your traffic. They are separate machines.</text>
+
+  <!-- YOU -->
+  <rect x="68" y="238" width="230" height="110" rx="18" class="sh"/>
+  <rect x="60" y="230" width="230" height="110" rx="18" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="175" y="277" text-anchor="middle" class="t">You</text>
+  <text x="175" y="303" text-anchor="middle" class="s">laptop, no SSH key</text>
+  <text x="175" y="325" text-anchor="middle" class="s">stored anywhere</text>
+
+  <!-- CONTROLLER -->
+  <rect x="468" y="168" width="300" height="180" rx="18" class="sh"/>
+  <rect x="460" y="160" width="300" height="180" rx="18" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+  <text x="610" y="200" text-anchor="middle" class="t">The controller</text>
+  <text x="610" y="228" text-anchor="middle" class="s">the doorman</text>
+  <text x="484" y="264" class="q">· Who are you?</text>
+  <text x="484" y="292" class="q">· What may you reach?</text>
+  <text x="484" y="320" class="q">· Which worker will take you?</text>
+
+  <!-- WORKER -->
+  <rect x="468" y="448" width="300" height="160" rx="18" class="sh"/>
+  <rect x="460" y="440" width="300" height="160" rx="18" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+  <text x="610" y="480" text-anchor="middle" class="t">The worker</text>
+  <text x="610" y="508" text-anchor="middle" class="s">the courier</text>
+  <text x="484" y="544" class="q">· Carries your keystrokes</text>
+  <text x="484" y="572" class="q">· Sits near the server</text>
+
+  <!-- SERVER -->
+  <rect x="948" y="448" width="290" height="160" rx="18" class="sh"/>
+  <rect x="940" y="440" width="290" height="160" rx="18" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <text x="1085" y="486" text-anchor="middle" class="t">The server</text>
+  <text x="1085" y="514" text-anchor="middle" class="s">private, no public address</text>
+  <text x="1085" y="542" class="s" text-anchor="middle">sees an ordinary SSH</text>
+  <text x="1085" y="564" class="s" text-anchor="middle">connection from the worker</text>
+  <text x="1085" y="590" class="s" text-anchor="middle">— it never knows Boundary exists</text>
+
+  <!-- arrows -->
+  <path class="a" d="M292 262 L 452 232"/>
+  <text x="300" y="212" class="num">1 · ask permission</text>
+
+  <path class="a" d="M452 300 L 300 316"/>
+  <text x="300" y="360" class="num">2 · here is a ticket, and</text>
+  <text x="300" y="382" class="num">the address of a worker</text>
+
+  <path class="a" d="M180 350 C 180 470, 300 520, 452 520"/>
+  <text x="120" y="470" class="num">3 · you show</text>
+  <text x="120" y="492" class="num">the ticket</text>
+
+  <path class="a" d="M770 520 L 932 520"/>
+  <text x="790" y="500" class="num">4 · the worker</text>
+  <text x="790" y="556" class="num">connects for you</text>
+
+  <path class="a" d="M690 348 L 640 432" stroke-dasharray="9 6"/>
+  <text x="700" y="400" class="s">the controller tells the</text>
+  <text x="700" y="422" class="s">worker what to open</text>
+
+  <rect x="948" y="178" width="290" height="150" rx="16" fill="#EDE9FF" stroke="#16161D" stroke-width="3"/>
+  <text x="972" y="212" class="t" font-size="18">The key idea</text>
+  <text x="972" y="244" class="s">You never get a key.</text>
+  <text x="972" y="270" class="s">You get permission,</text>
+  <text x="972" y="296" class="s">for one session,</text>
+  <text x="972" y="322" class="s">that can be taken away.</text>
+
+  <text x="60" y="672" class="s">If your account is disabled, the next request at step 1 simply fails. There is no key left behind that still works — because there never was one.</text>
+</svg>

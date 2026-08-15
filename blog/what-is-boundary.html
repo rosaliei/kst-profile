@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>What is HashiCorp Boundary? A beginner's guide — Kyaw Sithu</title>
+    <meta
+      name="description"
+      content="A plain-English introduction to HashiCorp Boundary: what problem it solves, the vocabulary you need, when to use it, and three complete hands-on walkthroughs in AWS, Azure and Google Cloud."
+    />
+    <link rel="canonical" href="https://kst-devops.com/blog/what-is-boundary.html" />
+    <meta property="og:title" content="What is HashiCorp Boundary? A beginner's guide" />
+    <meta
+      property="og:description"
+      content="What Boundary does in plain words, when you would want it, and three complete walkthroughs you can follow yourself."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://kst-devops.com/blog/what-is-boundary.html"
+    />
+    <meta property="og:site_name" content="Kyaw Sithu" />
+    <meta
+      property="og:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="What is HashiCorp Boundary? A beginner's guide"
+    />
+    <meta
+      name="twitter:description"
+      content="What Boundary does in plain words, and three walkthroughs you can follow yourself."
+    />
+    <meta
+      name="twitter:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FFF6E9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* same tokens as the profile page */
+        --cream: #fff6e9;
+        --paper: #fffdf7;
+        --ink: #16161d;
+        --ink-soft: #5a5a66;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --teal: #2ec4a6;
+        --sun: #ffd24c;
+        --sky: #4ea8f5;
+        /* light tints — these sit behind ink-coloured text */
+        --lilac: #cdc5f7;
+        --mint: #b6f0e4;
+        --dash: rgba(22, 22, 29, 0.16);
+        --shadow: 6px 6px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        /* flat paper, like the profile — no polka texture */
+        background: var(--cream);
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16.5px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--grape); text-decoration: none; font-weight: 700; }
+      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
+
+      /* ---- nav: same bar as the profile page ---- */
+      nav {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--cream);
+        border-bottom: 3px solid var(--ink);
+      }
+      .nav-inner {
+        max-width: 1040px; margin: 0 auto; padding: 0 32px;
+        height: 56px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .nav-logo {
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        font-size: 18px; line-height: 1;
+        display: flex; align-items: center; gap: 10px;
+      }
+      /* the round KS blob from the profile header */
+      .nav-logo span {
+        width: 34px; height: 34px; flex: none;
+        background: var(--sun); color: var(--ink);
+        border: 3px solid var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; line-height: 1; letter-spacing: .02em;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      /* styled as a profile nav tab rather than a thin outline pill */
+      .nav-back {
+        color: var(--ink); font-size: 13px; font-weight: 600;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
+        transition: transform .08s, box-shadow .08s;
+      }
+      .nav-back:hover, .nav-back:active {
+        text-decoration: none; transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        .nav-inner { padding: 0 16px; }
+      }
+
+      /* ---- layout ---- */
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px 110px; }
+      article { max-width: 760px; }
+      .full { max-width: 1040px; }
+
+      header.post { padding: 54px 0 34px; }
+      .eyebrow {
+        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        box-shadow: var(--shadow-sm);
+      }
+      h1 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
+      }
+      .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
+      .meta {
+        margin-top: 26px; font-size: 14px; color: var(--ink-soft);
+        display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      }
+
+      h2 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
+      }
+      h2::after {
+        content: ""; display: block; width: 74px; height: 6px; margin-top: 8px;
+        background: var(--teal); border-radius: 999px;
+      }
+      h3 {
+        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-size: 20px; margin: 38px 0 12px;
+      }
+      p { margin: 0 0 18px; }
+      ul, ol { margin: 0 0 18px 24px; }
+      li { margin-bottom: 10px; }
+      strong { font-weight: 700; }
+
+      code {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #f1eeff; border: 2px solid #d6ceff;
+        border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
+      }
+      pre {
+        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
+      }
+      pre code {
+        background: none; border: 0; padding: 0; color: var(--ink);
+        font-size: 13.5px; line-height: 1.7;
+      }
+
+      /* ---- figures: sticker cards ---- */
+      figure { margin: 30px 0 36px; }
+      figure img {
+        width: 100%; height: auto; display: block;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
+      }
+      figcaption {
+        margin-top: 14px; font-size: 16.5px; line-height: 1.6;
+        color: var(--ink); max-width: 760px;
+      }
+
+      .board {
+        display: inline-block; margin-top: 6px; font-size: 14.5px;
+        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
+      }
+      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+
+      /* ---- callouts ---- */
+      .note {
+        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
+      }
+      .note p:last-child { margin-bottom: 0; }
+      .note.warn { background: #fff0c9; }
+
+      /* ---- tables ---- */
+      .tw {
+        overflow-x: auto; margin: 0 0 28px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 15px; }
+      th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+      th {
+        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
+        letter-spacing: .05em; background: var(--mint);
+        border-bottom: 3px solid var(--ink); color: var(--ink);
+      }
+      td { border-bottom: 2px dashed var(--dash); }
+      tr:last-child td { border-bottom: 0; }
+
+      /* ---- contents ---- */
+      .toc {
+        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
+      }
+      .toc h4 {
+        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
+        letter-spacing: .07em; margin-bottom: 12px;
+      }
+      .toc ol { margin: 0 0 0 22px; }
+      .toc li { margin-bottom: 6px; }
+
+      /* ---- flow pills ---- */
+      .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .pill {
+        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
+        transform: rotate(-1deg);
+      }
+
+      .author-card {
+        display: flex; gap: 18px; align-items: center;
+        margin-top: 28px; padding: 18px 22px; max-width: 720px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .author-loves {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 4px; color: var(--ink);
+      }
+      .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+      .author-humble {
+        margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
+        border-top: 2px dashed var(--dash); padding-top: 10px;
+      }
+
+      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
+      .meta time {
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 1px 11px; font-weight: 700; font-size: 13.5px;
+      }
+      .author-avatar {
+        flex: 0 0 auto; width: 72px; height: 72px;
+        /* the source is landscape, so crop to the moon rather than squash it */
+        object-fit: cover; object-position: 50% 45%;
+        border: 3px solid var(--ink); border-radius: 50%;
+        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      @media (max-width: 520px) {
+        .author-card { align-items: flex-start; }
+        .author-avatar { width: 56px; height: 56px; }
+      }
+
+
+      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
+      .share-title {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 12px; color: var(--ink);
+      }
+      .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
+      .share-btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
+        border: 3px solid var(--ink); border-radius: 999px;
+        padding: 8px 18px; box-shadow: var(--shadow-sm);
+      }
+      .share-btn svg { width: 18px; height: 18px; fill: currentColor; }
+      .share-btn.li { background: #0a66c2; }
+      .share-btn.fb { background: #1877f2; }
+      .share-btn:hover {
+        text-decoration: none; transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      footer.post {
+        margin-top: 70px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
+      }
+
+      @media (max-width: 640px) {
+        body { font-size: 16px; }
+        .wrap { padding: 0 16px 72px; }
+        header.post { padding: 34px 0 24px; }
+        :root { --shadow: 4px 4px 0 var(--ink); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-back:hover { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
+        <a class="nav-back" href="/#blog">← Back to profile</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <article>
+        <header class="post">
+          <div class="eyebrow">Guide · Start here</div>
+          <h1>What is HashiCorp Boundary? A beginner's guide — and why I built it three times</h1>
+          <p class="standfirst">
+            If you have ever copied an SSH key onto a laptop and hoped for the best, this is
+            for you. I will explain what Boundary does in plain words, why you would want
+            it, and then hand you three complete walkthroughs — one in AWS, one in Azure,
+            one in Google Cloud — that you can follow along with yourself.
+          </p>
+          <div class="meta">
+            <span class="byline">by <strong>Kyaw Sithu</strong></span>
+            <span>·</span>
+            <time datetime="2026-08-16">16 August 2026</time>
+            <span>·</span>
+            <span>Beginner friendly · No prior Boundary knowledge needed</span>
+          </div>
+
+          <div class="author-card">
+            <img class="author-avatar" src="img/moon.jpg" alt="" width="72" height="72" />
+            <div>
+              <p class="author-loves">He who loves Mum, Ei, and Arsenal —<br />and is still chasing the moon.</p>
+              <p class="author-ace">
+                Proudly a
+                <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
+                candidate.
+              </p>
+              <p class="author-humble">
+                A note, humbly: I am not an expert, and none of this is a brag. It is all
+                about learning how to learn — and how to unlearn — and cherishing the
+                process somewhere along the way. If you got this far, I hope you learned
+                something too.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <div class="toc">
+          <h4>Contents</h4>
+          <ol>
+            <li><a href="#problem">The problem, in plain words</a></li>
+            <li><a href="#what">So what is Boundary?</a></li>
+            <li><a href="#words">The words you will meet</a></li>
+            <li><a href="#session">What happens when you connect</a></li>
+            <li><a href="#usecases">When would you actually use this?</a></li>
+            <li><a href="#why3">Why I built it three times</a></li>
+            <li><a href="#clouds">What changes between clouds</a></li>
+            <li><a href="#walkthroughs">The three walkthroughs</a></li>
+            <li><a href="#handson">Before you follow along</a></li>
+            <li><a href="#reading">Further reading</a></li>
+          </ol>
+        </div>
+
+        <h2 id="problem">The problem, in plain words</h2>
+        <p>
+          Imagine you have a server running in the cloud. It holds something important, so
+          you did the sensible thing and gave it no public address. Nobody on the internet
+          can reach it.
+        </p>
+        <p>Now you need to log into it. How?</p>
+        <p>The usual answer has two parts, and both of them age badly.</p>
+
+        <h3>Part one: you give people a key</h3>
+        <p>
+          SSH normally works with a <strong>key pair</strong>. You keep a private key file on
+          your laptop, and the server keeps a matching public key in a file called
+          <code>authorized_keys</code>. If the two match, you are let in.
+        </p>
+        <p>
+          The trouble is what that key really is. It is a <strong>bearer credential</strong>
+          — a thing where whoever holds it <em>is</em> the user. The server does not know who
+          you are. It only knows that whoever is connecting has the right file.
+        </p>
+        <p>So:</p>
+        <ul>
+          <li>The key does not expire. It works next year, and the year after.</li>
+          <li>If someone copies it, there is no way to tell.</li>
+          <li>When someone leaves the company, disabling their email account does nothing. Their key still works, on every server it was ever added to.</li>
+        </ul>
+        <p>
+          That last one is worth sitting with. You remove someone's access in one system in
+          about four seconds, and their access to your servers continues until a human
+          remembers every machine and edits a file on each one.
+        </p>
+
+        <h3>Part two: you build a door to get in through</h3>
+        <p>
+          Your server is private, so you cannot reach it directly. The traditional fix is a
+          <strong>jump host</strong> (also called a bastion): a second machine that
+          <em>does</em> have a public address. You log into that, then hop from there to the
+          real server.
+        </p>
+        <p>
+          It works. But now you own a machine whose whole job is to be reachable from the
+          internet, permanently, so that people can occasionally hop through it.
+        </p>
+
+        <h3>And nobody can answer the question afterwards</h3>
+        <p>
+          Someone asks: who logged into that server last Tuesday? With keys and a jump host,
+          the answer lives in log files on the machines themselves — if those machines still
+          exist, and if the logs were kept. There is no single place that knows, because
+          there was never a single place that decided.
+        </p>
+
+        <h2 id="what">So what is Boundary?</h2>
+        <p>
+          Boundary is a piece of software that sits between people and servers, and changes
+          the question being asked.
+        </p>
+        <p>
+          Instead of <em>"do you have the key?"</em> it asks <em>"are you, right now,
+          allowed to do this?"</em> — and it checks that against your real identity every
+          single time you connect.
+        </p>
+        <p>
+          The clever part is that it splits the work between two different kinds of machine.
+        </p>
+
+        <figure>
+          <img src="img/boundary-basics.svg" alt="Diagram showing the controller deciding access and the worker carrying traffic" />
+          <figcaption>
+            The controller decides. The worker carries. Keeping those two jobs on separate
+            machines is what makes the rest of the design possible.
+          </figcaption>
+        </figure>
+
+        <p><strong>The controller</strong> is the doorman. It answers three questions:</p>
+        <ul>
+          <li>Who are you? (it checks with your identity provider — your company login)</li>
+          <li>What are you allowed to reach?</li>
+          <li>Which machine should carry your traffic?</li>
+        </ul>
+        <p>
+          The controller never touches your actual session. It hands out permission and steps
+          aside.
+        </p>
+
+        <p><strong>The worker</strong> is the courier. It does the carrying:</p>
+        <ul>
+          <li>It sits close to the server you want to reach — usually in the same private network.</li>
+          <li>It receives your traffic and passes it on.</li>
+          <li>It does not decide anything. It is told what to do by the controller.</li>
+        </ul>
+
+        <div class="note">
+          <p>
+            <strong>The single most surprising thing, for me:</strong> the server you are
+            connecting to has no idea Boundary exists. There is no agent installed on it, no
+            special port open, no configuration. It just sees an ordinary SSH connection
+            arriving from the worker — which is a normal machine on its own network. All of
+            the access control happened before the packet ever arrived.
+          </p>
+        </div>
+
+        <h2 id="words">The words you will meet</h2>
+        <p>
+          Boundary has its own vocabulary, and the documentation assumes you already know it.
+          Here it is in one place. Read it once now, and it will save you an hour later.
+        </p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Word</th><th>What it means</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Controller</strong></td>
+                <td>The brain. Decides who may do what. On HCP, HashiCorp runs this for you.</td>
+              </tr>
+              <tr>
+                <td><strong>Worker</strong></td>
+                <td>The courier. Carries your session traffic. Can be run by HashiCorp (a "managed worker") or by you (a "self-managed worker").</td>
+              </tr>
+              <tr>
+                <td><strong>Scope</strong></td>
+                <td>A container, like a folder. There are three levels: <em>global</em> at the top, then <em>orgs</em>, then <em>projects</em> inside those.</td>
+              </tr>
+              <tr>
+                <td><strong>Org</strong></td>
+                <td>A scope that holds <em>people</em> — users, groups, roles, login methods.</td>
+              </tr>
+              <tr>
+                <td><strong>Project</strong></td>
+                <td>A scope that holds <em>things</em> — the servers you want to reach. Servers can only live here, never in an org.</td>
+              </tr>
+              <tr>
+                <td><strong>Target</strong></td>
+                <td>A thing you can connect to. Roughly: an address, a port, and some rules.</td>
+              </tr>
+              <tr>
+                <td><strong>Host</strong></td>
+                <td>An actual machine. A target points at one or more hosts.</td>
+              </tr>
+              <tr>
+                <td><strong>Session</strong></td>
+                <td>One connection, from the moment you are allowed in to the moment it closes. It has a time limit.</td>
+              </tr>
+              <tr>
+                <td><strong>Auth method</strong></td>
+                <td>How people log in. A password, or — much better — your company identity provider.</td>
+              </tr>
+              <tr>
+                <td><strong>Credential store</strong></td>
+                <td>Where the secrets for reaching a server are kept, so the person connecting never has to hold them.</td>
+              </tr>
+              <tr>
+                <td><strong>Worker filter</strong></td>
+                <td>A rule that says which worker should handle a session. This turns out to matter enormously — it is the whole subject of one of the walkthroughs.</td>
+              </tr>
+              <tr>
+                <td><strong>Worker tag</strong></td>
+                <td>A label you put on a worker, like <code>region = ["uae-north"]</code>, so filters can select it.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="session">What happens when you connect</h2>
+        <p>Step by step, the first time you use it:</p>
+        <ol>
+          <li>
+            <strong>You log in.</strong> You run a command, or open the desktop app, and sign
+            in with your normal work account. Boundary hands you a token — a temporary proof
+            that you are you. It expires.
+          </li>
+          <li>
+            <strong>You ask for something.</strong> You say "connect me to the profile
+            server". You do this by name or by ID; you do not type an IP address, and in most
+            setups you would not even know it.
+          </li>
+          <li>
+            <strong>The controller checks.</strong> Are you allowed to reach that target? If
+            no, it stops here and nothing on the network was touched.
+          </li>
+          <li>
+            <strong>The controller picks a worker.</strong> It looks at your worker filter
+            and chooses which machine will carry this session.
+          </li>
+          <li>
+            <strong>You get a ticket.</strong> The controller sends back a session ID, a
+            short-lived certificate, and the address of the worker to go to.
+          </li>
+          <li>
+            <strong>You connect to the worker</strong> and show the certificate.
+          </li>
+          <li>
+            <strong>The worker opens the real connection</strong> to the server, and copies
+            bytes between you and it. To the server it looks like an ordinary connection from
+            a machine nearby.
+          </li>
+        </ol>
+        <p>
+          Notice that at no point did you hold a key to the server. You held permission, it
+          was checked live, and it expires.
+        </p>
+
+        <h2 id="usecases">When would you actually use this?</h2>
+        <p>
+          Boundary is not free to run, and it is not worth the effort for a hobby server. It
+          starts making sense when one or more of these is true.
+        </p>
+
+        <h3>People join and leave</h3>
+        <p>
+          The moment more than a couple of people need access, key management becomes a job
+          nobody wants. With Boundary in front, removing someone is one action in your
+          identity provider — the same action that removes their email.
+        </p>
+
+        <h3>Someone will eventually audit you</h3>
+        <p>
+          If you work in finance, healthcare, telecoms or anything regulated, someone will
+          ask for a list of who accessed what. Boundary produces that as a side effect of how
+          it works, rather than as a reporting project.
+        </p>
+
+        <h3>Your servers should not be reachable</h3>
+        <p>
+          If you are trying to get rid of public IP addresses and jump hosts, this is the
+          thing that lets you. The server needs no inbound path from the internet at all.
+        </p>
+
+        <h3>Contractors, or people on machines you do not control</h3>
+        <p>
+          You can grant access to one server, for a limited time, without ever handing over a
+          credential the person could keep. When the access ends, they retain nothing.
+        </p>
+
+        <h3>You have more than one cloud</h3>
+        <p>
+          This is the one I find most interesting, and it is why this guide exists. Boundary
+          does not care which cloud a server is in. One login, one permission model, servers
+          in AWS and Azure and Google Cloud behind it.
+        </p>
+
+        <div class="note warn">
+          <p>
+            <strong>When <em>not</em> to use it.</strong> If you have three servers and one
+            person, this is more machinery than problem. Use SSH keys, keep them in a
+            password manager, and revisit this when the team grows. Good engineering
+            includes knowing when a tool is too big.
+          </p>
+        </div>
+
+        <h2 id="why3">Why I built it three times</h2>
+        <p>
+          I could have built this once, in one cloud, and written it up. I did it three times
+          on purpose, and I learned more from the repetition than from the first build.
+        </p>
+
+        <h3>To find out what is actually Boundary and what is just cloud</h3>
+        <p>
+          When you build something once, you cannot tell which parts are the tool and which
+          parts are the environment. Build it three times and the answer separates itself.
+          The Boundary configuration barely changed between clouds. The networking around it
+          changed constantly. That told me where the real difficulty lives — and it is not
+          where I expected.
+        </p>
+
+        <h3>Because the three clouds forced three different designs</h3>
+        <p>
+          This is the part I did not plan. Each cloud pushed me toward a different answer for
+          how traffic should reach the server:
+        </p>
+        <ul>
+          <li>In <strong>Azure</strong> I used a private worker, and the session was relayed through HashiCorp's own workers.</li>
+          <li>In <strong>AWS</strong> the target network had no route to the internet at all, so I needed <em>two</em> workers chained together.</li>
+          <li>In <strong>Google Cloud</strong> I gave the worker a public address, and my laptop connected to it directly — with HashiCorp's workers out of the traffic path entirely.</li>
+        </ul>
+        <p>
+          Three designs, one product. Comparing them taught me what the settings actually do,
+          in a way that reading the documentation had not.
+        </p>
+
+        <h3>Because interviews and real jobs are multi-cloud now</h3>
+        <p>
+          Saying "I know AWS networking" is common. Being able to explain why a peering
+          connection needs manual routes in one cloud and not in another is much less common,
+          and it comes from doing it twice.
+        </p>
+
+        <h2 id="clouds">What changes between clouds</h2>
+        <p>
+          Here is the honest summary of what actually differed. If you only take one table
+          away from this page, take this one.
+        </p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th></th><th>AWS</th><th>Azure</th><th>Google Cloud</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>The private network is called</strong></td>
+                <td>VPC</td>
+                <td>VNet</td>
+                <td>VPC</td>
+              </tr>
+              <tr>
+                <td><strong>Getting to the internet</strong></td>
+                <td>Create an internet gateway, then add a route yourself</td>
+                <td>Works by default — there is no gateway resource</td>
+                <td>A default route already exists</td>
+              </tr>
+              <tr>
+                <td><strong>Outbound only, from a private machine</strong></td>
+                <td>NAT gateway plus a route</td>
+                <td>NAT gateway attached to the subnet</td>
+                <td>Cloud NAT — and not needed at all if the machine has its own public IP</td>
+              </tr>
+              <tr>
+                <td><strong>Connecting two networks</strong></td>
+                <td>Peering, then add routes on both sides by hand</td>
+                <td>Peering, and the routes appear automatically</td>
+                <td>Peering, automatic routes, but you must set it up from <em>both</em> sides</td>
+              </tr>
+              <tr>
+                <td><strong>Firewall is called</strong></td>
+                <td>Security group</td>
+                <td>Network security group (NSG)</td>
+                <td>VPC firewall rule</td>
+              </tr>
+              <tr>
+                <td><strong>How a firewall rule finds its machine</strong></td>
+                <td>You attach the group to the instance</td>
+                <td>You attach the NSG to the network card or subnet</td>
+                <td>The rule names a <em>tag</em>; any machine wearing that tag is covered</td>
+              </tr>
+              <tr>
+                <td><strong>What happens by default</strong></td>
+                <td>Inbound denied, outbound allowed</td>
+                <td>There are built-in rules you cannot delete</td>
+                <td>Inbound denied, outbound <em>allowed</em>, both at lowest priority</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Two of these caught me out properly, and both are in the walkthroughs:
+        </p>
+        <ul>
+          <li>
+            <strong>Google Cloud peering must be created from both sides.</strong> In AWS you
+            request a peering and the other side accepts. In Google Cloud you write a
+            matching configuration at each end, and until both exist the peering simply sits
+            there inactive. I spent a while convinced I had made a mistake elsewhere.
+          </li>
+          <li>
+            <strong>Google Cloud firewall rules are not attached to machines.</strong> You
+            write a rule that applies to anything wearing a certain tag, then tag the machine.
+            If you come from AWS this feels backwards for about a day, and then it feels
+            better.
+          </li>
+        </ul>
+
+        <h2 id="walkthroughs">The three walkthroughs</h2>
+        <p>
+          Each of these is a complete build you can follow from an empty cloud account, and
+          each has the original Excalidraw board behind it with every screenshot I took while
+          doing it. They are ordered easiest to hardest.
+        </p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Walkthrough</th><th>Design</th><th>Start here if…</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="/blog/boundary-azure-egress.html"><strong>Azure — the private worker</strong></a></td>
+                <td>Egress worker filter</td>
+                <td>…you are new to this. Fewest moving parts, and nothing of yours is exposed to the internet.</td>
+              </tr>
+              <tr>
+                <td><a href="/blog/boundary-gcp-ingress.html"><strong>Google Cloud — your own front door</strong></a></td>
+                <td>Ingress worker filter</td>
+                <td>…you do not want your session traffic passing through someone else's machines.</td>
+              </tr>
+              <tr>
+                <td><a href="/blog/boundary-aws-multihop.html"><strong>AWS — reaching a sealed network</strong></a></td>
+                <td>Multi-hop egress</td>
+                <td>…the network holding your server has no way out at all.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          If you want the comparison rather than the builds — why these three designs differ
+          and how to choose — that is a separate deep dive:
+          <a href="/blog/boundary-worker-traffic-flow.html">Who actually carries the packets?</a>
+          It is the more advanced read, and it makes much more sense after you have built one
+          of these.
+        </p>
+
+        <h2 id="handson">Before you follow along</h2>
+        <p>
+          These walkthroughs are written to be done, not just read. A few honest warnings
+          first.
+        </p>
+
+        <div class="note warn">
+          <p>
+            <strong>This costs real money.</strong> You will create virtual machines, NAT
+            gateways and an HCP Boundary cluster. NAT gateways in particular charge by the
+            hour whether you use them or not. Set a budget alert before you start, and
+            destroy everything when you finish. I did not, once, and the bill taught me the
+            lesson better than any warning would have.
+          </p>
+        </div>
+
+        <p><strong>What you need:</strong></p>
+        <ul>
+          <li>An account in the cloud you are following, with permission to create networks and virtual machines.</li>
+          <li>An HCP account. There is a free tier for Boundary that is enough for these builds.</li>
+          <li>A terminal, an SSH client, and basic comfort with the command line — you should know what <code>ssh</code> and <code>sudo</code> do, but nothing beyond that.</li>
+          <li>Two to four hours, honestly. The first build takes longest.</li>
+        </ul>
+
+        <p><strong>What you do not need:</strong></p>
+        <ul>
+          <li>Any prior Boundary knowledge. That is what this page was for.</li>
+          <li>Terraform. I built all of this by clicking, deliberately, because clicking teaches you what the resources are. Automating it afterwards is the right order.</li>
+          <li>An identity provider. The walkthroughs use a simple password login. Connecting a real company login is a
+            <a href="/blog/boundary-entra-id-sso.html">separate article</a>.</li>
+        </ul>
+
+        <div class="note">
+          <p>
+            <strong>A suggestion on how to follow along.</strong> Do not copy and paste
+            blindly. When a step says to open a port, stop and ask yourself which machine is
+            connecting to which, and in which direction. Almost every mistake I made in these
+            builds was a firewall rule written in the wrong direction, and every one of them
+            taught me something I would not have learned by pasting a working config.
+          </p>
+          <p style="margin-bottom: 0">
+            If you get stuck, open the Excalidraw board linked in each walkthrough. The
+            boards have the screenshots of every screen I filled in, which is usually faster
+            than re-reading prose.
+          </p>
+        </div>
+
+        <h2 id="reading">Further reading</h2>
+        <ul>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/overview/what-is-boundary" target="_blank" rel="noopener">What is Boundary — HashiCorp</a>
+            — the official introduction, worth reading after this one.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/concepts/domain-model" target="_blank" rel="noopener">Domain model</a>
+            — the formal version of the vocabulary table above.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/tutorials" target="_blank" rel="noopener">HashiCorp's own tutorials</a>
+            — a good second source. They stay in one cloud, which is exactly the gap this
+            guide tries to fill.
+          </li>
+          <li>
+            <a href="/blog/boundary-entra-id-sso.html">Boundary and Microsoft Entra ID</a>
+            — how to replace the password login with a real company identity provider, and
+            what goes wrong when you do.
+          </li>
+        </ul>
+
+        <footer class="post">
+          <p>
+            All three builds started on Excalidraw, with every screen captured as I went:
+            <a href="https://link.excalidraw.com/l/9hD7S5FgGWN/9QirFAmE7rX" target="_blank" rel="noopener">AWS multi-hop</a> ·
+            <a href="https://link.excalidraw.com/l/9hD7S5FgGWN/482NXdUV6gH" target="_blank" rel="noopener">Azure egress</a> ·
+            <a href="https://link.excalidraw.com/l/9hD7S5FgGWN/9kqDsEkxMrG" target="_blank" rel="noopener">GCP ingress</a>
+          </p>
+          <div class="share">
+            <p class="share-title">Found this useful? Pass it on 🌙</p>
+            <div class="share-row">
+              <a class="share-btn li" target="_blank" rel="noopener"
+                 href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fkst-devops.com%2Fblog%2Fwhat-is-boundary.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Share on LinkedIn
+              </a>
+              <a class="share-btn fb" target="_blank" rel="noopener"
+                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkst-devops.com%2Fblog%2Fwhat-is-boundary.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+                Share on Facebook
+              </a>
+            </div>
+          </div>
+
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>

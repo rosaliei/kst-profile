@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Boundary in Google Cloud: your own front door — Kyaw Sithu</title>
+    <meta
+      name="description"
+      content="A hands-on walkthrough of the Boundary ingress worker design in Google Cloud: your laptop connects straight to a worker you own, behind a firewall you wrote, with HCP out of the traffic path."
+    />
+    <link rel="canonical" href="https://kst-devops.com/blog/boundary-gcp-ingress.html" />
+    <meta property="og:title" content="Boundary in Google Cloud: your own front door" />
+    <meta
+      property="og:description"
+      content="Your session never touches HashiCorp's machines. One config line makes the difference — here is the whole build."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://kst-devops.com/blog/boundary-gcp-ingress.html"
+    />
+    <meta property="og:site_name" content="Kyaw Sithu" />
+    <meta
+      property="og:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Boundary in Google Cloud: your own front door"
+    />
+    <meta
+      name="twitter:description"
+      content="Your session never touches HashiCorp's machines. Here is the whole build."
+    />
+    <meta
+      name="twitter:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FFF6E9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* same tokens as the profile page */
+        --cream: #fff6e9;
+        --paper: #fffdf7;
+        --ink: #16161d;
+        --ink-soft: #5a5a66;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --teal: #2ec4a6;
+        --sun: #ffd24c;
+        --sky: #4ea8f5;
+        /* light tints — these sit behind ink-coloured text */
+        --lilac: #cdc5f7;
+        --mint: #b6f0e4;
+        --dash: rgba(22, 22, 29, 0.16);
+        --shadow: 6px 6px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        /* flat paper, like the profile — no polka texture */
+        background: var(--cream);
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16.5px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--grape); text-decoration: none; font-weight: 700; }
+      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
+
+      /* ---- nav: same bar as the profile page ---- */
+      nav {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--cream);
+        border-bottom: 3px solid var(--ink);
+      }
+      .nav-inner {
+        max-width: 1040px; margin: 0 auto; padding: 0 32px;
+        height: 56px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .nav-logo {
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        font-size: 18px; line-height: 1;
+        display: flex; align-items: center; gap: 10px;
+      }
+      /* the round KS blob from the profile header */
+      .nav-logo span {
+        width: 34px; height: 34px; flex: none;
+        background: var(--sun); color: var(--ink);
+        border: 3px solid var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; line-height: 1; letter-spacing: .02em;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      /* styled as a profile nav tab rather than a thin outline pill */
+      .nav-back {
+        color: var(--ink); font-size: 13px; font-weight: 600;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
+        transition: transform .08s, box-shadow .08s;
+      }
+      .nav-back:hover, .nav-back:active {
+        text-decoration: none; transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        .nav-inner { padding: 0 16px; }
+      }
+
+      /* ---- layout ---- */
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px 110px; }
+      article { max-width: 760px; }
+      .full { max-width: 1040px; }
+
+      header.post { padding: 54px 0 34px; }
+      .eyebrow {
+        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        box-shadow: var(--shadow-sm);
+      }
+      h1 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
+      }
+      .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
+      .meta {
+        margin-top: 26px; font-size: 14px; color: var(--ink-soft);
+        display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      }
+
+      h2 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
+      }
+      h2::after {
+        content: ""; display: block; width: 74px; height: 6px; margin-top: 8px;
+        background: var(--teal); border-radius: 999px;
+      }
+      h3 {
+        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-size: 20px; margin: 38px 0 12px;
+      }
+      p { margin: 0 0 18px; }
+      ul, ol { margin: 0 0 18px 24px; }
+      li { margin-bottom: 10px; }
+      strong { font-weight: 700; }
+
+      code {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #f1eeff; border: 2px solid #d6ceff;
+        border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
+      }
+      pre {
+        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
+      }
+      pre code {
+        background: none; border: 0; padding: 0; color: var(--ink);
+        font-size: 13.5px; line-height: 1.7;
+      }
+
+      /* ---- figures: sticker cards ---- */
+      figure { margin: 30px 0 36px; }
+      figure img {
+        width: 100%; height: auto; display: block;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
+      }
+      figcaption {
+        margin-top: 14px; font-size: 16.5px; line-height: 1.6;
+        color: var(--ink); max-width: 760px;
+      }
+
+      .board {
+        display: inline-block; margin-top: 6px; font-size: 14.5px;
+        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
+      }
+      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+
+      /* ---- callouts ---- */
+      .note {
+        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
+      }
+      .note p:last-child { margin-bottom: 0; }
+      .note.warn { background: #fff0c9; }
+
+      /* ---- tables ---- */
+      .tw {
+        overflow-x: auto; margin: 0 0 28px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 15px; }
+      th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+      th {
+        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
+        letter-spacing: .05em; background: var(--mint);
+        border-bottom: 3px solid var(--ink); color: var(--ink);
+      }
+      td { border-bottom: 2px dashed var(--dash); }
+      tr:last-child td { border-bottom: 0; }
+
+      /* ---- contents ---- */
+      .toc {
+        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
+      }
+      .toc h4 {
+        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
+        letter-spacing: .07em; margin-bottom: 12px;
+      }
+      .toc ol { margin: 0 0 0 22px; }
+      .toc li { margin-bottom: 6px; }
+
+      /* ---- flow pills ---- */
+      .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .pill {
+        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
+        transform: rotate(-1deg);
+      }
+
+      .author-card {
+        display: flex; gap: 18px; align-items: center;
+        margin-top: 28px; padding: 18px 22px; max-width: 720px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .author-loves {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 4px; color: var(--ink);
+      }
+      .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+      .author-humble {
+        margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
+        border-top: 2px dashed var(--dash); padding-top: 10px;
+      }
+
+      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
+      .meta time {
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 1px 11px; font-weight: 700; font-size: 13.5px;
+      }
+      .author-avatar {
+        flex: 0 0 auto; width: 72px; height: 72px;
+        /* the source is landscape, so crop to the moon rather than squash it */
+        object-fit: cover; object-position: 50% 45%;
+        border: 3px solid var(--ink); border-radius: 50%;
+        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      @media (max-width: 520px) {
+        .author-card { align-items: flex-start; }
+        .author-avatar { width: 56px; height: 56px; }
+      }
+
+
+      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
+      .share-title {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 12px; color: var(--ink);
+      }
+      .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
+      .share-btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
+        border: 3px solid var(--ink); border-radius: 999px;
+        padding: 8px 18px; box-shadow: var(--shadow-sm);
+      }
+      .share-btn svg { width: 18px; height: 18px; fill: currentColor; }
+      .share-btn.li { background: #0a66c2; }
+      .share-btn.fb { background: #1877f2; }
+      .share-btn:hover {
+        text-decoration: none; transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      footer.post {
+        margin-top: 70px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
+      }
+
+      @media (max-width: 640px) {
+        body { font-size: 16px; }
+        .wrap { padding: 0 16px 72px; }
+        header.post { padding: 34px 0 24px; }
+        :root { --shadow: 4px 4px 0 var(--ink); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-back:hover { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
+        <a class="nav-back" href="/#blog">← Back to profile</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <article>
+        <header class="post">
+          <div class="eyebrow">Walkthrough · Google Cloud</div>
+          <h1>Boundary in Google Cloud: your own front door</h1>
+          <p class="standfirst">
+            Same goal as the Azure build — reach a private VM with no key on your laptop —
+            but this time your session never touches HashiCorp's machines. Your laptop
+            connects straight to a worker you own, behind a firewall you wrote. One config
+            line makes the difference.
+          </p>
+          <div class="meta">
+            <span class="byline">by <strong>Kyaw Sithu</strong></span>
+            <span>·</span>
+            <time datetime="2026-08-16">16 August 2026</time>
+            <span>·</span>
+            <span>Beginner friendly · 2–3 hours</span>
+            <span>·</span>
+            <span><a href="/blog/what-is-boundary.html">Start with the guide →</a></span>
+          </div>
+        </header>
+
+        <div class="note warn">
+          <p>
+            <strong>New to Boundary?</strong> Read
+            <a href="/blog/what-is-boundary.html">What is HashiCorp Boundary?</a> first for
+            the vocabulary. And if you have not done the
+            <a href="/blog/boundary-azure-egress.html">Azure walkthrough</a>, consider doing
+            it before this one — the contrast between the two is where the understanding
+            actually comes from.
+          </p>
+          <p style="margin-bottom: 0">
+            <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/9kqDsEkxMrG" target="_blank" rel="noopener">Open the GCP board ↗</a>
+          </p>
+        </div>
+
+        <div class="toc">
+          <h4>Contents</h4>
+          <ol>
+            <li><a href="#difference">The one difference that matters</a></li>
+            <li><a href="#before">Before you start</a></li>
+            <li><a href="#project">Step 1 · Project and APIs</a></li>
+            <li><a href="#networks">Step 2 · Two networks</a></li>
+            <li><a href="#firewall">Step 3 · Firewall rules, the GCP way</a></li>
+            <li><a href="#peering">Step 4 · Peering, from both sides</a></li>
+            <li><a href="#vms">Step 5 · The machines</a></li>
+            <li><a href="#worker">Step 6 · The worker, with a public address</a></li>
+            <li><a href="#filter">Step 7 · The ingress filter</a></li>
+            <li><a href="#connect">Step 8 · Connect, and prove it</a></li>
+            <li><a href="#gotchas">Google Cloud gotchas</a></li>
+            <li><a href="#cleanup">Clean up</a></li>
+          </ol>
+        </div>
+
+        <h2 id="difference">The one difference that matters</h2>
+        <p>
+          In the Azure build, our worker had a private address. Our laptop could not reach
+          it, so the session had to be relayed:
+          <strong>laptop → HashiCorp's worker → our worker → target</strong>.
+        </p>
+        <p>
+          Here we give the worker a real, routable public address. Now our laptop
+          <em>can</em> reach it, and the path collapses to
+          <strong>laptop → our worker → target</strong>.
+        </p>
+        <p>
+          HashiCorp's control plane is still involved — the worker registers with it and
+          sends heartbeats — but no byte of your session passes through it.
+        </p>
+
+        <figure>
+          <img src="img/flow-three-paths.svg" alt="The three data paths compared, with the GCP ingress design on the right" />
+          <figcaption>
+            The three designs across this series. This walkthrough builds the one on the
+            right.
+            <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/9kqDsEkxMrG" target="_blank" rel="noopener">Open the GCP board ↗</a>
+          </figcaption>
+        </figure>
+
+        <p>Here is the note I wrote on the board at the moment this clicked:</p>
+        <div class="note">
+          <p>
+            <em>"Now we can control the self-managed worker ourselves — like allowing only
+            port 9202 from our clients, which we can't do with HCP managed in the previous
+            Azure flow."</em>
+          </p>
+        </div>
+        <p>
+          That is the real trade, and it is worth being clear-eyed about both halves. You
+          take on a public IP address and the duty to defend it. In exchange, the firewall in
+          front of your session traffic becomes <em>yours to write</em>. In the Azure design
+          you cannot restrict who reaches the relay, because the relay is not yours.
+        </p>
+        <p>
+          "Public IP" sounds alarming, but the exposure is smaller than it sounds: one port,
+          9202, open to your office address range and nothing else. That is a much narrower
+          opening than a traditional jump host, which needs SSH open to wherever your people
+          happen to be.
+        </p>
+
+        <h2 id="before">Before you start</h2>
+        <ul>
+          <li>A Google Cloud account with billing enabled.</li>
+          <li>An HCP account with a Boundary cluster.</li>
+          <li>An SSH key pair: <code>ssh-keygen -t ed25519 -f ./boundary-gcp -C boundary-worker-gcp</code></li>
+          <li>Your own public IP address — visit any "what is my IP" site. You will need it for a firewall rule.</li>
+        </ul>
+
+        <div class="note warn">
+          <p>
+            <strong>Money.</strong> Cheaper than the Azure build, because this design needs
+            no Cloud NAT — the worker has its own public address and the target does not need
+            outbound internet. Still: two VMs left running add up. Set a budget alert and do
+            the <a href="#cleanup">clean-up step</a>.
+          </p>
+        </div>
+
+        <h2 id="project">Step 1 · Project and APIs</h2>
+        <p>
+          Google Cloud organises everything into <strong>projects</strong>. Create a new one
+          — this makes clean-up trivial later, because deleting the project deletes
+          everything in it.
+        </p>
+        <p>
+          Then enable the <strong>Compute Engine API</strong>. Google Cloud disables most
+          services by default and you must turn on the ones you need. This is unusual if you
+          come from AWS, where services are simply available. You will be prompted the first
+          time you try to create a VM, but enabling it up front avoids an interruption later.
+        </p>
+
+        <h2 id="networks">Step 2 · Two networks</h2>
+        <p>Two VPCs, as in the Azure build, but with different subnet needs.</p>
+
+        <h3>The boundary VPC</h3>
+        <p>
+          One subnet, and this one is <strong>public</strong> — the worker needs an external
+          address. When creating the subnet you will see an option called <strong>Private
+          Google Access</strong>. It controls whether machines with no external IP can still
+          reach Google's own services. Our worker has an external IP, so it does not need
+          this. Leave it off.
+        </p>
+
+        <h3>The profile VPC</h3>
+        <p>
+          One private subnet, for the target VM. No external addresses, and no route to the
+          internet.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>No Cloud NAT needed here.</strong> This surprised me. In the Azure build
+            the worker needed a NAT gateway to reach HCP. Here the worker has its own public
+            address, so it reaches the internet directly. And the target does not need
+            outbound access at all. You would only add Cloud NAT if the target VM needed to
+            download packages — which is a real need in production, but not for this build.
+          </p>
+        </div>
+
+        <h3>A word on routing mode</h3>
+        <p>
+          When creating a VPC, Google Cloud asks whether routing should be
+          <strong>regional</strong> or <strong>global</strong>. Regional is the default and
+          the right answer here. In short:
+        </p>
+        <ul>
+          <li><strong>Regional</strong> — each region is handled on its own. Smaller blast radius, no cross-region traffic charges.</li>
+          <li><strong>Global</strong> — one connection reaches every region in the VPC, traffic hops across Google's backbone, and you pay cross-region egress for the privilege. One region's problem can affect all of them.</li>
+        </ul>
+        <p>Pick regional unless you have a specific reason not to.</p>
+
+        <h2 id="firewall">Step 3 · Firewall rules, the GCP way</h2>
+        <p>
+          This is where Google Cloud differs most from the other two clouds, and it is worth
+          slowing down for.
+        </p>
+        <p>
+          In AWS you attach a security group to an instance. In Azure you attach an NSG to a
+          network card. In Google Cloud you do <strong>neither</strong>. You write a rule
+          that lives on the VPC and says which machines it applies to — by
+          <strong>network tag</strong>.
+        </p>
+
+        <pre><code>Name:       allow-client-to-worker
+Network:    boundary-vpc
+Direction:  Ingress
+Action:     Allow
+Source:     &lt;your office/home public IP&gt;/32
+Targets:    network tag = vm-self-managed-worker
+Protocol:   TCP
+Port:       9202</code></pre>
+
+        <p>
+          Then you tag the worker VM with <code>vm-self-managed-worker</code>, and the rule
+          applies to it. Tag a second machine the same way and the rule covers that one too,
+          with no further action.
+        </p>
+        <p>
+          If you have used Kubernetes, this is a selector, and the model will feel
+          immediately familiar. If you have come from AWS it feels backwards for about a day,
+          and then it feels better than what you had.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>There is a second way.</strong> Instead of tags you can target machines
+            by their attached <em>service account</em> — any VM running as
+            <code>web-sa@project.iam.gserviceaccount.com</code> gets the rule. That is
+            stronger, because a tag can be added by anyone who can edit the VM, whereas
+            changing a service account is a permission-controlled action. Tags are fine for
+            learning; service accounts are the better production answer.
+          </p>
+        </div>
+
+        <h3>The rules you need</h3>
+        <pre><code>worker VPC
+  ingress  SSH (22)   from your public IP        → tag: vm-self-managed-worker
+  ingress  TCP 9202   from your public IP        → tag: vm-self-managed-worker
+  egress   TCP 9202   to HCP managed workers     (registration + heartbeat)
+  egress   SSH (22)   to the profile VPC         (the actual job)
+
+profile VPC
+  ingress  SSH (22)   from the worker only       → tag: vm-profile</code></pre>
+
+        <p>
+          That second ingress rule — <code>9202 from your public IP</code> — is the entire
+          point of this design. It is the line the Azure build cannot express, because there
+          you would be trying to firewall a machine you do not own.
+        </p>
+
+        <h3>Two things about how GCP evaluates rules</h3>
+        <p>
+          <strong>Implied rules.</strong> Every VPC has two invisible rules at the lowest
+          possible priority: deny all ingress, and <em>allow</em> all egress. You cannot
+          delete them. The allow-all-egress one catches people — outbound is open unless you
+          write something to close it.
+        </p>
+        <p>
+          <strong>Priority.</strong> Rules have a number, and lower numbers win. If two rules
+          match the same traffic, the lower number decides. Leave everything at the default
+          until you have a reason not to, and when you do need an override, remember that
+          "higher priority" means a smaller number.
+        </p>
+        <p>
+          Firewall rules in Google Cloud are also <strong>stateful</strong>: allow a
+          connection in and the replies are automatically allowed back out. You do not write
+          a matching return rule.
+        </p>
+
+        <h2 id="peering">Step 4 · Peering, from both sides</h2>
+        <p>
+          Connect the two VPCs so the worker can reach the target. Go to VPC network → VPC
+          network peering, and create a peering.
+        </p>
+
+        <div class="note warn">
+          <p>
+            <strong>You must create it twice.</strong> Once from the boundary VPC pointing at
+            the profile VPC, and once from the profile VPC pointing back. This is genuinely
+            different from AWS, where you request a peering from one side and accept it from
+            the other. In Google Cloud both ends need their own matching configuration, and
+            until both exist the peering just sits there inactive.
+          </p>
+          <p style="margin-bottom: 0">
+            I lost time to this, convinced I had a firewall problem. It was a peering with
+            only one half built.
+          </p>
+        </div>
+
+        <p>
+          The good news: once both halves exist, routes are added automatically. No manual
+          route table entries, unlike AWS.
+        </p>
+
+        <h2 id="vms">Step 5 · The machines</h2>
+        <p>Two virtual machines this time — no permanent jump host needed.</p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Machine</th><th>Network</th><th>External IP</th><th>Network tag</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>worker</td><td>boundary VPC</td><td>Yes</td><td><code>vm-self-managed-worker</code></td></tr>
+              <tr><td>profile VM</td><td>profile VPC</td><td>No</td><td><code>vm-profile</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          When creating each VM, the network tags go under the Networking section, and the
+          SSH public key goes under Security → Manage Access. Attach the key you generated
+          earlier.
+        </p>
+        <p>
+          Because the worker has a public address, you can SSH to it directly for setup —
+          which is why this build needs no jump host at all. One fewer machine to create,
+          secure and remember to delete.
+        </p>
+
+        <h2 id="worker">Step 6 · The worker, with a public address</h2>
+        <p>SSH to the worker using its external address and install the binary:</p>
+
+        <pre><code>ssh -i ./boundary-gcp boundary@&lt;worker-external-ip&gt;
+
+sudo apt-get update &amp;&amp; sudo apt-get install -y jq unzip
+wget -q "$(curl -fsSL \
+  "https://api.releases.hashicorp.com/v1/releases/boundary/latest?license_class=enterprise" \
+  | jq -r '.builds[] | select(.arch=="amd64" and .os=="linux") | .url')"
+unzip *.zip</code></pre>
+
+        <p>Now the configuration — and this is the file that makes this build different:</p>
+
+        <pre><code>hcp_boundary_cluster_id = "&lt;your-cluster-id&gt;"
+
+listener "tcp" {
+  address = "0.0.0.0:9202"
+  purpose = "proxy"
+}
+
+worker {
+  public_addr       = "34.18.234.32:9202"   # a REAL public address
+  auth_storage_path = "/home/boundary/worker1"
+  tags {
+    automated = ["gcp-cloud"]
+    owner     = ["kst"]
+    country   = ["doha"]
+    region    = ["middle-east"]
+  }
+}</code></pre>
+
+        <div class="note warn">
+          <p>
+            <strong>Compare this with the Azure file.</strong> Everything is the same shape.
+            The only meaningful difference is that <code>public_addr</code> is now an address
+            your laptop can actually reach. That single change is what allows the ingress
+            design — the client can dial the worker, so the relay through HCP is no longer
+            necessary.
+          </p>
+        </div>
+
+        <p>
+          Install the systemd unit exactly as in the Azure walkthrough, start it, and watch
+          the log:
+        </p>
+
+        <pre><code>sudo mv boundary /usr/local/bin/
+sudo useradd --system --home /etc/boundary.d --shell /bin/false boundary
+sudo chown -R boundary:boundary /home/boundary
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now boundary-worker
+sudo journalctl -u boundary-worker -f</code></pre>
+
+        <p>
+          As before, the node reports that it is not yet authorized. Read the
+          <code>auth_request_token</code> from the worker's storage directory and paste it
+          into the admin console under Workers → New.
+        </p>
+
+        <h2 id="filter">Step 7 · The ingress filter</h2>
+        <p>
+          Create the credential store and the SSH target as in the Azure build — same steps,
+          same injected credential.
+        </p>
+        <p>
+          Then, instead of an egress filter, set an <strong>ingress worker filter</strong> on
+          the target:
+        </p>
+
+        <pre><code>"gcp-cloud" in "/tags/automated"</code></pre>
+
+        <p>
+          The syntax is identical to the egress filter. What differs is which end of the
+          journey it selects. An <em>egress</em> filter picks the worker that makes the final
+          hop to the server. An <em>ingress</em> filter picks the worker that the client is
+          allowed to enter through.
+        </p>
+        <p>
+          Because our worker is reachable from the client, one worker does both jobs and the
+          middle of the chain disappears.
+        </p>
+
+        <h2 id="connect">Step 8 · Connect, and prove it</h2>
+        <pre><code>boundary authenticate password \
+  -auth-method-id=&lt;your-auth-method-id&gt; \
+  -login-name=&lt;your-user&gt;
+
+boundary connect ssh -target-id=&lt;your-target-id&gt;</code></pre>
+
+        <p>
+          You should land on the target VM. Now prove that the path is what we claimed, by
+          looking at where your own laptop is connected. Run this on your laptop while the
+          session is open:
+        </p>
+
+        <pre><code>lsof -nP -iTCP -a -c boundary</code></pre>
+
+        <p>
+          In the Azure build, the 9202 connection went to an address belonging to HashiCorp.
+          Here it should go to <strong>your worker's public address</strong> — the one you
+          put in <code>public_addr</code>. That is the whole difference, visible in one line
+          of output.
+        </p>
+        <p>
+          The worker still holds connections to HCP on 9202, but those are registration and
+          heartbeat traffic only. Your session is not in them.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>Try the experiment.</strong> Temporarily remove the
+            <code>9202 from your IP</code> ingress firewall rule and try to connect again. It
+            will fail — and it will fail in a way that proves your laptop really was talking
+            directly to your worker, rather than being relayed. Two minutes, and it makes the
+            architecture concrete in a way that reading cannot.
+          </p>
+        </div>
+
+        <h2 id="gotchas">Google Cloud gotchas</h2>
+
+        <h3>Peering needs both halves</h3>
+        <p>
+          Said already, repeated here because it is the one that will cost you an hour.
+          Configure it from both VPCs.
+        </p>
+
+        <h3>Egress is allowed by default</h3>
+        <p>
+          The implied rules are deny-ingress and <em>allow</em>-egress. If you assumed
+          outbound was closed until you opened it, that assumption is wrong here, and it is
+          the kind of wrong that does not announce itself.
+        </p>
+
+        <h3>Tags are how rules find machines</h3>
+        <p>
+          If a firewall rule seems to do nothing, check the VM's network tags before you
+          check the rule. Nine times out of ten the rule is correct and the tag is missing or
+          misspelled — there is no validation linking the two, so a typo simply means the
+          rule matches nothing.
+        </p>
+
+        <h3>APIs must be enabled</h3>
+        <p>
+          If a resource type is missing from the console, the API for it is probably off. It
+          is not a permissions problem, which is the first thing most people assume.
+        </p>
+
+        <h3>Routes can be filtered by tag too</h3>
+        <p>
+          Not needed for this build, but worth knowing: Google Cloud routes can also target
+          machines by network tag. That means you can send some VMs out through one path and
+          others through another, in the same subnet. It is a genuinely useful capability
+          with no clean equivalent in the other two clouds.
+        </p>
+
+        <h2 id="cleanup">Clean up</h2>
+        <p>
+          Delete the project. Everything lives inside it, so that one action removes the VMs,
+          the networks, the firewall rules and the peering.
+        </p>
+        <p>
+          Then remove the worker, target and credential store from the Boundary admin
+          console.
+        </p>
+
+        <div class="note">
+          <p>
+            <strong>Where to go next.</strong> The
+            <a href="/blog/boundary-aws-multihop.html">AWS multi-hop walkthrough</a> is the
+            hardest of the three and handles the case where the target's network has no way
+            out at all. For the comparison of all three designs and how to choose between
+            them, see
+            <a href="/blog/boundary-worker-traffic-flow.html">Who actually carries the packets?</a>
+          </p>
+        </div>
+
+        <footer class="post">
+          <p>
+            Every screen from this build, including the firewall and routing pages:
+            <a href="https://link.excalidraw.com/l/9hD7S5FgGWN/9kqDsEkxMrG" target="_blank" rel="noopener">the GCP board on Excalidraw</a>
+          </p>
+          <p>
+            Part of a series ·
+            <a href="/blog/what-is-boundary.html">Start here</a> ·
+            <a href="/blog/boundary-azure-egress.html">Azure egress</a> ·
+            <a href="/blog/boundary-aws-multihop.html">AWS multi-hop</a>
+          </p>
+          <div class="share">
+            <p class="share-title">Found this useful? Pass it on 🌙</p>
+            <div class="share-row">
+              <a class="share-btn li" target="_blank" rel="noopener"
+                 href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-gcp-ingress.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Share on LinkedIn
+              </a>
+              <a class="share-btn fb" target="_blank" rel="noopener"
+                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-gcp-ingress.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+                Share on Facebook
+              </a>
+            </div>
+          </div>
+
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>
