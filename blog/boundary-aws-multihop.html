@@ -202,6 +202,19 @@
       .note p:last-child { margin-bottom: 0; }
       .note.warn { background: #fff0c9; }
 
+      /* every post carries this: the reading is half of it, the doing is the rest */
+      .handson {
+        background: var(--mint); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow);
+        padding: 18px 22px; margin: 0 0 28px;
+      }
+      .handson p { margin-bottom: 12px; }
+      .handson p:last-child { margin-bottom: 0; }
+      .handson .hs-lead {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: 19px; margin-bottom: 8px;
+      }
+
       /* ---- tables ---- */
       .tw {
         overflow-x: auto; margin: 0 0 28px; background: var(--paper);
@@ -339,6 +352,23 @@
           </div>
         </header>
 
+        <div class="handson">
+          <p class="hs-lead">Read it, then build it 🛠️</p>
+          <p>
+            This page is written to be <strong>followed along with</strong>, not just read.
+            Open the Excalidraw board beside it and work through the steps yourself — every
+            screen I filled in is captured there, in the order I filled it in.
+          </p>
+          <p>
+            Reading gives you the shape of the thing. Only doing it gives you the
+            understanding. I did not learn any of this by reading, and I do not think anyone
+            does.
+          </p>
+          <p style="margin-bottom: 0">
+            <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/9QirFAmE7rX" target="_blank" rel="noopener">Open the AWS board ↗</a>
+          </p>
+        </div>
+
         <div class="note warn">
           <p>
             <strong>Do the other two first.</strong> This build assumes you have already done
@@ -347,9 +377,6 @@
             and only summarised here. Start with
             <a href="/blog/what-is-boundary.html">What is HashiCorp Boundary?</a> if the
             vocabulary is new.
-          </p>
-          <p style="margin-bottom: 0">
-            <a class="board" href="https://link.excalidraw.com/l/9hD7S5FgGWN/9QirFAmE7rX" target="_blank" rel="noopener">Open the AWS board ↗</a>
           </p>
         </div>
 
