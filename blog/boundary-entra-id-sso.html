@@ -334,6 +334,8 @@
             <time datetime="2026-08-15">15 August 2026</time>
             <span>·</span>
             <span>HCP Boundary · Microsoft Entra ID · OIDC</span>
+            <span>·</span>
+            <span><a href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">The Excalidraw board →</a></span>
           </div>
 
           <div class="author-card">
@@ -357,11 +359,17 @@
 
         <div class="note">
           <p>
-            Every identifier in this post is a placeholder. The tenant ID, application ID,
+            Every identifier in the text is a placeholder. The tenant ID, application ID,
             client secret, cluster address and worker IPs from my build have been replaced
             with <code>&lt;angle-bracket&gt;</code> stand-ins, and the environment itself is
             gone. Resource IDs like <code>u_mJjZAPrPGf</code> are kept because the shape of
             an ID is the thing worth recognising in a log line.
+          </p>
+          <p>
+            The screenshots are from the working environment and were chosen because they
+            show mechanism rather than configuration values — a permission list, an account
+            mapping, a target list. The Entra sign-in log is described but not pictured, as
+            that pane carries tenant identifiers and a source IP.
           </p>
         </div>
 
@@ -502,6 +510,15 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
             experiment that makes the consent screen make sense forever after.
           </p>
         </div>
+        <figure>
+          <img src="img/entra-permissions.png" alt="Entra enterprise application permissions blade listing four delegated Microsoft Graph permissions" />
+          <figcaption>
+            The whole permission surface: <code>email</code>, <code>openid</code>,
+            <code>profile</code>, <code>User.Read</code> — all delegated, all Microsoft
+            Graph. "Sign users in" and "View users' basic profile" is the extent of it.
+          </figcaption>
+        </figure>
+
         <p>
           The flip side is the reassuring part. An engineer looking at that consent prompt
           can see that this application reads a name and an e-mail. It cannot read their
@@ -555,6 +572,23 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           about this error, in hindsight, is that it is honest. It says precisely what it
           refused to do and precisely why. Most of the time I spent on it was spent
           URL-decoding it.
+        </p>
+
+        <figure>
+          <img src="img/entra-user-account.png" alt="Boundary user page showing a user ID with an OIDC account attached" />
+          <figcaption>
+            Once it is primary, this is what the successful path produces: a Boundary user
+            <code>u_mJjZAPrPGf</code> with an OIDC account <code>acctoidc_LikE4uBayy</code>
+            attached to it. Two objects, not one — the account is the Entra identity, the
+            user is the thing roles attach to.
+          </figcaption>
+        </figure>
+
+        <p>
+          That two-object split is worth pausing on, because it is what the error message
+          was really about. Boundary had the account. It would not make the user. Roles are
+          granted to users, so an account with no user is an identity that has authenticated
+          and can do nothing at all.
         </p>
 
         <h3 class="flow-head"><span class="pill">Error 2</span> request state has expired</h3>
@@ -621,6 +655,14 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           never been wrong. It was pointed at the scope that holds identities rather than the
           scope that holds resources, and those are deliberately not the same place.
         </p>
+
+        <figure>
+          <img src="img/entra-targets.png" alt="Boundary desktop client listing two SSH targets with Connect buttons" />
+          <figcaption>
+            The same account, the same role, one extra grant scope — and the list that had
+            been empty for an hour now has both targets in it, each with a Connect button.
+          </figcaption>
+        </figure>
 
         <div class="note">
           <p>
@@ -769,6 +811,11 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
         </p>
 
         <footer class="post">
+          <p>
+            The whole build as I actually worked through it — every step, every screenshot,
+            every wrong turn — is on one Excalidraw board:
+            <a href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">app.excalidraw.com — Boundary × Entra ID</a>
+          </p>
           <p>
             Configuration reference for the Entra side:
             <a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/hashicorp-tutorial" target="_blank" rel="noopener">learn.microsoft.com — HashiCorp Boundary tutorial</a>
