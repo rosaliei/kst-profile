@@ -2795,12 +2795,29 @@
         <section>
           <div class="eyebrow">Writing</div>
           <h2>Blog</h2>
-          <p class="lead" style="margin: 10px 0 20px">
+          <p class="lead" style="margin: 10px 0 14px">
             Long-form deep dives — the kind of write-up I wish I had found when
-            I was building the thing.
+            I was building the thing. Filter by topic; each post is tagged with
+            how deep it goes.
           </p>
 
-          <div class="pop card">
+          <div class="filters">
+            <button class="chip on" data-f="all" onclick="filt(this)">
+              All · 7
+            </button>
+            <button class="chip" data-f="identity" onclick="filt(this)">
+              Identity &amp; access
+            </button>
+            <button class="chip" data-f="network" onclick="filt(this)">
+              Networking &amp; architecture
+            </button>
+          </div>
+
+          <div class="groupname" data-g="identity">
+            Guides &amp; hands-on series
+          </div>
+
+          <div class="pop card" data-g="identity">
             <a
               href="/blog/what-is-boundary.html"
               style="display: block; color: var(--ink)"
@@ -2849,7 +2866,9 @@
             </div>
           </div>
 
-          <a class="pop card" href="/blog/boundary-worker-traffic-flow.html">
+          <div class="groupname" data-g="identity network">Deep dives</div>
+
+          <a class="pop card" data-g="network" href="/blog/boundary-worker-traffic-flow.html">
             <span
               class="tag t-sky"
               style="display: inline-block; margin-bottom: 9px"
@@ -2875,7 +2894,7 @@
             </div>
           </a>
 
-          <a class="pop card" href="/blog/boundary-entra-id-sso.html">
+          <a class="pop card" data-g="identity" href="/blog/boundary-entra-id-sso.html">
             <span
               class="tag t-grape"
               style="display: inline-block; margin-bottom: 9px"
@@ -2901,7 +2920,7 @@
             </div>
           </a>
 
-          <a class="pop card" href="/blog/keycloak-sso-gateway.html">
+          <a class="pop card" data-g="identity" href="/blog/keycloak-sso-gateway.html">
             <span
               class="tag t-mint"
               style="display: inline-block; margin-bottom: 9px"
@@ -3306,13 +3325,17 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
         window.scrollTo(0, 0);
       }
 
+      // Scoped to its own tab, so the Work filters and the Blog filters cannot
+      // fight each other. data-g may list several topics, space separated.
       function filt(el) {
         const f = el.dataset.f;
-        document
+        const page = el.closest(".page") || document;
+        page
           .querySelectorAll(".chip")
           .forEach((c) => c.classList.toggle("on", c === el));
-        document.querySelectorAll("[data-g]").forEach((n) => {
-          n.style.display = f === "all" || n.dataset.g === f ? "" : "none";
+        page.querySelectorAll("[data-g]").forEach((n) => {
+          const hit = f === "all" || n.dataset.g.split(" ").includes(f);
+          n.style.display = hit ? "" : "none";
         });
       }
 
