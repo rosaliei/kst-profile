@@ -726,6 +726,25 @@
       .lk:last-child {
         border-bottom: none;
       }
+      /* a series of follow-on posts, listed inside their parent card */
+      .series {
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 3px solid var(--ink);
+      }
+      .series-title {
+        font: 600 12px "Inter";
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+      .lk-time {
+        margin-left: auto;
+        font: 600 12px "Inter";
+        color: var(--muted);
+        flex: none;
+      }
       .kind {
         font: 600 10.5px "Inter";
         border: 2px solid var(--ink);
@@ -2781,52 +2800,53 @@
             I was building the thing.
           </p>
 
-          <a class="pop card" href="/blog/what-is-boundary.html">
-            <span
-              class="tag t-butter"
-              style="display: inline-block; margin-bottom: 9px"
-              >Guide · Start here</span
+          <div class="pop card">
+            <a
+              href="/blog/what-is-boundary.html"
+              style="display: block; color: var(--ink)"
             >
-            <h3>
-              What is HashiCorp Boundary? A beginner's guide — and why I built
-              it three times
-            </h3>
-            <p>
-              If you have ever copied an SSH key onto a laptop and hoped for the
-              best, this is for you. What Boundary does in plain words, why you
-              would want it, and three complete walkthroughs you can follow
-              yourself.
-            </p>
-            <div class="meta">
-              <span>16 Aug 2026</span>
-              <span class="readtime"
-                ><svg class="i"><use href="#i-clock" /></svg> 13 min</span
+              <span
+                class="tag t-butter"
+                style="display: inline-block; margin-bottom: 9px"
+                >Guide · Start here</span
               >
-              <span class="tag t-mint">Beginner friendly</span>
-            </div>
-          </a>
+              <h3>
+                What is HashiCorp Boundary? A beginner's guide — and why I built
+                it three times
+              </h3>
+              <p>
+                If you have ever copied an SSH key onto a laptop and hoped for
+                the best, this is for you. What Boundary does in plain words,
+                why you would want it, and three complete walkthroughs you can
+                follow yourself.
+              </p>
+              <div class="meta">
+                <span>16 Aug 2026</span>
+                <span class="readtime"
+                  ><svg class="i"><use href="#i-clock" /></svg> 13 min</span
+                >
+                <span class="tag t-mint">Beginner friendly</span>
+              </div>
+            </a>
 
-          <div class="note" style="margin-bottom: 17px">
-            <strong>The three walkthroughs.</strong> Hands-on builds you can
-            follow from an empty cloud account —
-            <a
-              href="/blog/boundary-azure-egress.html"
-              style="color: var(--ink); text-decoration: underline"
-              >Azure · the private worker</a
-            >
-            (11 min) ·
-            <a
-              href="/blog/boundary-gcp-ingress.html"
-              style="color: var(--ink); text-decoration: underline"
-              >Google Cloud · your own front door</a
-            >
-            (11 min) ·
-            <a
-              href="/blog/boundary-aws-multihop.html"
-              style="color: var(--ink); text-decoration: underline"
-              >AWS · a network with no way out</a
-            >
-            (10 min)
+            <div class="series">
+              <div class="series-title">The three walkthroughs — pick a cloud</div>
+              <a class="lk" href="/blog/boundary-azure-egress.html">
+                <span class="kind k-dia">Azure</span> The private worker —
+                easiest, start here
+                <span class="lk-time">11 min</span>
+              </a>
+              <a class="lk" href="/blog/boundary-gcp-ingress.html">
+                <span class="kind k-git">GCP</span> Your own front door — keep
+                HCP out of the traffic
+                <span class="lk-time">11 min</span>
+              </a>
+              <a class="lk" href="/blog/boundary-aws-multihop.html">
+                <span class="kind k-note">AWS</span> A network with no way out —
+                two chained workers
+                <span class="lk-time">10 min</span>
+              </a>
+            </div>
           </div>
 
           <a class="pop card" href="/blog/boundary-worker-traffic-flow.html">
