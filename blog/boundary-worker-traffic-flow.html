@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Who carries the packets? Boundary workers across three clouds — Kyaw Sithu</title>
+    <meta
+      name="description"
+      content="Three clouds, three Boundary data paths. Ingress versus egress worker filters, multi-hop chains, and the one line of worker config that decides whether HCP sits in your session."
+    />
+    <link rel="canonical" href="https://kst-devops.com/blog/boundary-worker-traffic-flow.html" />
+    <meta property="og:title" content="Who actually carries the packets? Boundary workers across AWS, Azure and GCP" />
+    <meta
+      property="og:description"
+      content="Ingress versus egress worker filters, multi-hop chains, and the single config line that decides whether your session transits infrastructure you do not run."
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content="https://kst-devops.com/blog/boundary-worker-traffic-flow.html"
+    />
+    <meta property="og:site_name" content="Kyaw Sithu" />
+    <meta
+      property="og:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Who actually carries the packets? Boundary workers across AWS, Azure and GCP"
+    />
+    <meta
+      name="twitter:description"
+      content="Three clouds, three data paths, and the one line of worker config that decides which one you get."
+    />
+    <meta
+      name="twitter:image"
+      content="https://kst-devops.com/assets/og-image.png"
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FFF6E9" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* same tokens as the profile page */
+        --cream: #fff6e9;
+        --paper: #fffdf7;
+        --ink: #16161d;
+        --ink-soft: #5a5a66;
+        --grape: #6c5ce7;
+        --coral: #ff7a45;
+        --teal: #2ec4a6;
+        --sun: #ffd24c;
+        --sky: #4ea8f5;
+        /* light tints — these sit behind ink-coloured text */
+        --lilac: #cdc5f7;
+        --mint: #b6f0e4;
+        --dash: rgba(22, 22, 29, 0.16);
+        --shadow: 6px 6px 0 var(--ink);
+        --shadow-sm: 3px 3px 0 var(--ink);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        /* flat paper, like the profile — no polka texture */
+        background: var(--cream);
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 16.5px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--grape); text-decoration: none; font-weight: 700; }
+      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
+
+      /* ---- nav: same bar as the profile page ---- */
+      nav {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--cream);
+        border-bottom: 3px solid var(--ink);
+      }
+      .nav-inner {
+        max-width: 1040px; margin: 0 auto; padding: 0 32px;
+        height: 56px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      }
+      .nav-logo {
+        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        font-size: 18px; line-height: 1;
+        display: flex; align-items: center; gap: 10px;
+      }
+      /* the round KS blob from the profile header */
+      .nav-logo span {
+        width: 34px; height: 34px; flex: none;
+        background: var(--sun); color: var(--ink);
+        border: 3px solid var(--ink); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; line-height: 1; letter-spacing: .02em;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      /* styled as a profile nav tab rather than a thin outline pill */
+      .nav-back {
+        color: var(--ink); font-size: 13px; font-weight: 600;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
+        transition: transform .08s, box-shadow .08s;
+      }
+      .nav-back:hover, .nav-back:active {
+        text-decoration: none; transform: translate(3px, 3px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      @media (max-width: 640px) {
+        .nav-inner { padding: 0 16px; }
+      }
+
+      /* ---- layout ---- */
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px 110px; }
+      article { max-width: 760px; }
+      .full { max-width: 1040px; }
+
+      header.post { padding: 54px 0 34px; }
+      .eyebrow {
+        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
+        letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        box-shadow: var(--shadow-sm);
+      }
+      h1 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
+      }
+      .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
+      .meta {
+        margin-top: 26px; font-size: 14px; color: var(--ink-soft);
+        display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center;
+      }
+
+      h2 {
+        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
+      }
+      h2::after {
+        content: ""; display: block; width: 74px; height: 6px; margin-top: 8px;
+        background: var(--teal); border-radius: 999px;
+      }
+      h3 {
+        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-size: 20px; margin: 38px 0 12px;
+      }
+      p { margin: 0 0 18px; }
+      ul, ol { margin: 0 0 18px 24px; }
+      li { margin-bottom: 10px; }
+      strong { font-weight: 700; }
+
+      code {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85em; background: #f1eeff; border: 2px solid #d6ceff;
+        border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
+      }
+      pre {
+        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
+      }
+      pre code {
+        background: none; border: 0; padding: 0; color: var(--ink);
+        font-size: 13.5px; line-height: 1.7;
+      }
+
+      /* ---- figures: sticker cards ---- */
+      figure { margin: 30px 0 36px; }
+      figure img {
+        width: 100%; height: auto; display: block;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
+      }
+      figcaption {
+        margin-top: 14px; font-size: 16.5px; line-height: 1.6;
+        color: var(--ink); max-width: 760px;
+      }
+
+      .board {
+        display: inline-block; margin-top: 6px; font-size: 14.5px;
+        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
+      }
+      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+
+      /* ---- callouts ---- */
+      .note {
+        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
+      }
+      .note p:last-child { margin-bottom: 0; }
+      .note.warn { background: #fff0c9; }
+
+      /* ---- tables ---- */
+      .tw {
+        overflow-x: auto; margin: 0 0 28px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+      }
+      table { border-collapse: collapse; width: 100%; font-size: 15px; }
+      th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+      th {
+        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
+        letter-spacing: .05em; background: var(--mint);
+        border-bottom: 3px solid var(--ink); color: var(--ink);
+      }
+      td { border-bottom: 2px dashed var(--dash); }
+      tr:last-child td { border-bottom: 0; }
+
+      /* ---- contents ---- */
+      .toc {
+        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
+      }
+      .toc h4 {
+        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
+        letter-spacing: .07em; margin-bottom: 12px;
+      }
+      .toc ol { margin: 0 0 0 22px; }
+      .toc li { margin-bottom: 6px; }
+
+      /* ---- flow pills ---- */
+      .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .pill {
+        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 2px solid var(--ink);
+        border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
+        transform: rotate(-1deg);
+      }
+
+      .author-card {
+        display: flex; gap: 18px; align-items: center;
+        margin-top: 28px; padding: 18px 22px; max-width: 720px;
+        background: var(--paper); border: 3px solid var(--ink);
+        border-radius: 18px; box-shadow: var(--shadow);
+      }
+      .author-loves {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 4px; color: var(--ink);
+      }
+      .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+      .author-humble {
+        margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
+        border-top: 2px dashed var(--dash); padding-top: 10px;
+      }
+
+      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
+      .meta time {
+        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        padding: 1px 11px; font-weight: 700; font-size: 13.5px;
+      }
+      .author-avatar {
+        flex: 0 0 auto; width: 72px; height: 72px;
+        /* the source is landscape, so crop to the moon rather than squash it */
+        object-fit: cover; object-position: 50% 45%;
+        border: 3px solid var(--ink); border-radius: 50%;
+        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+      }
+      @media (max-width: 520px) {
+        .author-card { align-items: flex-start; }
+        .author-avatar { width: 56px; height: 56px; }
+      }
+
+
+      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
+      .share-title {
+        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        margin: 0 0 12px; color: var(--ink);
+      }
+      .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
+      .share-btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
+        border: 3px solid var(--ink); border-radius: 999px;
+        padding: 8px 18px; box-shadow: var(--shadow-sm);
+      }
+      .share-btn svg { width: 18px; height: 18px; fill: currentColor; }
+      .share-btn.li { background: #0a66c2; }
+      .share-btn.fb { background: #1877f2; }
+      .share-btn:hover {
+        text-decoration: none; transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      footer.post {
+        margin-top: 70px; background: var(--paper);
+        border: 3px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
+      }
+
+      @media (max-width: 640px) {
+        body { font-size: 16px; }
+        .wrap { padding: 0 16px 72px; }
+        header.post { padding: 34px 0 24px; }
+        :root { --shadow: 4px 4px 0 var(--ink); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-back:hover { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <a class="nav-logo" href="/"><span>KS</span> · Kyaw Sithu</a>
+        <a class="nav-back" href="/#blog">← Back to profile</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <article>
+        <header class="post">
+          <div class="eyebrow">Deep dive · Network architecture</div>
+          <h1>Who actually carries the packets? Boundary workers across AWS, Azure and GCP</h1>
+          <p class="standfirst">
+            I built the same thing three times — one private VM, reachable over SSH with no
+            key on my laptop — in three clouds, with three different data paths. One line of
+            worker config decides which path you get, and almost nothing written down says
+            so plainly.
+          </p>
+          <div class="meta">
+            <span class="byline">by <strong>Kyaw Sithu</strong></span>
+            <span>·</span>
+            <time datetime="2026-08-16">16 August 2026</time>
+            <span>·</span>
+            <span>HCP Boundary · AWS · Azure · GCP</span>
+          </div>
+
+          <div class="author-card">
+            <img class="author-avatar" src="img/moon.jpg" alt="" width="72" height="72" />
+            <div>
+              <p class="author-loves">He who loves Mum, Ei, and Arsenal —<br />and is still chasing the moon.</p>
+              <p class="author-ace">
+                Proudly a
+                <a href="https://www.facebook.com/hellocloudinc" target="_blank" rel="noopener">HelloCloud ACE</a>
+                candidate.
+              </p>
+              <p class="author-humble">
+                A note, humbly: I am not an expert, and none of this is a brag. It is all
+                about learning how to learn — and how to unlearn — and cherishing the
+                process somewhere along the way. If you got this far, I hope you learned
+                something too.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <div class="note warn">
+          <p>
+            <strong>Three boards, one per cloud.</strong> Everything here was worked out on
+            Excalidraw first — the console screenshots, the firewall rules, the terminal
+            output at each hop. The environments are decommissioned: clusters, workers and
+            VMs are torn down, so the addresses below point at nothing that still exists.
+          </p>
+          <p style="margin-bottom: 0">
+            <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the boards ↗</a>
+          </p>
+        </div>
+
+        <div class="toc">
+          <h4>Contents</h4>
+          <ol>
+            <li><a href="#question">The question nobody asks first</a></li>
+            <li><a href="#oneline">The one line that decides everything</a></li>
+            <li><a href="#paths">Three paths, one target</a></li>
+            <li><a href="#dials">Who dials whom</a></li>
+            <li><a href="#route">How the controller picks the route</a></li>
+            <li><a href="#proof">Proving it, hop by hop</a></li>
+            <li><a href="#clouds">The clouds are not the same</a></li>
+            <li><a href="#build">Building it, three ways</a></li>
+            <li><a href="#choose">Which one should you use?</a></li>
+            <li><a href="#reading">Further reading</a></li>
+          </ol>
+        </div>
+
+        <h2 id="question">The question nobody asks first</h2>
+        <p>
+          When you set up HashiCorp Boundary, the tutorials get you to a working SSH session
+          quickly and you feel like you understand it. Then someone asks a question you
+          cannot answer: <em>whose machine did my keystrokes travel through?</em>
+        </p>
+        <p>
+          It matters more than it sounds. On HCP, Boundary gives you managed workers with
+          public IP addresses, and by default your session goes through them. That may be
+          completely fine. It may also be unacceptable — a regulator, a data-residency rule
+          or simply a security review will eventually ask whether your production shell
+          traffic transits infrastructure you do not run, in a region you did not choose.
+        </p>
+        <p>
+          Boundary's answer is the <strong>worker filter</strong>, and it has two forms that
+          are easy to confuse because the documentation treats them as symmetrical options.
+          They are not symmetrical at all. One of them keeps HCP in the data path and one
+          removes it, and which you get is decided by a config line most people copy without
+          reading.
+        </p>
+
+        <h2 id="oneline">The one line that decides everything</h2>
+        <p>
+          Here are the three worker configurations I ended up with. Look only at
+          <code>public_addr</code>:
+        </p>
+
+        <pre><code># Azure — egress worker
+worker {
+  public_addr = "192.168.9.4:9202"          # private address
+  auth_storage_path = "/home/azureuser/boundary/worker1"
+  tags {
+    owner = ["kst"]
+    cloud-env = ["azure"]
+    region = ["uae-north"]
+  }
+}
+
+# AWS — worker 1 of a multi-hop chain
+worker {
+  public_addr = "192.168.80.252"            # private address
+  auth_storage_path = "/home/ubuntu/boundary/worker1"
+  tags {
+    owner = ["kst"]
+    country = ["india"]
+    region = ["ap-south-1"]
+  }
+}
+
+# GCP — ingress worker
+worker {
+  public_addr = "34.18.234.32:9202"         # a real, routable public IP
+  auth_storage_path = "/home/boundary/worker1"
+  tags {
+    owner = ["kst"]
+    country = ["doha"]
+    region = ["middle-east"]
+  }
+}</code></pre>
+
+        <div class="note">
+          <p>
+            <strong>This is the whole article in one paragraph.</strong> If
+            <code>public_addr</code> is an address your client cannot reach, your client
+            cannot dial the worker directly — so the session has to be relayed through HCP's
+            managed workers, and you use an <em>egress</em> filter to say which of your
+            workers makes the final hop. If <code>public_addr</code> is an address your
+            client <em>can</em> reach, you can use an <em>ingress</em> filter and your
+            client connects straight to your own worker. HCP then only handles registration
+            and heartbeats, and never sees a byte of your session.
+          </p>
+        </div>
+
+        <p>
+          Nothing about the words "ingress" and "egress" tells you that. They describe which
+          end of the chain the filter is selecting — the worker traffic comes <em>in</em>
+          through, or the worker traffic goes <em>out</em> from. But the consequence is about
+          reachability, and reachability is set by <code>public_addr</code>.
+        </p>
+
+        <h2 id="paths">Three paths, one target</h2>
+        <p>
+          Same goal in all three clouds: a VM in a private subnet, no public IP, reachable
+          over SSH by an authenticated engineer. Three quite different routes to it.
+        </p>
+
+        <figure>
+          <img src="img/flow-three-paths.svg" alt="Egress, multi-hop egress and ingress data paths compared side by side" />
+          <figcaption>
+            The same session, three data paths. The number of hops is the visible difference;
+            who owns the machines in the middle is the one that matters.
+            <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the boards ↗</a>
+          </figcaption>
+        </figure>
+
+        <h3 class="flow-head"><span class="pill">Azure</span> Egress filter</h3>
+        <p>
+          The worker sits in a private subnet with no public address. It reaches HCP outbound
+          through a NAT gateway, and that is the only way it talks to the outside world. My
+          client cannot reach it directly, so the session goes
+          <strong>client → HCP managed worker → my worker → target</strong>. The egress
+          filter is how I tell the controller which of my workers should make that last hop.
+        </p>
+        <p>
+          The security posture here is genuinely good: I expose nothing. The cost is that
+          HCP's infrastructure is in my data path, and I cannot apply any network policy to
+          who reaches it — those workers are shared, public and not mine.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">AWS</span> Multi-hop egress</h3>
+        <p>
+          Same idea, one level deeper. The target lives in a second VPC that has no route to
+          the internet at all — no NAT, no gateway, nothing. A single worker could not reach
+          both HCP and the target, so there are two: worker 1 in the boundary VPC, worker 2
+          in the profile VPC, peered.
+        </p>
+        <p>
+          Worker 2 never talks to HCP. It dials worker 1, which dials HCP. The session becomes
+          <strong>client → HCP → worker 1 → worker 2 → target</strong>. This is the pattern
+          for reaching genuinely isolated networks, and it is the one where the reverse
+          connection model below stops being a curiosity and starts being the reason it works
+          at all.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">GCP</span> Ingress filter</h3>
+        <p>
+          Here the worker sits in a public subnet with a real external IP, and
+          <code>public_addr</code> names it. Now my client can dial the worker directly, so
+          the path collapses to <strong>client → my worker → target</strong>. HCP is still
+          involved — the worker registers with it and heartbeats to it — but no session byte
+          passes through HCP.
+        </p>
+        <p>
+          My note on the board, written at the moment it clicked, says it better than I would
+          rewrite it now:
+        </p>
+        <div class="note">
+          <p>
+            <em>"Now we can control the self-managed worker ourselves — like allowing only
+            port 9202 from our clients, which we can't do with HCP managed in the previous
+            Azure flow."</em>
+          </p>
+        </div>
+        <p>
+          That is the real trade. You take on a public IP and the duty to defend it, and in
+          exchange the firewall in front of the data path becomes yours to write. Allow 9202
+          from the office range and nothing else, and the exposure is far smaller than the
+          phrase "public IP" suggests.
+        </p>
+
+        <h2 id="dials">Who dials whom</h2>
+        <p>
+          This is the part that took me longest to see, and it makes every firewall rule in
+          the article make sense.
+        </p>
+
+        <figure>
+          <img src="img/flow-who-dials.svg" alt="Data flowing downward while TCP connections are established upward" />
+          <figcaption>
+            Data flows toward the target. Connections are established in the opposite
+            direction — each worker dials its upstream.
+          </figcaption>
+        </figure>
+
+        <p>
+          Workers do not listen for the control plane. They <strong>dial out</strong> to it
+          and hold the connection open. You can watch it happen in the worker's own log at
+          startup:
+        </p>
+
+        <pre><code>{"op":"reverseconn_ent.(*dialingListener).SetAddresses",
+ "data":{"address":"&lt;id&gt;.proxy.boundary.hashicorp.cloud:9202",
+         "msg":"dialing"}}</code></pre>
+
+        <p>
+          <code>reverseconn</code> and <code>dialingListener</code> — a listener that dials.
+          The worker is establishing the connection that the controller will later push work
+          down. In a multi-hop chain the same thing happens at every level: worker 2 dials
+          worker 1, worker 1 dials HCP.
+        </p>
+        <p>The consequences are worth stating explicitly, because they are the whole security argument:</p>
+        <ul>
+          <li>No worker needs an inbound firewall rule from the internet — ever, in any of these designs, except the GCP ingress worker where I deliberately chose to accept client connections.</li>
+          <li>The deepest worker in a chain needs no inbound rule <em>at all</em>, and no NAT gateway, because it only dials its neighbour on the peered network.</li>
+          <li>Firewall policy gets <em>simpler</em> the deeper into the network you go, which is the opposite of how bastion-based designs behave.</li>
+        </ul>
+
+        <h2 id="route">How the controller picks the route</h2>
+        <p>
+          A thing that confused me early: worker 2 has no configuration mentioning my target.
+          It does not know the address. It never reads the target record. So how does it know
+          where to connect?
+        </p>
+        <p>It is told. In order:</p>
+        <ol>
+          <li>
+            <strong>You ask.</strong> You say "connect me to <code>tssh_TnK5FbClBJ</code>".
+            The controller opens that target's record and reads the address off it —
+            <code>192.168.90.199</code>, port 22.
+          </li>
+          <li>
+            <strong>The controller picks the worker.</strong> Your egress filter says worker
+            2, so the controller decides worker 2 will do the dialing.
+          </li>
+          <li>
+            <strong>The instruction is passed down.</strong> When worker 2 asks "is this
+            session real?", the answer is not just yes. It is: <em>yes — and when the
+            client's bytes arrive, open a TCP connection to 192.168.90.199:22</em>.
+          </li>
+          <li>
+            <strong>Worker 2 dials the host.</strong> An ordinary TCP connect, the same thing
+            <code>ssh</code> would do from that box. It is just a normal machine on the same
+            subnet as the instance.
+          </li>
+          <li>
+            <strong>It becomes a pipe.</strong> Worker 2 now holds two connections — one
+            facing up the chain, one facing the instance — and copies bytes between them.
+            Your traffic arrives at the target as if it came from worker 2's own IP, because
+            it did.
+          </li>
+        </ol>
+
+        <figure>
+          <img src="img/flow-controller-view.png" alt="Controller's view: worker1 reachable directly, worker2 reachable via worker1" />
+          <figcaption>
+            The controller's model of the chain. worker 2 is not unreachable — it is
+            reachable <em>via</em> worker 1, and the controller tracks that relationship
+            because worker 1 reports it.
+          </figcaption>
+        </figure>
+
+        <div class="note warn">
+          <p>
+            <strong>The target has no idea Boundary exists.</strong> That is worth sitting
+            with. There is no agent on it, no Boundary port, no configuration. It sees an
+            SSH connection from a machine on its own subnet. Every bit of the access control
+            happened before the packet arrived — which is exactly why this composes with
+            whatever the host already does.
+          </p>
+        </div>
+
+        <h2 id="proof">Proving it, hop by hop</h2>
+        <p>
+          Diagrams are claims. Here is the same session observed from every machine in the
+          chain, in the AWS multi-hop build. This is the part I would want to see if someone
+          else wrote this article.
+        </p>
+
+        <h3>1 · The client</h3>
+        <figure>
+          <img src="img/flow-proof-client.png" alt="lsof on the client showing connections to the controller on 443 and a worker on 9202" />
+          <figcaption>
+            <code>lsof -nP -iTCP -a -c boundary</code> — the client holds two kinds of
+            connection: several to the controller on <strong>443</strong>, and one to
+            <code>3.224.38.35:9202</code>. That second one is the data path, and its address
+            is an HCP managed worker, not mine.
+          </figcaption>
+        </figure>
+
+        <h3>2 · Worker 1</h3>
+        <figure>
+          <img src="img/flow-proof-worker1.png" alt="ss on worker 1 showing outbound connections to HCP and inbound from worker 2" />
+          <figcaption>
+            Two queries, two answers. Filtering on <code>dport = :9202</code> shows worker 1
+            dialing <em>out</em> to the HCP managed workers. Filtering on
+            <code>sport = :9202</code> shows connections arriving <em>from</em>
+            <code>192.168.90.225</code> — worker 2. Worker 1 is both a client and a server,
+            and it initiated the upstream half itself.
+          </figcaption>
+        </figure>
+
+        <h3>3 · Worker 2</h3>
+        <figure>
+          <img src="img/flow-proof-worker2.png" alt="ss on worker 2 showing outbound connections to worker 1 and no inbound connections" />
+          <figcaption>
+            The important half of this screenshot is the empty half. Worker 2 has outbound
+            connections to <code>192.168.80.252:9202</code> — worker 1. The
+            <code>sport = :9202</code> query returns <strong>nothing at all</strong>. Nobody
+            connects to worker 2. It only ever dials.
+          </figcaption>
+        </figure>
+
+        <h3>4 · The target</h3>
+        <figure>
+          <img src="img/flow-proof-target.png" alt="ss on the target showing no 9202 connections and one SSH connection from worker 2" />
+          <figcaption>
+            Four queries. No connections on 9202 in either direction — the target does not
+            speak Boundary's protocol. One connection on port 22, from
+            <code>192.168.90.225</code>, owned by <code>sshd</code>. Ordinary SSH from worker
+            2, exactly as promised.
+          </figcaption>
+        </figure>
+
+        <p>
+          Read those four in order and the architecture stops being a diagram and becomes a
+          fact. My laptop talks to an HCP address. Worker 1 talks to HCP and hears from
+          worker 2. Worker 2 talks to worker 1 and hears from nobody. The target hears plain
+          SSH from a neighbour. Nothing in the chain requires the previous hop to be
+          reachable from the internet.
+        </p>
+
+        <h2 id="clouds">The clouds are not the same</h2>
+        <p>
+          The Boundary configuration barely changed between clouds. The networking around it
+          changed constantly, and that is where the time went. These are the differences that
+          actually cost me something:
+        </p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th></th><th>AWS</th><th>Azure</th><th>GCP</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Outbound internet</strong></td>
+                <td>Internet gateway + route table entry, both explicit</td>
+                <td>Built in — there is no gateway resource to create</td>
+                <td>Default route exists; Cloud NAT only if the VM has no external IP</td>
+              </tr>
+              <tr>
+                <td><strong>Private egress</strong></td>
+                <td>NAT gateway + route table</td>
+                <td>NAT gateway, attached to the subnet</td>
+                <td>Cloud NAT — and my ingress worker did not need one at all</td>
+              </tr>
+              <tr>
+                <td><strong>Peering routes</strong></td>
+                <td>Manual route table entries on both sides</td>
+                <td>System routes added automatically</td>
+                <td>Automatic; but the peering must be created from <em>both</em> sides</td>
+              </tr>
+              <tr>
+                <td><strong>Firewall model</strong></td>
+                <td>Security groups attached to instances</td>
+                <td>NSGs attached to subnets or NICs</td>
+                <td>VPC-level rules selected by network tag or service account</td>
+              </tr>
+              <tr>
+                <td><strong>Default posture</strong></td>
+                <td>SG denies inbound, allows outbound</td>
+                <td>NSG has default rules you cannot delete</td>
+                <td>Implied deny inbound, implied <em>allow</em> outbound, lowest priority</td>
+              </tr>
+              <tr>
+                <td><strong>Rule targeting</strong></td>
+                <td>Attach the SG to the instance</td>
+                <td>Attach the NSG to the NIC or subnet</td>
+                <td>Rule names a tag; any VM carrying it is covered</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Two of those caught me properly. <strong>GCP peering must be created from both
+          sides</strong> — AWS lets you request from the source and accept at the target,
+          which is one mental model; GCP wants a matching configuration at each end and the
+          peering simply stays inactive until it has both. And <strong>GCP's firewall rules
+          are selected by tag, not attached to a machine</strong>. You write a rule that says
+          "this applies to anything tagged <code>vm-self-managed-worker</code>", then tag the
+          VM. It is closer to a Kubernetes selector than to a security group, and it is
+          genuinely nicer once the model lands.
+        </p>
+
+        <div class="note">
+          <p>
+            The Azure NSG default rules are the other quiet trap. They exist, you cannot
+            delete them, and they will happily allow something you assumed was denied
+            because you were reasoning only about the rules you wrote. Read the defaults
+            before adding rules on top.
+          </p>
+        </div>
+
+        <h2 id="build">Building it, three ways</h2>
+        <p>
+          The shape is the same everywhere. Here it is as a sequence, with the per-cloud
+          differences called out rather than repeated three times.
+        </p>
+
+        <h3>1 · Two networks and a peering</h3>
+        <p>
+          One network for the worker, one for the workload, peered. In AWS that is two VPCs
+          plus route table entries on both sides. In Azure, two VNets and a peering created
+          in both directions — the system routes appear on their own. In GCP, two VPCs and a
+          peering configured at each end.
+        </p>
+        <p>
+          The worker subnet is public only in the GCP ingress design. In the other two it is
+          private with a NAT gateway for outbound.
+        </p>
+
+        <h3>2 · Firewall rules, written as a chain</h3>
+        <p>
+          The rules follow the dial direction, and writing them in that order makes them
+          obvious. For the multi-hop AWS build:
+        </p>
+        <pre><code>bastion       in : SSH from my address           (temporary)
+              out: SSH to worker 1, worker 2
+
+worker 1      in : SSH from bastion                (management)
+                   9202 from worker 2              (the chain)
+              out: 9202 to HCP managed workers
+
+worker 2      in : SSH from bastion                (removable)
+              out: 9202 to worker 1
+                   22   to the target
+
+target        in : SSH from worker 2 only
+              out: nothing</code></pre>
+        <p>
+          Note the target's outbound rule: nothing. It does not need to reach anything,
+          including the internet, and saying so explicitly is free.
+        </p>
+        <p>
+          For the GCP ingress build there is one extra inbound rule and one fewer hop —
+          <code>9202 from my client range</code> on the worker. That single line is the thing
+          the egress designs cannot express.
+        </p>
+
+        <h3>3 · Install and register the worker</h3>
+        <p>
+          Copy the binary in (via the temporary bastion, or by allowing outbound internet
+          briefly), then run it as a service rather than in a shell:
+        </p>
+        <pre><code>sudo mv boundary /usr/local/bin/
+sudo useradd --system --home /etc/boundary.d --shell /bin/false boundary
+sudo chown -R boundary:boundary /home/&lt;user&gt;/boundary
+
+# /etc/systemd/system/boundary-worker.service
+[Unit]
+Description=Boundary PKI Worker
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=boundary
+Group=boundary
+ExecStart=/usr/local/bin/boundary server -config=/home/&lt;user&gt;/boundary/pki-worker.hcl
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now boundary-worker
+sudo journalctl -u boundary-worker -f</code></pre>
+        <p>
+          The first thing the log says is that the node is <em>not yet authorized</em>, which
+          is correct and not an error. Registration is a two-party handshake: the worker
+          writes an <code>auth_request_token</code> into its storage directory, and you paste
+          that into the controller to approve it.
+        </p>
+
+        <h3>4 · Targets, credentials and the filter</h3>
+        <p>
+          Create the credential store and target, then attach the credential as an
+          <strong>injected</strong> application credential so the user never handles it:
+        </p>
+        <figure>
+          <img src="img/flow-injected-creds.png" alt="Boundary target with an injected application credential attached" />
+          <figcaption>
+            Injected, not brokered. Brokering would hand the key pair to the client;
+            injection keeps it on the worker. Note this needs HCP or Enterprise — community
+            Boundary has brokering only.
+          </figcaption>
+        </figure>
+        <p>
+          Then the filter itself, on the target. An egress filter selects which of your
+          workers makes the final hop; an ingress filter selects which worker the client is
+          allowed to enter through. Both are written against worker tags, which is why the
+          tags in those configs above are worth choosing deliberately:
+        </p>
+        <pre><code># egress — pick the worker that can reach the host
+"azure" in "/tags/cloud-env"
+
+# ingress — pick the worker the client may connect to
+"gcp-cloud" in "/tags/automated"</code></pre>
+        <p>
+          Tag on the things you might one day filter on: cloud, region, owner, whether it was
+          built by automation. Tags are cheap to add now and awkward to retrofit once targets
+          reference them.
+        </p>
+
+        <h2 id="choose">Which one should you use?</h2>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Use</th><th>When</th><th>Because</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Egress filter</strong></td>
+                <td>Default. You want zero exposed surface and have no opinion about the transit path.</td>
+                <td>Nothing of yours accepts an inbound connection. Simplest thing that works.</td>
+              </tr>
+              <tr>
+                <td><strong>Multi-hop egress</strong></td>
+                <td>The target's network has no route to the internet, or crosses a trust boundary you will not open.</td>
+                <td>Each worker only needs to reach its neighbour. The deepest one needs no inbound rule and no NAT.</td>
+              </tr>
+              <tr>
+                <td><strong>Ingress filter</strong></td>
+                <td>Session traffic must not transit third-party infrastructure, or you need control over who reaches the data path, or latency matters.</td>
+                <td>Shortest path, and the firewall in front of it is yours to write. Costs you a public IP to defend.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          If I were starting again on a real system I would begin with the egress filter,
+          because it is the least to get wrong, and move to ingress only when someone can
+          articulate why the transit path matters. "It feels better" is not a reason to own a
+          public IP. "Our sessions may not traverse infrastructure we do not operate" is.
+        </p>
+        <p>
+          Multi-hop is not a more advanced version of the other two — it answers a different
+          question. Reach for it when the network genuinely has no way out, not when you want
+          extra layers. Every hop is another machine to patch, and the security benefit of
+          hop three over hop two is close to zero if hop two was already private.
+        </p>
+        <p>
+          The thing I did not expect to come away with is how little of this is about
+          Boundary. The controller does the same job in all three clouds and the worker
+          config differs by one meaningful line. What differs is the network, and the reason
+          the same design took three attempts is that AWS, Azure and GCP disagree about what
+          a route is, what a firewall attaches to, and what happens by default. Boundary was
+          the easy half. Again.
+        </p>
+
+        <h2 id="reading">Further reading</h2>
+        <ul>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/concepts/filtering/worker-tags" target="_blank" rel="noopener">Worker tags and filters</a>
+            — the filter expression syntax, and how tags are matched.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/configuration/worker" target="_blank" rel="noopener">Worker configuration</a>
+            — every field, including <code>public_addr</code> and
+            <code>initial_upstreams</code>.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/concepts/connection-workflows/multi-hop" target="_blank" rel="noopener">Multi-hop sessions</a>
+            — the chain model, and which tier it requires.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/concepts/domain-model" target="_blank" rel="noopener">Domain model</a>
+            — targets, host sets, credential stores and how the pieces relate.
+          </li>
+          <li>
+            <a href="https://cloud.google.com/firewall/docs/firewalls" target="_blank" rel="noopener">GCP VPC firewall rules</a>
+            — implied rules, priority, and targeting by tag or service account.
+          </li>
+          <li>
+            <a href="/blog/boundary-entra-id-sso.html">Boundary and Microsoft Entra ID</a>
+            — the identity half of the same system: who is allowed to ask for these sessions
+            in the first place.
+          </li>
+        </ul>
+
+        <footer class="post">
+          <p>
+            The three boards behind this — AWS multi-hop, Azure egress, GCP ingress — with
+            every console screenshot and every terminal capture:
+            <a href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">app.excalidraw.com</a>
+          </p>
+          <div class="share">
+            <p class="share-title">Found this useful? Pass it on 🌙</p>
+            <div class="share-row">
+              <a class="share-btn li" target="_blank" rel="noopener"
+                 href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-worker-traffic-flow.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Share on LinkedIn
+              </a>
+              <a class="share-btn fb" target="_blank" rel="noopener"
+                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkst-devops.com%2Fblog%2Fboundary-worker-traffic-flow.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+                Share on Facebook
+              </a>
+            </div>
+          </div>
+
+          <p style="margin-top: 18px"><a href="/">← Back to profile</a></p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>

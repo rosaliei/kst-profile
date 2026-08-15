@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 880" width="1440" height="880"
+     font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif">
+  <defs>
+    <marker id="d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16161D"/>
+    </marker>
+    <style>
+      .sh { fill:#16161D; }
+      .n  { font-size:16px; font-weight:700; fill:#16161D; }
+      .s  { font-size:13.5px; fill:#5A5A66; }
+      .h  { font-size:20px; font-weight:800; fill:#16161D; }
+      .c  { font-size:14px; fill:#5A5A66; }
+      .fl { stroke:#16161D; stroke-width:3.5; fill:none; marker-end:url(#d); }
+    </style>
+  </defs>
+  <rect width="1440" height="880" fill="#FFF6E9"/>
+
+  <!-- ============ column 1: egress ============ -->
+  <rect x="38" y="48" width="420" height="762" rx="20" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <rect x="68" y="72" width="228" height="40" rx="20" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+  <text x="182" y="100" text-anchor="middle" class="n">Egress filter</text>
+  <text x="68" y="140" class="h">Azure</text>
+  <text x="68" y="166" class="c">worker has no public address</text>
+
+  <g>
+    <rect x="118" y="196" width="260" height="56" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="248" y="223" text-anchor="middle" class="n">Client</text>
+    <text x="248" y="242" text-anchor="middle" class="s">your laptop</text>
+
+    <path class="fl" d="M248 254 L 248 300"/>
+
+    <rect x="118" y="304" width="260" height="66" rx="14" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+    <text x="248" y="331" text-anchor="middle" class="n">HCP managed worker</text>
+    <text x="248" y="352" text-anchor="middle" class="s">public IP, carries data</text>
+
+    <path class="fl" d="M248 372 L 248 418"/>
+
+    <rect x="118" y="422" width="260" height="66" rx="14" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+    <text x="248" y="449" text-anchor="middle" class="n">Self-managed worker</text>
+    <text x="248" y="470" text-anchor="middle" class="s">private subnet, egress</text>
+
+    <path class="fl" d="M248 490 L 248 536"/>
+
+    <rect x="118" y="540" width="260" height="56" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="248" y="567" text-anchor="middle" class="n">Target VM</text>
+    <text x="248" y="586" text-anchor="middle" class="s">peered VNet</text>
+  </g>
+  <rect x="68" y="632" width="360" height="152" rx="14" fill="#FFF6E9" stroke="#16161D" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="88" y="662" class="s" font-weight="700" fill="#16161D">Trade-off</text>
+  <text x="88" y="688" class="s">Nothing of yours is exposed —</text>
+  <text x="88" y="710" class="s">but HCP's workers sit in the data</text>
+  <text x="88" y="732" class="s">path, and you cannot restrict who</text>
+  <text x="88" y="754" class="s">reaches them. Two extra hops of</text>
+  <text x="88" y="776" class="s">latency you do not control.</text>
+
+  <!-- ============ column 2: multi-hop ============ -->
+  <rect x="510" y="48" width="420" height="762" rx="20" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <rect x="540" y="72" width="270" height="40" rx="20" fill="#FF7A45" stroke="#16161D" stroke-width="3"/>
+  <text x="675" y="100" text-anchor="middle" class="n">Multi-hop egress</text>
+  <text x="540" y="140" class="h">AWS</text>
+  <text x="540" y="166" class="c">two workers, two VPCs</text>
+
+  <g>
+    <rect x="590" y="196" width="260" height="46" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="720" y="225" text-anchor="middle" class="n">Client</text>
+
+    <path class="fl" d="M720 244 L 720 278"/>
+
+    <rect x="590" y="282" width="260" height="52" rx="14" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+    <text x="720" y="304" text-anchor="middle" class="n">HCP managed worker</text>
+    <text x="720" y="323" text-anchor="middle" class="s">public IP</text>
+
+    <path class="fl" d="M720 336 L 720 370"/>
+
+    <rect x="590" y="374" width="260" height="52" rx="14" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+    <text x="720" y="396" text-anchor="middle" class="n">worker 1</text>
+    <text x="720" y="415" text-anchor="middle" class="s">boundary VPC, private</text>
+
+    <path class="fl" d="M720 428 L 720 462"/>
+
+    <rect x="590" y="466" width="260" height="52" rx="14" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+    <text x="720" y="488" text-anchor="middle" class="n">worker 2</text>
+    <text x="720" y="507" text-anchor="middle" class="s">profile VPC, private</text>
+
+    <path class="fl" d="M720 520 L 720 554"/>
+
+    <rect x="590" y="558" width="260" height="46" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="720" y="587" text-anchor="middle" class="n">Target VM</text>
+  </g>
+  <rect x="540" y="632" width="360" height="152" rx="14" fill="#FFF6E9" stroke="#16161D" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="560" y="662" class="s" font-weight="700" fill="#16161D">Trade-off</text>
+  <text x="560" y="688" class="s">Reaches a network that has no</text>
+  <text x="560" y="710" class="s">route out at all. worker 2 needs</text>
+  <text x="560" y="732" class="s">no inbound rule and no NAT —</text>
+  <text x="560" y="754" class="s">it dials worker 1. Most hops,</text>
+  <text x="560" y="776" class="s">most moving parts.</text>
+
+  <!-- ============ column 3: ingress ============ -->
+  <rect x="982" y="48" width="420" height="762" rx="20" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+  <rect x="1012" y="72" width="250" height="40" rx="20" fill="#4EA8F5" stroke="#16161D" stroke-width="3"/>
+  <text x="1137" y="100" text-anchor="middle" class="n">Ingress filter</text>
+  <text x="1012" y="140" class="h">GCP</text>
+  <text x="1012" y="166" class="c">worker has a real public IP</text>
+
+  <g>
+    <rect x="1062" y="196" width="260" height="56" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="1192" y="223" text-anchor="middle" class="n">Client</text>
+    <text x="1192" y="242" text-anchor="middle" class="s">your laptop</text>
+
+    <path class="fl" d="M1192 254 L 1192 418"/>
+    <rect x="1078" y="310" width="228" height="26" fill="#FFFDF7"/>
+    <text x="1192" y="330" text-anchor="middle" class="s" font-weight="700" fill="#16161D">straight to your worker</text>
+
+    <rect x="1062" y="422" width="260" height="66" rx="14" fill="#4EA8F5" stroke="#16161D" stroke-width="3"/>
+    <text x="1192" y="449" text-anchor="middle" class="n">Self-managed worker</text>
+    <text x="1192" y="470" text-anchor="middle" class="s">public subnet, ingress</text>
+
+    <path class="fl" d="M1192 490 L 1192 536"/>
+
+    <rect x="1062" y="540" width="260" height="56" rx="14" fill="#FFFDF7" stroke="#16161D" stroke-width="3"/>
+    <text x="1192" y="567" text-anchor="middle" class="n">Target VM</text>
+    <text x="1192" y="586" text-anchor="middle" class="s">peered VPC</text>
+  </g>
+  <rect x="1012" y="632" width="360" height="152" rx="14" fill="#FFF6E9" stroke="#16161D" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="1032" y="662" class="s" font-weight="700" fill="#16161D">Trade-off</text>
+  <text x="1032" y="688" class="s">Shortest path, and the firewall</text>
+  <text x="1032" y="710" class="s">is yours — allow 9202 from your</text>
+  <text x="1032" y="732" class="s">office range only. The cost is a</text>
+  <text x="1032" y="754" class="s">public IP you now own and must</text>
+  <text x="1032" y="776" class="s">defend. HCP still registers it.</text>
+</svg>

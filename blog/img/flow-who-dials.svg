@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 700" width="1440" height="700"
+     font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif">
+  <defs>
+    <marker id="dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6C5CE7"/>
+    </marker>
+    <marker id="up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#FF7A45"/>
+    </marker>
+    <style>
+      .n  { font-size:17px; font-weight:700; fill:#16161D; }
+      .s  { font-size:14px; fill:#5A5A66; }
+      .hd { font-size:21px; font-weight:800; fill:#16161D; }
+      .box{ fill:#FFFDF7; stroke:#16161D; stroke-width:3; }
+      .down { stroke:#6C5CE7; stroke-width:4; fill:none; marker-end:url(#dn); }
+      .upc  { stroke:#FF7A45; stroke-width:4; fill:none; marker-end:url(#up); stroke-dasharray:10 6; }
+    </style>
+  </defs>
+  <rect width="1440" height="700" fill="#FFF6E9"/>
+
+  <!-- nodes down the middle -->
+  <g>
+    <rect x="560" y="70" width="300" height="60" rx="15" class="box"/>
+    <text x="710" y="98" text-anchor="middle" class="n">Client</text>
+    <text x="710" y="118" text-anchor="middle" class="s">your laptop</text>
+
+    <rect x="560" y="210" width="300" height="60" rx="15" fill="#FFD24C" stroke="#16161D" stroke-width="3"/>
+    <text x="710" y="238" text-anchor="middle" class="n">HCP managed worker</text>
+    <text x="710" y="258" text-anchor="middle" class="s">public</text>
+
+    <rect x="560" y="350" width="300" height="60" rx="15" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+    <text x="710" y="378" text-anchor="middle" class="n">worker 1</text>
+    <text x="710" y="398" text-anchor="middle" class="s">private, no inbound from internet</text>
+
+    <rect x="560" y="490" width="300" height="60" rx="15" fill="#2EC4A6" stroke="#16161D" stroke-width="3"/>
+    <text x="710" y="518" text-anchor="middle" class="n">worker 2</text>
+    <text x="710" y="538" text-anchor="middle" class="s">private, no inbound at all</text>
+
+    <rect x="560" y="600" width="300" height="60" rx="15" class="box"/>
+    <text x="710" y="628" text-anchor="middle" class="n">Target VM</text>
+    <text x="710" y="648" text-anchor="middle" class="s">sees plain SSH from worker 2</text>
+  </g>
+
+  <!-- LEFT: data direction -->
+  <text x="120" y="60" class="hd" fill="#6C5CE7">Bytes flow down</text>
+  <text x="120" y="86" class="s">the request travels toward the target</text>
+  <path class="down" d="M470 100 L 470 630"/>
+  <rect x="386" y="330" width="170" height="26" fill="#FFF6E9"/>
+  <text x="470" y="350" text-anchor="middle" class="s" font-weight="700" fill="#6C5CE7">your SSH session</text>
+
+  <!-- RIGHT: connection direction -->
+  <text x="960" y="60" class="hd" fill="#FF7A45">Connections dial up</text>
+  <text x="960" y="86" class="s">every worker calls its upstream, outbound only</text>
+
+  <path class="upc" d="M950 240 L 950 120"/>
+  <path class="upc" d="M950 380 L 950 260"/>
+  <path class="upc" d="M950 520 L 950 400"/>
+
+  <text x="980" y="180" class="s">client dials the worker it was told about</text>
+  <text x="980" y="320" class="s">worker 1 dials HCP — outbound 9202</text>
+  <text x="980" y="460" class="s">worker 2 dials worker 1 — outbound 9202</text>
+
+  <rect x="960" y="530" width="420" height="130" rx="14" fill="#FFF0EE" stroke="#16161D" stroke-width="3"/>
+  <text x="982" y="560" class="n" font-size="16">Why this matters</text>
+  <text x="982" y="586" class="s">No worker needs an inbound rule from the internet.</text>
+  <text x="982" y="608" class="s">The deepest worker needs no inbound rule at all,</text>
+  <text x="982" y="630" class="s">and no NAT — it only ever dials outward. Firewall</text>
+  <text x="982" y="652" class="s">policy gets simpler the deeper you go.</text>
+</svg>
