@@ -364,24 +364,16 @@
             order I actually hit them, the scope diagrams and the log analysis. The post is
             the tidied version; the board is the working one, with the dead ends left in.
           </p>
+          <p>
+            <strong>The environment is decommissioned</strong> — cluster, workers, VMs and
+            the Entra application with its client secret are all gone, so nothing on the
+            board points at anything that still exists. I have used
+            <code>&lt;angle-bracket&gt;</code> placeholders in the text anyway, out of habit.
+            Resource IDs like <code>u_mJjZAPrPGf</code> are kept as they were, because
+            recognising the shape of an ID in a log line is half of what this post is about.
+          </p>
           <p style="margin-bottom: 0">
             <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the full board ↗</a>
-          </p>
-        </div>
-
-        <div class="note">
-          <p>
-            <strong>This environment has been decommissioned.</strong> The Boundary cluster,
-            both workers and the target VMs are torn down, and the Entra application along
-            with its client secret has been removed. Anything identifying that appears on
-            the board — tenant, application ID, cluster address, worker addresses — points
-            at nothing that still exists.
-          </p>
-          <p>
-            In the text below I have used <code>&lt;angle-bracket&gt;</code> placeholders
-            anyway, out of habit rather than necessity. Resource IDs like
-            <code>u_mJjZAPrPGf</code> are kept as they were, because recognising the shape
-            of an ID in a log line is half of what this post is about.
           </p>
         </div>
 
@@ -398,6 +390,7 @@
             <li><a href="#logs">What the client logs admitted</a></li>
             <li><a href="#extend">Where this goes next</a></li>
             <li><a href="#change">What I would do differently</a></li>
+            <li><a href="#reading">Further reading</a></li>
           </ol>
         </div>
 
@@ -654,6 +647,19 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           auth method is inactive and non-primary. It will happily accept a login and then
           refuse to do anything useful with it.
         </p>
+        <p>
+          Those are two different settings in two different places, which is part of why
+          they get missed. The state lives on the auth method and has three values; primary
+          lives on the <em>scope</em> and points at an auth method:
+        </p>
+        <pre><code># state: inactive → active-private → active-public
+# only active-public appears on the login screen
+boundary auth-methods change-state oidc \
+  -id amoidc_&lt;id&gt; -state active-public
+
+# primary is a property of the scope, not the auth method
+boundary scopes update \
+  -id o_&lt;org-id&gt; -primary-auth-method-id amoidc_&lt;id&gt;</code></pre>
 
         <figure>
           <img src="img/entra-authmethod-state.png" alt="Boundary auth method page with the state dropdown open on Inactive, Private, Public" />
@@ -686,10 +692,17 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           that scope.
         </p>
         <p>
-          The fix is one setting: mark the auth method primary for the org. What I like
-          about this error, in hindsight, is that it is honest. It says precisely what it
-          refused to do and precisely why. Most of the time I spent on it was spent
-          URL-decoding it.
+          The fix is one setting: mark the auth method primary for the org. HashiCorp's
+          documentation has a lovely word for what that setting switches on — the primary
+          auth method for a scope <strong>auto-vivifies</strong> users, meaning that on a
+          successful authentication against an account with no user linked to it, Boundary
+          creates the user itself. Take away primary and you take away auto-vivification,
+          and the account has nowhere to land.
+        </p>
+        <p>
+          What I like about this error, in hindsight, is that it is honest. It says
+          precisely what it refused to do and precisely why. Most of the time I spent on it
+          was spent URL-decoding it.
         </p>
 
         <figure>
@@ -784,6 +797,40 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           scope that holds resources, and those are deliberately not the same place.
         </p>
 
+        <p>There are three keywords, and which ones are legal depends on where the role lives:</p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Keyword</th><th>Reaches</th><th>Allowed on</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>this</code></td>
+                <td>The role's own scope, nothing below it</td>
+                <td>Any scope — and it is the default Boundary assigns on creation</td>
+              </tr>
+              <tr>
+                <td><code>children</code></td>
+                <td>Direct children only — one level down</td>
+                <td>Global and org scopes</td>
+              </tr>
+              <tr>
+                <td><code>descendants</code></td>
+                <td>Everything underneath, all the way down</td>
+                <td>Global scope only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          That <code>this</code> is applied automatically at creation is the detail that
+          makes this trap so easy to walk into. You never chose it. It was chosen for you,
+          it is a sensible default, and it is silently wrong the moment your resources live
+          one level down from your role.
+        </p>
+
         <figure>
           <img src="img/entra-targets.png" alt="Boundary desktop client listing two SSH targets with Connect buttons" />
           <figcaption>
@@ -874,6 +921,10 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
 [debug] Search request took 2 ms {
   query: '(target_id = "tssh_MKHBF4VwaM" or target_id = "tssh_kamaDARfM7")',
   resource: 'sessions'
+}
+[debug] Search request took 978 ms {
+  query: '(destination_id = "tssh_MKHBF4VwaM" or destination_id = "tssh_kamaDARfM7")',
+  resource: 'resolvable-aliases'
 }</code></pre>
 
         <p>Three things fall out of that:</p>
@@ -894,6 +945,14 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
             The third returns two target IDs. Those are the two I had been granted, and the
             client resolves them in 2 ms because by then it is asking about things it already
             knows exist.
+          </li>
+          <li>
+            The fourth asks for <code>resolvable-aliases</code> against those same two
+            targets. I had not configured a single alias, and the client asks anyway —
+            because aliases are how it lets you type <code>boundary connect ssh
+            profile-vm</code> instead of a target ID. Finding this in the log is what put
+            aliases on the roadmap; the client was already prepared for a feature I had not
+            noticed existed.
           </li>
         </ul>
 
@@ -919,8 +978,8 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
             <tbody>
               <tr>
                 <td><strong>Vault credential injection</strong></td>
-                <td>Boundary fetches a short-lived credential at connect time and injects it. With Vault's SSH secrets engine the target trusts a CA, not static keys — no durable key left to outlive anyone.</td>
-                <td>Config only; Vault already runs on HCP</td>
+                <td>Boundary fetches a short-lived credential at connect time and injects it into the session, so the user never sees it. With Vault's SSH secrets engine the target trusts a CA rather than static keys — no durable key left to outlive anyone.</td>
+                <td>Config only; Vault already runs on HCP. Note <strong>injection needs HCP or Enterprise</strong> — on community Boundary you get brokering, which hands the credential to the client instead of hiding it.</td>
               </tr>
               <tr>
                 <td><strong>Entra groups → managed groups</strong></td>
@@ -935,7 +994,7 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
               <tr>
                 <td><strong>Session recording</strong></td>
                 <td>Turns the audit answer from "a session was opened" into what actually ran inside it.</td>
-                <td>A bucket and a retention policy</td>
+                <td>A bucket, a retention policy, and <strong>HCP Plus or Enterprise</strong>. Needs a self-managed worker with local storage — which I already have.</td>
               </tr>
               <tr>
                 <td><strong>Dynamic host catalogs</strong></td>
@@ -946,6 +1005,11 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
                 <td><strong>Worker tags</strong></td>
                 <td>A worker per network, sessions routed to one that can reach the target — the path to a single front door over a multi-cloud estate.</td>
                 <td>One more worker per network</td>
+              </tr>
+              <tr>
+                <td><strong>Target aliases</strong></td>
+                <td>A DNS-like name per target, so it is <code>boundary connect ssh profile-vm</code> rather than a target ID nobody memorises.</td>
+                <td>Small. My client is already querying for them — see the log below</td>
               </tr>
               <tr>
                 <td><strong>Terraform</strong></td>
@@ -998,6 +1062,48 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           deliberately separated into different scopes, the extra dropdown stops being an
           annoyance and starts being the point.
         </p>
+
+        <h2 id="reading">Further reading</h2>
+        <p>
+          The documentation I actually had open while building this, rather than a
+          link dump:
+        </p>
+        <ul>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/tutorials/identity-management/oidc-azure" target="_blank" rel="noopener">OIDC authentication with Microsoft Azure</a>
+            — HashiCorp's own walkthrough. Confirms the issuer format
+            <code>https://login.microsoftonline.com/&lt;tenant&gt;/v2.0</code> and gives the
+            CLI equivalents of everything I did by clicking.
+          </li>
+          <li>
+            <a href="https://learn.microsoft.com/en-us/entra/identity/saas-apps/hashicorp-tutorial" target="_blank" rel="noopener">Microsoft's Boundary tutorial</a>
+            — the same integration from the Entra side. Between the two you get both halves.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/rbac" target="_blank" rel="noopener">Boundary permissions index</a>
+            and
+            <a href="https://developer.hashicorp.com/boundary/docs/commands/roles/set-grant-scopes" target="_blank" rel="noopener">roles set-grant-scopes</a>
+            — where <code>this</code>, <code>children</code> and <code>descendants</code>
+            are defined. The section I most needed and read last.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/concepts/domain-model" target="_blank" rel="noopener">Domain model overview</a>
+            — scopes, accounts, users, managed groups and how they relate. Reading this
+            first would have saved me the empty target list.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/docs/concepts/credential-management" target="_blank" rel="noopener">Credential management</a>
+            — the brokering-versus-injection distinction, and which tiers have which.
+          </li>
+          <li>
+            <a href="https://developer.hashicorp.com/boundary/tutorials/identity-management/oidc-idp-groups" target="_blank" rel="noopener">Manage OIDC IdP groups</a>
+            — managed groups, for when named users stop scaling.
+          </li>
+          <li>
+            <a href="https://supertokens.com/blog/authorization-code-flow-with-pkce" target="_blank" rel="noopener">Authorization code flow with PKCE</a>
+            — the protocol underneath all of it, explained better than I could.
+          </li>
+        </ul>
 
         <footer class="post">
           <p>
