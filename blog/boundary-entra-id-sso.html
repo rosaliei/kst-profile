@@ -388,6 +388,7 @@
         <div class="toc">
           <h4>Contents</h4>
           <ol>
+            <li><a href="#problem">The problem this solves</a></li>
             <li><a href="#shape">The shape of the thing</a></li>
             <li><a href="#entra">The Entra side</a></li>
             <li><a href="#boundary">The Boundary side</a></li>
@@ -395,8 +396,114 @@
             <li><a href="#scopes">Why login worked and nothing was visible</a></li>
             <li><a href="#tracing">Tracing the whole flow</a></li>
             <li><a href="#logs">What the client logs admitted</a></li>
+            <li><a href="#extend">Where this goes next</a></li>
             <li><a href="#change">What I would do differently</a></li>
           </ol>
+        </div>
+
+        <h2 id="problem">The problem this solves</h2>
+        <p>
+          It is worth being precise about what was wrong before, because "we set up SSO"
+          is not a reason to do anything. The reason is that the normal way of giving
+          engineers SSH access to private machines has four failure modes, and all four
+          are the kind that stay invisible until the day they matter.
+        </p>
+
+        <h3>1 · The key outlives the person</h3>
+        <p>
+          The default pattern is a keypair on a laptop and a public key in
+          <code>authorized_keys</code> on the target. That key is a
+          <strong>bearer credential</strong>: whoever holds the file is the user. It does
+          not expire, it does not know who is holding it, and removing it means finding
+          every host it was ever copied to.
+        </p>
+        <p>
+          So offboarding becomes a search problem. Someone leaves, their account is disabled
+          in the directory within minutes — and their SSH key still works, because nothing
+          about the SSH path ever consults the directory. The gap between "disabled in Entra"
+          and "can no longer reach production" is however long it takes a human to remember
+          every machine.
+        </p>
+
+        <h3>2 · The bastion is a permanent front door</h3>
+        <p>
+          To reach a private subnet you put a jump host in a public one. It needs a public
+          IP and an open port, forever, for the small fraction of the week anyone uses it.
+          It gets patched less often than the things behind it, because it is "just" a jump
+          host. It is the single most attacked machine you own and the least interesting to
+          maintain.
+        </p>
+
+        <h3>3 · Network access is not the same as permission</h3>
+        <p>
+          The usual alternative is a VPN, which solves reachability by putting the laptop
+          <em>on the network</em>. But being on the network is enormously more access than
+          being allowed to SSH into one VM. A VPN answers "can these packets route", when
+          the question you actually wanted answered was "may this person open a shell on
+          that host". Those get conflated constantly, and the blast radius of a compromised
+          laptop is the difference between them.
+        </p>
+
+        <h3>4 · Nobody can answer who connected to what</h3>
+        <p>
+          Ask who opened a shell on a given host last Tuesday and, with keys and a bastion,
+          the honest answer is a grep through <code>auth.log</code> on machines that may have
+          been replaced since. There is no central record, because there was never a central
+          decision — each host decided for itself, based on a file.
+        </p>
+
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Question</th><th>Keys + bastion</th><th>Boundary + Entra</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>What is checked at connect time?</td>
+                <td>Possession of a file</td>
+                <td>Current identity and current grants</td>
+              </tr>
+              <tr>
+                <td>Revoking one person</td>
+                <td>Find every <code>authorized_keys</code></td>
+                <td>Disable the user in Entra</td>
+              </tr>
+              <tr>
+                <td>Target's exposure</td>
+                <td>Reachable from the bastion, which is public</td>
+                <td>No public IP, one inbound source</td>
+              </tr>
+              <tr>
+                <td>Scope of a compromised laptop</td>
+                <td>Everything the key opens, indefinitely</td>
+                <td>What that identity may reach, until the session expires</td>
+              </tr>
+              <tr>
+                <td>Who connected to what?</td>
+                <td>Per-host logs, if they still exist</td>
+                <td>One session record per connection</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          The shift underneath all five rows is the same one. Access stops being a property
+          of <em>something you have</em> and becomes a property of <em>who you currently
+          are</em> — and because Entra already knows who you currently are, the two systems
+          have something real to say to each other. That is the whole reason for the
+          integration. Single sign-on is a pleasant side effect; the point is that
+          disabling an account in one place ends access everywhere.
+        </p>
+
+        <div class="note">
+          <p>
+            This is also the honest limit of what I built. Boundary brokers the
+            <em>connection</em>; on its own it does not yet remove the SSH credential from
+            the equation, and in my setup the target still trusts a key. Closing that gap is
+            the first item in <a href="#extend">where this goes next</a> — but it is a
+            second problem, and conflating it with the first is how these projects stall.
+          </p>
         </div>
 
         <h2 id="shape">The shape of the thing</h2>
@@ -787,6 +894,108 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           provider think this login succeeded? If Entra says yes and Boundary shows you
           nothing, you have stopped debugging SSO and started debugging RBAC, and the two
           have almost nothing to do with each other.
+        </p>
+
+        <h2 id="extend">Where this goes next</h2>
+        <p>
+          What I have is the floor, not the ceiling: identity-based access to two VMs, with
+          the roles maintained by hand. Everything below is a real next step rather than a
+          wishlist, and I have ordered them by how much they pay back relative to the effort.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Next</span> Vault credential injection</h3>
+        <p>
+          This is the one that closes the gap I admitted above. Right now Boundary controls
+          <em>who may open a session</em>, but the target still trusts an SSH key that exists
+          somewhere. With a credential store attached to the project, Boundary asks Vault for
+          a credential at connect time and injects it into the session — the user never sees
+          it, never stores it, and it expires on its own.
+        </p>
+        <p>
+          Done properly with Vault's SSH secrets engine, the target stops trusting static
+          keys entirely and starts trusting a CA that signs short-lived certificates. At that
+          point "the key outlives the person" stops being possible, because there is no
+          longer a durable key to outlive anyone. I already run Vault on HCP, so this is
+          configuration rather than new infrastructure — which is exactly why it is first.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Next</span> Entra groups instead of named users</h3>
+        <p>
+          Today I assign a person to the enterprise application and add that person as a
+          principal on a role. That does not survive a growing team: every join and leave is
+          two manual edits in two systems, and manual edits get skipped.
+        </p>
+        <p>
+          Boundary supports managed groups on an OIDC auth method, matched against claims in
+          the token. Add the <code>groups</code> claim to the Entra app registration, create a
+          managed group that filters on the group ID, and attach the <em>group</em> to the
+          role. Access then follows directory membership: adding someone to
+          <code>platform-engineers</code> in Entra is the entire onboarding step, and removing
+          them is the entire offboarding step.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Next</span> Conditional Access — already paid for</h3>
+        <p>
+          This one costs nothing to adopt and I think it is the most under-appreciated
+          consequence of putting Entra in front. Because the login is a normal Entra
+          sign-in, every Conditional Access policy in the tenant applies to it: require MFA,
+          require a compliant or hybrid-joined device, block by country, step up on
+          risky-sign-in signals.
+        </p>
+        <p>
+          None of that is Boundary configuration and none of it is code. A policy scoped to
+          the Boundary enterprise application means SSH into production now inherits the same
+          device and MFA posture as e-mail. Getting that from an SSH key is not merely hard,
+          it is not a thing keys can express.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Later</span> Session recording</h3>
+        <p>
+          Boundary can record SSH sessions to object storage and play them back. The reason
+          to want it is less "catching people" and more that it makes an incident
+          reconstructable: what commands ran, in what order, on which host. It changes
+          the audit answer from "u_mJjZAPrPGf opened a session" to what actually happened
+          inside it. It needs a storage bucket and a retention policy decided by someone
+          other than me, which is why it is not first.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Later</span> Dynamic host catalogs</h3>
+        <p>
+          Both of my targets are static — a host, typed in. A dynamic host catalog queries
+          the cloud provider instead and builds host sets from tags, so a new VM carrying
+          <code>role=profile</code> becomes reachable the moment it exists, and a destroyed
+          one disappears without anybody tidying up.
+        </p>
+        <p>
+          This matters more than it sounds. Static targets rot: the list slowly stops
+          matching reality, and the failure is silent in the dangerous direction — entries
+          for machines that are gone, and no entries for machines that are running.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Later</span> The second cloud, properly</h3>
+        <p>
+          The target list in that screenshot has two rows, and the second one is
+          <code>profile-gcp-vm</code>. The Azure VM and the GCP VM sit behind the same org,
+          the same auth method and the same role, which is the point worth noticing: the
+          identity layer did not have to know there were two clouds.
+        </p>
+        <p>
+          What it does need is worker placement. A worker lives in a network, so reaching
+          into a second cloud properly means a second worker there, and <strong>worker
+          tags</strong> so a session is routed through one that can actually reach the
+          target. That turns Boundary into a single front door over a multi-cloud estate,
+          which is a much larger claim than "SSH without keys" and the reason I think this
+          is worth building on rather than replacing.
+        </p>
+
+        <h3 class="flow-head"><span class="pill">Later</span> All of it in Terraform</h3>
+        <p>
+          I built this by clicking, which was right for learning and wrong for keeping. The
+          Boundary provider covers scopes, auth methods, roles, grants, host catalogs and
+          targets. The part I most want in code is the grant scopes — the exact thing I got
+          wrong by hand, reviewable in a diff, where <code>this</code> versus
+          <code>this, children</code> is a visible one-line change rather than a dropdown
+          nobody looks at twice.
         </p>
 
         <h2 id="change">What I would do differently</h2>
