@@ -357,19 +357,31 @@
           </div>
         </header>
 
+        <div class="note warn">
+          <p>
+            <strong>The whole build, on one board.</strong> All of this started life on an
+            Excalidraw canvas — the topology, every portal screenshot, the errors in the
+            order I actually hit them, the scope diagrams and the log analysis. The post is
+            the tidied version; the board is the working one, with the dead ends left in.
+          </p>
+          <p style="margin-bottom: 0">
+            <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the full board ↗</a>
+          </p>
+        </div>
+
         <div class="note">
           <p>
-            Every identifier in the text is a placeholder. The tenant ID, application ID,
-            client secret, cluster address and worker IPs from my build have been replaced
-            with <code>&lt;angle-bracket&gt;</code> stand-ins, and the environment itself is
-            gone. Resource IDs like <code>u_mJjZAPrPGf</code> are kept because the shape of
-            an ID is the thing worth recognising in a log line.
+            <strong>This environment has been decommissioned.</strong> The Boundary cluster,
+            both workers and the target VMs are torn down, and the Entra application along
+            with its client secret has been removed. Anything identifying that appears on
+            the board — tenant, application ID, cluster address, worker addresses — points
+            at nothing that still exists.
           </p>
           <p>
-            The screenshots are from the working environment and were chosen because they
-            show mechanism rather than configuration values — a permission list, an account
-            mapping, a target list. The Entra sign-in log is described but not pictured, as
-            that pane carries tenant identifiers and a source IP.
+            In the text below I have used <code>&lt;angle-bracket&gt;</code> placeholders
+            anyway, out of habit rather than necessity. Resource IDs like
+            <code>u_mJjZAPrPGf</code> are kept as they were, because recognising the shape
+            of an ID in a log line is half of what this post is about.
           </p>
         </div>
 
@@ -406,7 +418,7 @@
           <figcaption>
             HCP runs the controller. The self-managed worker sits in a private subnet with
             no inbound path at all — it dials out to HCP and holds the connection open.
-            The target VM accepts SSH from exactly one address: the worker.
+            The target VM accepts SSH from exactly one address: the worker. <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the full board ↗</a>
           </figcaption>
         </figure>
 
@@ -622,7 +634,7 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           <img src="img/entra-scopes.svg" alt="Boundary scope hierarchy: global containing org, org containing projects, resources only at project level" />
           <figcaption>
             Boundary nests scopes three deep, and each level holds different things.
-            Identity lives at the org. Targets live in projects underneath it.
+            Identity lives at the org. Targets live in projects underneath it. <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the full board ↗</a>
           </figcaption>
         </figure>
 
@@ -646,7 +658,7 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           <img src="img/entra-grant-scope.svg" alt="Grant scope this versus this and children, and the resulting target visibility" />
           <figcaption>
             The same role, the same grants, the same user. The only difference is whether
-            the grant scope reaches the child projects where the targets actually are.
+            the grant scope reaches the child projects where the targets actually are. <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the full board ↗</a>
           </figcaption>
         </figure>
 
@@ -683,7 +695,7 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
         <figure>
           <img src="img/entra-oidc-flow.svg" alt="Authorization code flow between browser, Boundary controller and Entra ID" />
           <figcaption>
-            The authorization code flow. Nine steps, two of which never touch the browser.
+            The authorization code flow. Nine steps, two of which never touch the browser. <a class="board" href="https://app.excalidraw.com/s/9hD7S5FgGWN/8nkDzyHqhO4" target="_blank" rel="noopener">Open the full board ↗</a>
           </figcaption>
         </figure>
 
