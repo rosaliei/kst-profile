@@ -463,8 +463,7 @@
         <h3>And nobody can answer the question afterwards</h3>
         <p>
           Someone asks: who logged into that server last Tuesday? With keys and a jump host,
-          the answer lives in log files on the machines themselves — if those machines still
-          exist, and if the logs were kept. There is no single place that knows, because
+          the answer lives in log files on the machines themselves, if those machines still exist, and if the logs were kept. There is no single place that knows, because
           there was never a single place that decided.
         </p>
 
@@ -513,7 +512,7 @@
             <strong>The single most surprising thing, for me:</strong> the server you are
             connecting to has no idea Boundary exists. There is no agent installed on it, no
             special port open, no configuration. It just sees an ordinary SSH connection
-            arriving from the worker — which is a normal machine on its own network. All of
+            arriving from the worker, which is a normal machine on its own network. All of
             the access control happened before the packet ever arrived.
           </p>
         </div>
@@ -630,8 +629,7 @@
         <h3>People join and leave</h3>
         <p>
           The moment more than a couple of people need access, key management becomes a job
-          nobody wants. With Boundary in front, removing someone is one action in your
-          identity provider — the same action that removes their email.
+          nobody wants. With Boundary in front, removing someone is one action in your identity provider, the same action that removes their email.
         </p>
 
         <h3>Someone will eventually audit you</h3>
@@ -692,7 +690,7 @@
         <ul>
           <li>In <strong>Azure</strong> I used a private worker, and the session was relayed through HashiCorp's own workers.</li>
           <li>In <strong>AWS</strong> the target network had no route to the internet at all, so I needed <em>two</em> workers chained together.</li>
-          <li>In <strong>Google Cloud</strong> I gave the worker a public address, and my laptop connected to it directly — with HashiCorp's workers out of the traffic path entirely.</li>
+          <li>In <strong>Google Cloud</strong> I gave the worker a public address, and my laptop connected to it directly, with HashiCorp's workers out of the traffic path entirely.</li>
         </ul>
         <p>
           Three designs, one product. Comparing them taught me what the settings actually do,

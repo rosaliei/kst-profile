@@ -451,8 +451,7 @@
           every host it was ever copied to.
         </p>
         <p>
-          So offboarding becomes a search problem. Someone leaves, their account is disabled
-          in the directory within minutes — and their SSH key still works, because nothing
+          So offboarding becomes a search problem. Someone leaves, their account is disabled in the directory within minutes, and their SSH key still works, because nothing
           about the SSH path ever consults the directory. The gap between "disabled in Entra"
           and "can no longer reach production" is however long it takes a human to remember
           every machine.
@@ -462,8 +461,7 @@
         <p>
           Ask who opened a shell on a given host last Tuesday and, with keys, the honest
           answer is a grep through <code>auth.log</code> on machines that may have been
-          replaced since. There is no central record, because there was never a central
-          decision — each host decided for itself, based on a file.
+          replaced since. There is no central record, because there was never a central decision. Each host decided for itself, based on a file.
         </p>
 
         <div class="tw">
@@ -564,7 +562,7 @@
         <h2 id="entra">The Entra side</h2>
         <p>
           Boundary ships in the Entra application gallery, which sounds like it should make
-          this a two-click job. It does not, quite — the gallery entry creates the
+          this a two-click job. It does not, quite. The gallery entry creates the
           enterprise application, but the OIDC wiring is still manual on both ends, and the
           two ends have to agree on values that neither generates first. That circularity is
           the awkward part of the setup.
@@ -663,7 +661,7 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
           Creating the enterprise application does not give anyone access to it. Users must
           be assigned to it explicitly, under the application's Users and groups blade. A
           user who exists in the tenant, has a valid password and passes MFA will still be
-          refused if they are not on that list — which is the first of the two errors below.
+          refused if they are not on that list, which is the first of the two errors below.
         </p>
 
         <figure>
@@ -727,7 +725,7 @@ boundary scopes update \
         <p>
           The important clause is in the middle: <em>auth method is not primary for the
           scope</em>. Entra had authenticated the person correctly. Boundary had even minted
-          an account object for them — <code>acctoidc_LikE4uBayy</code> exists in that
+          an account object for them: <code>acctoidc_LikE4uBayy</code> exists in that
           message. What it would not do is create the <em>user</em> that the account maps
           onto, because a non-primary auth method is not trusted to invent identities in
           that scope.
@@ -938,8 +936,8 @@ boundary scopes update \
             This pattern is the OAuth 2.0 authorization code flow, and public clients add PKCE
             on top of it to protect the same exchange when there is no secret to keep. It is
             worth reading once properly rather than absorbing by osmosis, because every SSO
-            integration you ever do is a variation on it —
-            <a href="https://supertokens.com/blog/authorization-code-flow-with-pkce" target="_blank" rel="noopener">this write-up</a>
+            integration you ever do is a variation on it.
+            <a href="https://supertokens.com/blog/authorization-code-flow-with-pkce" target="_blank" rel="noopener">This write-up</a>
             is a good one.
           </p>
         </div>
@@ -973,13 +971,12 @@ boundary scopes update \
           <li>
             The <code>user_id</code> in the first query, <code>u_mJjZAPrPGf</code>, is the
             same ID shown in the role's Principals tab. That is the proof that the Entra
-            login resolved to the right Boundary identity — worth checking early, because it
+            login resolved to the right Boundary identity, worth checking early, because it
             cleanly separates "authentication is broken" from "authorization is broken".
           </li>
           <li>
             The second query is <strong>empty</strong>. An empty query means "give me
-            everything I am allowed to see". Before the grant scope fix, this same call came
-            back with nothing — which is exactly what a correctly functioning authorization
+            everything I am allowed to see". Before the grant scope fix, this same call came back with nothing, which is exactly what a correctly functioning authorization
             system should do when your grants do not reach the resources.
           </li>
           <li>
@@ -989,8 +986,7 @@ boundary scopes update \
           </li>
           <li>
             The fourth asks for <code>resolvable-aliases</code> against those same two
-            targets. I had not configured a single alias, and the client asks anyway —
-            because aliases are how it lets you type <code>boundary connect ssh
+            targets. I had not configured a single alias, and the client asks anyway, because aliases are how it lets you type <code>boundary connect ssh
             profile-vm</code> instead of a target ID. Finding this in the log is what put
             aliases on the roadmap; the client was already prepared for a feature I had not
             noticed existed.
@@ -1008,7 +1004,7 @@ boundary scopes update \
         <h2 id="extend">Where this goes next</h2>
         <p>
           What I have is the floor: identity-based access to two VMs, roles maintained by
-          hand. The table is the roadmap in summary — ordered by payback, not novelty.
+          hand. The table is the roadmap in summary, ordered by payback, not novelty.
         </p>
 
         <div class="tw">
@@ -1063,8 +1059,7 @@ boundary scopes update \
 
         <p>
           Two of those are worth a sentence more. <strong>Vault credential injection</strong>
-          is first because it closes the gap I admitted at the top — Boundary brokers the
-          connection today, but the target still trusts a key, and this is what removes it.
+          is first because it closes the gap I admitted at the top. Boundary brokers the connection today, but the target still trusts a key, and this is what removes it.
           And <strong>the second cloud is already half-done</strong>: the target list in that
           screenshot has <code>profile-gcp-vm</code> next to the Azure VM, behind the same
           org, auth method and role. The identity layer never had to know there were two

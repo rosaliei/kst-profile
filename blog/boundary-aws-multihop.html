@@ -437,15 +437,13 @@
         </p>
         <p>Now imagine the target's network has <em>no</em> internet access at all.</p>
         <p>
-          A worker placed in that network could reach the target, but could never register
-          with HCP — it has no path to the internet. A worker placed in the other network
+          A worker placed in that network could reach the target, but could never register with HCP. It has no path to the internet. A worker placed in the other network
           could register fine, but might not be allowed to reach across into a network that
           is deliberately sealed.
         </p>
         <p>
           So we use two, and chain them. Worker 1 lives in the boundary VPC and can reach
-          HCP. Worker 2 lives in the profile VPC next to the target. Worker 2 never talks to
-          HashiCorp at all — it talks to worker 1, and worker 1 talks to HashiCorp.
+          HCP. Worker 2 lives in the profile VPC next to the target. Worker 2 never talks to HashiCorp at all. It talks to worker 1, and worker 1 talks to HashiCorp.
         </p>
         <p>
           The session path becomes:
@@ -468,7 +466,7 @@
 
         <p>
           Your data flows <em>down</em> the chain toward the target. But every TCP connection
-          in that chain is established in the opposite direction — each worker
+          in that chain is established in the opposite direction. Each worker
           <strong>dials its upstream</strong> and holds the connection open.
         </p>
         <ul>
@@ -493,8 +491,7 @@
 
         <div class="note warn">
           <p>
-            <strong>Money.</strong> This is the most expensive of the three — four instances
-            plus a NAT gateway. NAT gateways bill hourly regardless of traffic. Set a budget
+            <strong>Money.</strong> This is the most expensive of the three: four instances plus a NAT gateway. NAT gateways bill hourly regardless of traffic. Set a budget
             alert, and do the <a href="#cleanup">clean-up step</a> the same day.
           </p>
         </div>
@@ -617,8 +614,7 @@ events {
 }</code></pre>
 
         <p>
-          <strong>Worker 2</strong> uses the same shape, but its upstream is worker 1 rather
-          than HCP — it is configured to dial <code>192.168.80.252:9202</code> instead of the
+          <strong>Worker 2</strong> uses the same shape, but its upstream is worker 1 rather than HCP, it is configured to dial <code>192.168.80.252:9202</code> instead of the
           cluster. Register worker 1 first, then worker 2; the chain has to be built from the
           top down, because worker 2 has nothing to dial until worker 1 exists.
         </p>
@@ -736,8 +732,7 @@ events {
             arrive, open a TCP connection to 192.168.90.199:22</em>.
           </li>
           <li>
-            <strong>Worker 2 dials the target.</strong> A plain, ordinary TCP connect — the
-            same thing <code>ssh</code> would do from that machine.
+            <strong>Worker 2 dials the target.</strong> A plain, ordinary TCP connect, the same thing <code>ssh</code> would do from that machine.
           </li>
           <li>
             <strong>It becomes a pipe.</strong> Worker 2 holds two connections, one facing up
@@ -768,7 +763,7 @@ events {
         <p>
           It exists to copy a binary onto two machines. Delete it the moment both workers are
           running. A public SSH host with no remaining purpose is exactly the kind of thing
-          that quietly becomes permanent — mine outlived its usefulness by several days
+          that quietly becomes permanent. Mine outlived its usefulness by several days
           because nothing forced the issue.
         </p>
 

@@ -531,14 +531,12 @@ worker {
         </p>
         <p>
           The security posture here is genuinely good: I expose nothing. The cost is that
-          HCP's infrastructure is in my data path, and I cannot apply any network policy to
-          who reaches it — those workers are shared, public and not mine.
+          HCP's infrastructure is in my data path, and I cannot apply any network policy to who reaches it. Those workers are shared, public and not mine.
         </p>
 
         <h3 class="flow-head"><span class="pill">AWS</span> Multi-hop egress</h3>
         <p>
-          Same idea, one level deeper. The target lives in a second VPC that has no route to
-          the internet at all — no NAT, no gateway, nothing. A single worker could not reach
+          Same idea, one level deeper. The target lives in a second VPC that has no route to the internet at all: no NAT, no gateway, nothing. A single worker could not reach
           both HCP and the target, so there are two: worker 1 in the boundary VPC, worker 2
           in the profile VPC, peered.
         </p>
@@ -662,7 +660,7 @@ worker {
             <strong>The target has no idea Boundary exists.</strong> That is worth sitting
             with. There is no agent on it, no Boundary port, no configuration. It sees an
             SSH connection from a machine on its own subnet. Every bit of the access control
-            happened before the packet arrived — which is exactly why this composes with
+            happened before the packet arrived, which is exactly why this composes with
             whatever the host already does.
           </p>
         </div>
@@ -809,8 +807,7 @@ worker {
         <h3>1 · Two networks and a peering</h3>
         <p>
           One network for the worker, one for the workload, peered. In AWS that is two VPCs
-          plus route table entries on both sides. In Azure, two VNets and a peering created
-          in both directions — the system routes appear on their own. In GCP, two VPCs and a
+          plus route table entries on both sides. In Azure, two VNets and a peering created in both directions. The system routes appear on their own. In GCP, two VPCs and a
           peering configured at each end.
         </p>
         <p>
@@ -940,8 +937,7 @@ sudo journalctl -u boundary-worker -f</code></pre>
           public IP. "Our sessions may not traverse infrastructure we do not operate" is.
         </p>
         <p>
-          Multi-hop is not a more advanced version of the other two — it answers a different
-          question. Reach for it when the network genuinely has no way out, not when you want
+          Multi-hop is not a more advanced version of the other two. It answers a different question. Reach for it when the network genuinely has no way out, not when you want
           extra layers. Every hop is another machine to patch, and the security benefit of
           hop three over hop two is close to zero if hop two was already private.
         </p>

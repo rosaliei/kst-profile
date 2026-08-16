@@ -449,7 +449,7 @@
             <strong>Is it bad that HashiCorp's machines carry my traffic?</strong> For most
             people, no. The traffic is encrypted end to end and they cannot read it. But if
             you work somewhere that says session traffic must never transit infrastructure
-            you do not operate, this design will not pass — and the
+            you do not operate, this design will not pass, and the
             <a href="/blog/boundary-gcp-ingress.html">Google Cloud walkthrough</a> shows the
             alternative.
           </p>
@@ -465,8 +465,7 @@
 
         <div class="note warn">
           <p>
-            <strong>Money.</strong> The NAT gateway is the expensive part here — it bills per
-            hour whether or not anything uses it. Three small VMs and a NAT gateway left
+            <strong>Money.</strong> The NAT gateway is the expensive part here. It bills per hour whether or not anything uses it. Three small VMs and a NAT gateway left
             running for a month will cost real money. Set a budget alert now, and do the
             <a href="#cleanup">clean-up step</a> when you finish.
           </p>
@@ -545,8 +544,7 @@ target NSG
         <div class="note">
           <p>
             <strong>Read the worker's rules again.</strong> There is no inbound rule from the
-            internet. None. The worker reaches HCP by dialling <em>outward</em> and holding
-            that connection open — HCP never connects to it. This is the single most
+            internet. None. The worker reaches HCP by dialling <em>outward</em> and holding that connection open. HCP never connects to it. This is the single most
             important thing to understand about how Boundary workers behave, and it is why
             this design exposes nothing.
           </p>
@@ -718,7 +716,7 @@ cat auth_request_token</code></pre>
         <p>
           "Injected" means the worker uses the credential on your behalf and you never see
           it. The alternative, "brokered", hands the credential to you to use yourself.
-          Injected is the one you want — it is the difference between "the system logs me in"
+          Injected is the one you want. It is the difference between "the system logs me in"
           and "the system gives me a key".
         </p>
 
@@ -750,8 +748,7 @@ cat auth_request_token</code></pre>
 boundary connect ssh -target-id=&lt;your-target-id&gt;</code></pre>
 
         <p>
-          If you land on a shell prompt on the target VM, it worked. But do not stop there —
-          the interesting part is proving <em>how</em> it worked. Run this on the target VM
+          If you land on a shell prompt on the target VM, it worked. But do not stop there. The interesting part is proving <em>how</em> it worked. Run this on the target VM
           itself:
         </p>
 
@@ -777,7 +774,7 @@ Local Address:Port        Peer Address:Port     Process
         <p>
           Those peer addresses are HashiCorp's managed workers. Our worker dialled
           <em>them</em>. Nobody dialled us. Read the two captures together and the design is
-          no longer a claim on a diagram — it is a fact you can see.
+          no longer a claim on a diagram. It is a fact you can see.
         </p>
         <p>
           You can also confirm the login on the target the ordinary way, which is a nice
@@ -790,8 +787,7 @@ Local Address:Port        Peer Address:Port     Process
         <h3>The NSG rules you did not write</h3>
         <p>
           Every NSG comes with default rules that you cannot delete. They sit at low priority
-          underneath yours. If something is allowed that you thought you had denied, this is
-          usually why — you were reasoning only about the rules you added. Read the defaults
+          underneath yours. If something is allowed that you thought you had denied, this is usually why. You were reasoning only about the rules you added. Read the defaults
           before layering on top of them.
         </p>
 

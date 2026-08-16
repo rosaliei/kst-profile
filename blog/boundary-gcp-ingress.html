@@ -485,8 +485,7 @@
 
         <div class="note warn">
           <p>
-            <strong>Money.</strong> Cheaper than the Azure build, because this design needs
-            no Cloud NAT — the worker has its own public address and the target does not need
+            <strong>Money.</strong> Cheaper than the Azure build, because this design needs no Cloud NAT. The worker has its own public address and the target does not need
             outbound internet. Still: two VMs left running add up. Set a budget alert and do
             the <a href="#cleanup">clean-up step</a>.
           </p>
@@ -494,8 +493,7 @@
 
         <h2 id="project">Step 1 · Project and APIs</h2>
         <p>
-          Google Cloud organises everything into <strong>projects</strong>. Create a new one
-          — this makes clean-up trivial later, because deleting the project deletes
+          Google Cloud organises everything into <strong>projects</strong>. Create a new one. This makes clean-up trivial later, because deleting the project deletes
           everything in it.
         </p>
         <p>
@@ -510,7 +508,7 @@
 
         <h3>The boundary VPC</h3>
         <p>
-          One subnet, and this one is <strong>public</strong> — the worker needs an external
+          One subnet, and this one is <strong>public</strong>. The worker needs an external
           address. When creating the subnet you will see an option called <strong>Private
           Google Access</strong>. It controls whether machines with no external IP can still
           reach Google's own services. Our worker has an external IP, so it does not need
@@ -608,7 +606,7 @@ profile VPC
         <p>
           <strong>Implied rules.</strong> Every VPC has two invisible rules at the lowest
           possible priority: deny all ingress, and <em>allow</em> all egress. You cannot
-          delete them. The allow-all-egress one catches people — outbound is open unless you
+          delete them. The allow-all-egress one catches people. Outbound is open unless you
           write something to close it.
         </p>
         <p>
@@ -669,8 +667,7 @@ profile VPC
           earlier.
         </p>
         <p>
-          Because the worker has a public address, you can SSH to it directly for setup —
-          which is why this build needs no jump host at all. One fewer machine to create,
+          Because the worker has a public address, you can SSH to it directly for setup, which is why this build needs no jump host at all. One fewer machine to create,
           secure and remember to delete.
         </p>
 
@@ -709,8 +706,7 @@ worker {
           <p>
             <strong>Compare this with the Azure file.</strong> Everything is the same shape.
             The only meaningful difference is that <code>public_addr</code> is now an address
-            your laptop can actually reach. That single change is what allows the ingress
-            design — the client can dial the worker, so the relay through HCP is no longer
+            your laptop can actually reach. That single change is what allows the ingress design. The client can dial the worker, so the relay through HCP is no longer
             necessary.
           </p>
         </div>
@@ -811,8 +807,7 @@ boundary connect ssh -target-id=&lt;your-target-id&gt;</code></pre>
         <h3>Tags are how rules find machines</h3>
         <p>
           If a firewall rule seems to do nothing, check the VM's network tags before you
-          check the rule. Nine times out of ten the rule is correct and the tag is missing or
-          misspelled — there is no validation linking the two, so a typo simply means the
+          check the rule. Nine times out of ten the rule is correct and the tag is missing or misspelled. There is no validation linking the two, so a typo simply means the
           rule matches nothing.
         </p>
 
