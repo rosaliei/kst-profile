@@ -503,9 +503,9 @@
 
         <p>
           The shift underneath all five rows is the same one. Access stops being a property
-          of <em>something you have</em> and becomes a property of <em>who you currently
-          are</em> — and because Entra already knows who you currently are, the two systems
-          have something real to say to each other. That is the whole reason for the
+          of <em>something you have</em>. It becomes a property of <em>who you currently
+          are</em>. And because Entra already knows that, the two systems finally have
+          something real to say to each other. That is the whole reason for the
           integration. Single sign-on is a pleasant side effect; the point is that
           disabling an account in one place ends access everywhere.
         </p>
@@ -677,9 +677,10 @@ https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code></pre>
 
         <h2 id="boundary">The Boundary side</h2>
         <p>
-          On the Boundary cluster the work is: create an org scope, add an OIDC auth method
-          inside it, paste the four values from the table, set the signing algorithm to
-          <code>RS256</code>, and set the API URL prefix to the cluster address.
+          On the Boundary cluster the work is short. Create an org scope, and add an OIDC
+          auth method inside it. Paste in the four values from the table, set the signing
+          algorithm to <code>RS256</code>, and set the API URL prefix to your cluster
+          address.
         </p>
         <p>
           Then — and this is the step that is easy to skip — <strong>make the auth method
@@ -733,10 +734,10 @@ boundary scopes update \
         </p>
         <p>
           The fix is one setting: mark the auth method primary for the org. HashiCorp's
-          documentation has a lovely word for what that setting switches on — the primary
-          auth method for a scope <strong>auto-vivifies</strong> users, meaning that on a
-          successful authentication against an account with no user linked to it, Boundary
-          creates the user itself. Take away primary and you take away auto-vivification,
+          documentation has a lovely word for what that setting switches on: a scope's
+          primary auth method <strong>auto-vivifies</strong> users. In plain terms, if
+          someone authenticates successfully and their account has no user attached,
+          Boundary creates the user itself. Take away primary and you take away auto-vivification,
           and the account has nowhere to land.
         </p>
         <p>
@@ -881,10 +882,10 @@ boundary scopes update \
 
         <div class="note">
           <p>
-            The lesson generalises past Boundary: when a system separates
+            The lesson goes beyond Boundary. When a system separates
             <em>who a rule is about</em> from <em>where a rule applies</em>, you have to set
-            both, and an empty list is the honest answer to "what may this user reach" when
-            the second one is missing. Empty is not a bug. Empty is the system telling you it
+            both. Miss the second, and an empty list is the honest answer to "what may this
+            user reach". Empty is not a bug. Empty is the system telling you it
             looked in the place you pointed it.
           </p>
         </div>
@@ -1096,9 +1097,9 @@ boundary scopes update \
         <p>
           The thing I keep coming back to is how little of this was about Entra ID. The
           identity provider integration is well-trodden and the errors are legible. What took
-          the time was a model I brought with me from somewhere else — that granting a role
-          at a level implies everything beneath it — and Boundary makes that assumption
-          explicit rather than default. Once you see why identity and resources are
+          the time was a model I brought with me from somewhere else: that granting a role
+          at one level implies everything beneath it. Boundary makes that assumption
+          explicit rather than automatic. Once you see why identity and resources are
           deliberately separated into different scopes, the extra dropdown stops being an
           annoyance and starts being the point.
         </p>

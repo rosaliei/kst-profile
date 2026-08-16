@@ -471,10 +471,10 @@
           <p>
             <strong>An honest caveat.</strong> The Direct Grant is discouraged in modern
             guidance and dropped in OAuth 2.1, because it normally means an application
-            handling a raw password. It is used here for the opposite reason: it is the
+            handling a raw password. It is used here for the opposite reason. It is the
             one flow that lets the <em>application</em> own the UI while Keycloak still
-            owns the credential — the password field is replaced by a one-time code that
-            Keycloak generates, hashes, expires and validates. No password is ever
+            owns the credential. The password field is replaced by a one-time code, and
+            Keycloak generates, hashes, expires and validates it. No password is ever
             collected by application code. That is a deliberate trade, and worth knowing
             it is one.
           </p>
@@ -561,9 +561,9 @@ POST /auth-api/logout        { refresh_token }    -&gt; { message: "logged_out" 
           <li><em>what should the caller be told when it fails?</em> — a 401 makes a browser throw its tokens away, a 403 does not, and picking the wrong one breaks a flow</li>
         </ul>
         <p>
-          None of that is path matching. I do not think this is peculiar to nginx either:
-          every serious gateway ships an extension point for exactly this reason — Lua in
-          Kong and OpenResty, custom authorizers in AWS API Gateway, policies in Apigee.
+          None of that is path matching. I do not think this is peculiar to nginx. Every
+          serious gateway ships an extension point for exactly this reason: Lua in Kong and
+          OpenResty, custom authorizers in AWS API Gateway, policies in Apigee.
           <strong>The escape hatch is not an admission that the product is incomplete; it
           is where your business rules are supposed to live</strong>, because no vendor can
           ship them for you.
@@ -774,9 +774,9 @@ terraform init
 terraform apply            # t3.medium, Docker preinstalled
 terraform output public_ip</code></pre>
         <p>
-          Point both subdomains at that IP, put the TLS certificate and the
-          <code>.env</code> on the host — they are the two things that never live in git —
-          then copy the code up and start it:
+          Point both subdomains at that IP. Put the TLS certificate and the
+          <code>.env</code> on the host; those are the two things that never live in git.
+          Then copy the code up and start it:
         </p>
         <pre><code>rsync -az --delete \
   --exclude .git --exclude node_modules --exclude dist \
@@ -790,10 +790,10 @@ docker compose -f docker-compose.prod.yml up -d --build</code></pre>
         <div class="note warn">
           <p>
             <strong>Two things that cost me an outage.</strong> Those rsync excludes are not
-            optional: your local <code>.env</code> is the dev one, and
-            <code>gateway/certs/</code> usually does not exist locally — so with
-            <code>--delete</code>, rsync happily removes the TLS key from the server and
-            nginx then refuses to start. And compose derives its volume names from the
+            optional. Your local <code>.env</code> is the dev one, and
+            <code>gateway/certs/</code> usually does not exist locally. With
+            <code>--delete</code>, rsync happily removes the TLS key from the server,
+            and nginx then refuses to start. And compose derives its volume names from the
             <em>directory name</em>, so deploying from a differently-named folder silently
             starts with empty databases.
           </p>

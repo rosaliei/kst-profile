@@ -434,9 +434,10 @@
         <p>
           It matters more than it sounds. On HCP, Boundary gives you managed workers with
           public IP addresses, and by default your session goes through them. That may be
-          completely fine. It may also be unacceptable — a regulator, a data-residency rule
-          or simply a security review will eventually ask whether your production shell
-          traffic transits infrastructure you do not run, in a region you did not choose.
+          completely fine. It may also be unacceptable. A regulator, a data-residency rule
+          or simply a security review will eventually ask the same question: does your
+          production shell traffic pass through infrastructure you do not run, in a region
+          you did not choose?
         </p>
         <p>
           Boundary's answer is the <strong>worker filter</strong>, and it has two forms that
@@ -489,8 +490,8 @@ worker {
           <p>
             <strong>This is the whole article in one paragraph.</strong> If
             <code>public_addr</code> is an address your client cannot reach, your client
-            cannot dial the worker directly — so the session has to be relayed through HCP's
-            managed workers, and you use an <em>egress</em> filter to say which of your
+            cannot dial the worker directly. The session has to be relayed through HCP's
+            managed workers instead, and an <em>egress</em> filter says which of your
             workers makes the final hop. If <code>public_addr</code> is an address your
             client <em>can</em> reach, you can use an <em>ingress</em> filter and your
             client connects straight to your own worker. HCP then only handles registration
@@ -781,8 +782,8 @@ worker {
 
         <p>
           Two of those caught me properly. <strong>GCP peering must be created from both
-          sides</strong> — AWS lets you request from the source and accept at the target,
-          which is one mental model; GCP wants a matching configuration at each end and the
+          sides</strong>. AWS lets you request from the source and accept at the target,
+          which is one mental model. GCP wants a matching configuration at each end, and the
           peering simply stays inactive until it has both. And <strong>GCP's firewall rules
           are selected by tag, not attached to a machine</strong>. You write a rule that says
           "this applies to anything tagged <code>vm-self-managed-worker</code>", then tag the
@@ -933,9 +934,9 @@ sudo journalctl -u boundary-worker -f</code></pre>
         </div>
 
         <p>
-          If I were starting again on a real system I would begin with the egress filter,
-          because it is the least to get wrong, and move to ingress only when someone can
-          articulate why the transit path matters. "It feels better" is not a reason to own a
+          If I were starting again on a real system, I would begin with the egress filter.
+          It is the least to get wrong. Move to ingress only when someone can say why the
+          transit path matters. "It feels better" is not a reason to own a
           public IP. "Our sessions may not traverse infrastructure we do not operate" is.
         </p>
         <p>
@@ -947,9 +948,9 @@ sudo journalctl -u boundary-worker -f</code></pre>
         <p>
           The thing I did not expect to come away with is how little of this is about
           Boundary. The controller does the same job in all three clouds and the worker
-          config differs by one meaningful line. What differs is the network, and the reason
-          the same design took three attempts is that AWS, Azure and GCP disagree about what
-          a route is, what a firewall attaches to, and what happens by default. Boundary was
+          config differs by one meaningful line. What differs is the network. The same design took
+          three attempts because AWS, Azure and GCP disagree about what a route is, what a
+          firewall attaches to, and what happens by default. Boundary was
           the easy half. Again.
         </p>
 
