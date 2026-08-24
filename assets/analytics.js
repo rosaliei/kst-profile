@@ -11,7 +11,7 @@
 (function () {
   "use strict";
 
-  var MEASUREMENT_ID = "PASTE-YOUR-G-ID-HERE";
+  var MEASUREMENT_ID = "G-QC57JX7GDN";
   var STORAGE_KEY = "kst-consent";
 
   if (MEASUREMENT_ID.indexOf("G-") !== 0) return; // not configured yet
