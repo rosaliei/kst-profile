@@ -866,38 +866,6 @@
         }
       }
 
-      /* principles */
-      .prin {
-        display: flex;
-        gap: 13px;
-        border: var(--bd);
-        border-radius: 12px;
-        background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
-        padding: 15px;
-        margin-bottom: 13px;
-      }
-      .num {
-        width: 38px;
-        height: 38px;
-        flex: none;
-        border: var(--bd);
-        border-radius: 11px;
-        display: grid;
-        place-items: center;
-        font-family: "Baloo 2";
-        font-weight: 800;
-        font-size: 18px;
-        box-shadow: 2px 2px 0 var(--ink);
-      }
-      .prin h3 {
-        font-size: 16.5px;
-        margin-bottom: 4px;
-      }
-      .prin p {
-        font-size: 14.3px;
-        color: var(--muted);
-      }
 
       .grid2 {
         display: grid;
@@ -1186,14 +1154,6 @@
           grid-template-columns: repeat(4, 1fr);
         }
 
-        .pringrid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 13px;
-        }
-        .pringrid .prin {
-          margin-bottom: 0;
-        }
         .edugrid {
           grid-template-columns: 1fr 1fr;
         }
@@ -3046,54 +3006,14 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
 
         <section>
           <div class="eyebrow">How I work</div>
-          <h2>Four principles</h2>
-
-          <div class="pringrid">
-            <div class="prin">
-              <div class="num" style="background: var(--butter)">1</div>
-              <div>
-                <h3>Heartwork</h3>
-                <p>
-                  Not just hard work. I care how the thing turns out after I
-                  hand it over — whether the next engineer can read it, run it
-                  and fix it without calling me.
-                </p>
-              </div>
-            </div>
-            <div class="prin">
-              <div class="num" style="background: var(--mint)">2</div>
-              <div>
-                <h3>Passionate</h3>
-                <p>
-                  I chase the problems I find genuinely interesting, and it
-                  shows in the work. Most of the research on this site was done
-                  because I wanted to know, not because a ticket asked.
-                </p>
-              </div>
-            </div>
-            <div class="prin">
-              <div class="num" style="background: var(--sky)">3</div>
-              <div>
-                <h3>Deep dive</h3>
-                <p>
-                  Surface-level answers don't stick. I trace a request end to
-                  end until I understand what actually happens — then write it
-                  down so the next person can skip the digging.
-                </p>
-              </div>
-            </div>
-            <div class="prin">
-              <div class="num" style="background: var(--coral)">4</div>
-              <div>
-                <h3>Flexible</h3>
-                <p>
-                  I came up as a traditional system engineer — racks, ESXi,
-                  hand-built servers — and moved into DevOps and platform work.
-                  Tools change; being willing to relearn is the actual skill.
-                </p>
-              </div>
-            </div>
-          </div>
+          <h2>I would rather show you</h2>
+          <p class="lead" style="margin-top: 10px">
+            I could say hardworking, passionate, flexible. Everyone says that,
+            and it proves nothing. Have a look at
+            <a href="#" onclick="go('portfolio'); return false;">Projects</a>
+            and the <a href="#" onclick="go('blog'); return false;">Blog</a>
+            instead. I put my heart into them, and I hope you can feel it.
+          </p>
         </section>
 
         <section>
