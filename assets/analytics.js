@@ -68,16 +68,16 @@
     var css = document.createElement("style");
     css.textContent =
       "#kst-consent{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;" +
-      "max-width:520px;margin:0 auto;background:#FFFDF7;color:#16161D;" +
-      "border:3px solid #16161D;border-radius:16px;box-shadow:6px 6px 0 #16161D;" +
+      "max-width:520px;margin:0 auto;background:#FFFFFF;color:#0F172A;" +
+      "border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,.15);" +
       "padding:16px 18px;font:400 14.5px/1.55 Inter,system-ui,sans-serif}" +
       "#kst-consent p{margin:0 0 12px}" +
       "#kst-consent .row{display:flex;gap:10px;flex-wrap:wrap}" +
-      "#kst-consent button{font:700 14px Inter,system-ui,sans-serif;cursor:pointer;" +
-      "border:3px solid #16161D;border-radius:11px;padding:8px 16px;" +
-      "box-shadow:3px 3px 0 #16161D;background:#FFFDF7;color:#16161D}" +
-      "#kst-consent button.yes{background:#FFD24C}" +
-      "#kst-consent button:active{transform:translate(3px,3px);box-shadow:0 0 0 #16161D}";
+      "#kst-consent button{font:600 14px Inter,system-ui,sans-serif;cursor:pointer;" +
+      "border:1px solid #E2E8F0;border-radius:10px;padding:8px 16px;" +
+      "background:#FFFFFF;color:#0F172A}" +
+      "#kst-consent button.yes{background:#1D4ED8;border-color:#1D4ED8;color:#fff}" +
+      "#kst-consent button:hover{box-shadow:0 4px 14px rgba(15,23,42,.1)}";
     document.head.appendChild(css);
 
     var box = document.createElement("div");

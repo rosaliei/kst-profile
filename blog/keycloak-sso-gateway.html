@@ -41,31 +41,32 @@
     />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-    <meta name="theme-color" content="#FFF6E9" />
+    <meta name="theme-color" content="#F8FAFC" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         /* same tokens as the profile page */
-        --cream: #fff6e9;
-        --paper: #fffdf7;
-        --ink: #16161d;
-        --ink-soft: #5a5a66;
-        --grape: #6c5ce7;
-        --coral: #ff7a45;
-        --teal: #2ec4a6;
-        --sun: #ffd24c;
-        --sky: #4ea8f5;
+        --cream: #f8fafc;
+        --paper: #ffffff;
+        --ink: #0f172a;
+        --ink-soft: #475569;
+        --grape: #1d4ed8;
+        --coral: #ffedd5;
+        --teal: #1d4ed8;
+        --sun: #fef3c7;
+        --sky: #dbeafe;
         /* light tints — these sit behind ink-coloured text */
-        --lilac: #cdc5f7;
-        --mint: #b6f0e4;
-        --dash: rgba(22, 22, 29, 0.16);
-        --shadow: 6px 6px 0 var(--ink);
-        --shadow-sm: 3px 3px 0 var(--ink);
+        --lilac: #e0e7ff;
+        --mint: #d1fae5;
+        --line: #e2e8f0;
+        --dash: #e2e8f0;
+        --shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+        --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -79,13 +80,13 @@
         -webkit-font-smoothing: antialiased;
       }
       a { color: var(--grape); text-decoration: none; font-weight: 700; }
-      a:hover { text-decoration: underline wavy; text-underline-offset: 3px; }
+      a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
       /* ---- nav: same bar as the profile page ---- */
       nav {
         position: sticky; top: 0; z-index: 20;
         background: var(--cream);
-        border-bottom: 3px solid var(--ink);
+        border-bottom: 1px solid var(--line);
       }
       .nav-inner {
         max-width: 1040px; margin: 0 auto; padding: 0 32px;
@@ -93,7 +94,7 @@
         display: flex; align-items: center; justify-content: space-between; gap: 16px;
       }
       .nav-logo {
-        color: var(--ink); font-family: "Baloo 2", cursive; font-weight: 800;
+        color: var(--ink); font-family: Inter, system-ui, sans-serif; font-weight: 800;
         font-size: 18px; line-height: 1;
         display: flex; align-items: center; gap: 10px;
       }
@@ -101,20 +102,20 @@
       .nav-logo span {
         width: 34px; height: 34px; flex: none;
         background: var(--sun); color: var(--ink);
-        border: 3px solid var(--ink); border-radius: 50%;
+        border: 1px solid var(--line); border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-size: 13px; line-height: 1; letter-spacing: .02em;
-        box-shadow: 2px 2px 0 var(--ink);
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
       }
       /* styled as a profile nav tab rather than a thin outline pill */
       .nav-back {
         color: var(--ink); font-size: 13px; font-weight: 600;
-        background: var(--paper); border: 3px solid var(--ink);
+        background: var(--paper); border: 1px solid var(--line);
         border-radius: 999px; padding: 6px 14px; box-shadow: var(--shadow-sm);
         transition: transform .08s, box-shadow .08s;
       }
       .nav-back:hover, .nav-back:active {
-        text-decoration: none; transform: translate(3px, 3px);
+        text-decoration: none; transform: none;
         box-shadow: 0 0 0 var(--ink);
       }
       @media (max-width: 640px) {
@@ -128,14 +129,14 @@
 
       header.post { padding: 54px 0 34px; }
       .eyebrow {
-        display: inline-block; font-family: "Baloo 2", cursive; font-size: 13px;
+        display: inline-block; font-family: Inter, system-ui, sans-serif; font-size: 13px;
         letter-spacing: .06em; text-transform: uppercase; color: var(--ink);
-        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
-        padding: 4px 14px; margin-bottom: 20px; transform: rotate(-1.5deg);
+        background: var(--mint); border: 1px solid var(--line); border-radius: 999px;
+        padding: 4px 14px; margin-bottom: 20px; 
         box-shadow: var(--shadow-sm);
       }
       h1 {
-        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-family: Inter, system-ui, sans-serif; font-weight: 700;
         font-size: clamp(30px, 5vw, 46px); line-height: 1.12; text-wrap: balance;
       }
       .standfirst { margin-top: 20px; font-size: 18.5px; max-width: 660px; color: var(--ink); }
@@ -145,7 +146,7 @@
       }
 
       h2 {
-        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-family: Inter, system-ui, sans-serif; font-weight: 700;
         font-size: 27px; margin: 62px 0 20px; line-height: 1.25; text-wrap: balance;
       }
       h2::after {
@@ -153,7 +154,7 @@
         background: var(--teal); border-radius: 999px;
       }
       h3 {
-        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-family: Inter, system-ui, sans-serif; font-weight: 600;
         font-size: 20px; margin: 38px 0 12px;
       }
       p { margin: 0 0 18px; }
@@ -167,7 +168,7 @@
         border-radius: 6px; padding: .05em .38em; color: #4b3fc0;
       }
       pre {
-        background: var(--paper); border: 3px solid var(--ink); border-radius: 14px;
+        background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
         box-shadow: var(--shadow); padding: 18px 20px; overflow-x: auto; margin: 0 0 26px;
       }
       pre code {
@@ -179,7 +180,7 @@
       figure { margin: 30px 0 36px; }
       figure img {
         width: 100%; height: auto; display: block;
-        background: var(--paper); border: 3px solid var(--ink);
+        background: var(--paper); border: 1px solid var(--line);
         border-radius: 16px; box-shadow: var(--shadow); padding: 12px;
       }
       figcaption {
@@ -189,14 +190,14 @@
 
       .board {
         display: inline-block; margin-top: 6px; font-size: 14.5px;
-        background: var(--sun); color: var(--ink); border: 2px solid var(--ink);
+        background: var(--sun); color: var(--ink); border: 1px solid var(--line);
         border-radius: 999px; padding: 2px 12px; box-shadow: var(--shadow-sm);
       }
-      .board:hover { text-decoration: none; transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+      .board:hover { text-decoration: none; transform: none; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08); }
 
       /* ---- callouts ---- */
       .note {
-        background: #e4f2ff; border: 3px solid var(--ink); border-radius: 16px;
+        background: #e4f2ff; border: 1px solid var(--line); border-radius: 16px;
         box-shadow: var(--shadow); padding: 18px 22px; margin: 0 0 28px;
       }
       .note p:last-child { margin-bottom: 0; }
@@ -204,39 +205,39 @@
 
       /* every post carries this: the reading is half of it, the doing is the rest */
       .handson {
-        background: var(--mint); border: 3px solid var(--ink);
+        background: var(--mint); border: 1px solid var(--line);
         border-radius: 16px; box-shadow: var(--shadow);
         padding: 18px 22px; margin: 0 0 28px;
       }
       .handson p { margin-bottom: 12px; }
       .handson p:last-child { margin-bottom: 0; }
       .handson .hs-lead {
-        font-family: "Baloo 2", cursive; font-weight: 700;
+        font-family: Inter, system-ui, sans-serif; font-weight: 700;
         font-size: 19px; margin-bottom: 8px;
       }
 
       /* ---- tables ---- */
       .tw {
         overflow-x: auto; margin: 0 0 28px; background: var(--paper);
-        border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--shadow);
+        border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
       }
       table { border-collapse: collapse; width: 100%; font-size: 15px; }
       th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
       th {
-        font-family: "Baloo 2", cursive; font-size: 13px; text-transform: uppercase;
+        font-family: Inter, system-ui, sans-serif; font-size: 13px; text-transform: uppercase;
         letter-spacing: .05em; background: var(--mint);
-        border-bottom: 3px solid var(--ink); color: var(--ink);
+        border-bottom: 1px solid var(--line); color: var(--ink);
       }
-      td { border-bottom: 2px dashed var(--dash); }
+      td { border-bottom: 1px solid var(--dash); }
       tr:last-child td { border-bottom: 0; }
 
       /* ---- contents ---- */
       .toc {
-        background: #efeaff; border: 3px solid var(--ink); border-radius: 18px;
+        background: #efeaff; border: 1px solid var(--line); border-radius: 18px;
         box-shadow: var(--shadow); padding: 22px 26px; margin: 0 0 46px;
       }
       .toc h4 {
-        font-family: "Baloo 2", cursive; font-size: 14px; text-transform: uppercase;
+        font-family: Inter, system-ui, sans-serif; font-size: 14px; text-transform: uppercase;
         letter-spacing: .07em; margin-bottom: 12px;
       }
       .toc ol { margin: 0 0 0 22px; }
@@ -245,20 +246,20 @@
       /* ---- flow pills ---- */
       .flow-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
       .pill {
-        font-family: "Baloo 2", cursive; font-size: 13px; color: var(--ink);
-        background: var(--lilac); border: 2px solid var(--ink);
+        font-family: Inter, system-ui, sans-serif; font-size: 13px; color: var(--ink);
+        background: var(--lilac); border: 1px solid var(--line);
         border-radius: 999px; padding: 3px 13px; box-shadow: var(--shadow-sm);
-        transform: rotate(-1deg);
+        
       }
 
       .author-card {
         display: flex; gap: 18px; align-items: center;
         margin-top: 28px; padding: 18px 22px; max-width: 720px;
-        background: var(--paper); border: 3px solid var(--ink);
+        background: var(--paper); border: 1px solid var(--line);
         border-radius: 18px; box-shadow: var(--shadow);
       }
       .author-loves {
-        font-family: "Baloo 2", cursive; font-weight: 600;
+        font-family: Inter, system-ui, sans-serif; font-weight: 600;
         font-size: 17px; line-height: 1.5; margin: 0 0 8px;
         color: var(--ink);
       }
@@ -272,20 +273,20 @@
       .author-ace { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
       .author-humble {
         margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-soft);
-        border-top: 2px dashed var(--dash); padding-top: 10px;
+        border-top: 1px solid var(--dash); padding-top: 10px;
       }
 
-      .byline strong { font-family: "Baloo 2", cursive; font-weight: 600; }
+      .byline strong { font-family: Inter, system-ui, sans-serif; font-weight: 600; }
       .meta time {
-        background: var(--mint); border: 2px solid var(--ink); border-radius: 999px;
+        background: var(--mint); border: 1px solid var(--line); border-radius: 999px;
         padding: 1px 11px; font-weight: 700; font-size: 13.5px;
       }
       .author-avatar {
         flex: 0 0 auto; width: 72px; height: 72px;
         /* the source is landscape, so crop to the moon rather than squash it */
         object-fit: cover; object-position: 50% 45%;
-        border: 3px solid var(--ink); border-radius: 50%;
-        box-shadow: var(--shadow-sm); transform: rotate(-4deg);
+        border: 1px solid var(--line); border-radius: 50%;
+        box-shadow: var(--shadow-sm); 
       }
       @media (max-width: 520px) {
         .author-card { align-items: flex-start; }
@@ -293,29 +294,29 @@
       }
 
 
-      .share { margin-top: 20px; padding-top: 18px; border-top: 2px dashed var(--dash); }
+      .share { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--dash); }
       .share-title {
-        font-family: "Baloo 2", cursive; font-weight: 600; font-size: 17px;
+        font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 17px;
         margin: 0 0 12px; color: var(--ink);
       }
       .share-row { display: flex; flex-wrap: wrap; gap: 12px; }
       .share-btn {
         display: inline-flex; align-items: center; gap: 9px;
-        font-family: "Baloo 2", cursive; font-size: 15.5px; color: #fff;
-        border: 3px solid var(--ink); border-radius: 999px;
+        font-family: Inter, system-ui, sans-serif; font-size: 15.5px; color: #fff;
+        border: 1px solid var(--line); border-radius: 999px;
         padding: 8px 18px; box-shadow: var(--shadow-sm);
       }
       .share-btn svg { width: 18px; height: 18px; fill: currentColor; }
       .share-btn.li { background: #0a66c2; }
       .share-btn.fb { background: #1877f2; }
       .share-btn:hover {
-        text-decoration: none; transform: translate(2px, 2px);
-        box-shadow: 1px 1px 0 var(--ink);
+        text-decoration: none; transform: none;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
       }
 
       footer.post {
         margin-top: 70px; background: var(--paper);
-        border: 3px solid var(--ink); border-radius: 18px;
+        border: 1px solid var(--line); border-radius: 18px;
         box-shadow: var(--shadow); padding: 22px 26px; font-size: 15px;
       }
 
@@ -323,11 +324,20 @@
         body { font-size: 16px; }
         .wrap { padding: 0 16px 72px; }
         header.post { padding: 34px 0 24px; }
-        :root { --shadow: 4px 4px 0 var(--ink); }
+        :root { --shadow: 0 1px 3px rgba(15, 23, 42, 0.08); }
       }
       @media (prefers-reduced-motion: reduce) {
         .nav-back:hover { transform: none; }
       }
+
+      /* ---- professional theme refinements (matches the profile page) ---- */
+      h1, h2 { letter-spacing: -0.02em; }
+      h2::after { width: 48px; height: 3px; background: var(--grape); }
+      .nav-logo span { background: var(--grape); color: #fff; border-color: var(--grape); }
+      nav { background: rgba(248, 250, 252, 0.92); backdrop-filter: saturate(1.4) blur(8px); -webkit-backdrop-filter: saturate(1.4) blur(8px); }
+      .nav-back:hover, .board:hover, .share-btn:hover { box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1); }
+      .toc { background: #f1f5f9; }
+      .share-btn { border-color: transparent; }
     </style>
   <script src="/assets/analytics.js" defer></script>
   </head>

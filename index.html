@@ -9,7 +9,7 @@
       content="Kyaw Sithu — Platform/DevOps Engineer and CNCF Kubestronaut based in Dubai, UAE. 9+ years across Telecoms, FinTech, Healthcare and ISP. Kubernetes, Istio, CI/CD, cloud-native infrastructure."
     />
     <link rel="canonical" href="https://kst-devops.com/" />
-    <meta name="theme-color" content="#FFF6E9" />
+    <meta name="theme-color" content="#F8FAFC" />
     <meta
       property="og:title"
       content="Kyaw Sithu — Platform Engineer · Kubestronaut"
@@ -50,22 +50,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --ink: #16161d;
-        --paper: #fff6e9;
-        --card: #fffdf7;
-        --grape: #6c5ce7;
-        --coral: #ff7a45;
-        --mint: #2ec4a6;
-        --butter: #ffd24c;
-        --sky: #4ea8f5;
-        --muted: #5a5a66;
-        --bd: 3px solid var(--ink);
-        --r: 16px;
+        /* professional theme: slate neutrals, one blue accent, soft tints.
+           The old names stay so every rule below keeps working. */
+        --ink: #0f172a;
+        --paper: #f8fafc;
+        --card: #ffffff;
+        --grape: #1d4ed8; /* primary accent */
+        --coral: #ffedd5;
+        --mint: #d1fae5;
+        --butter: #fef3c7;
+        --sky: #dbeafe;
+        --muted: #475569;
+        --line: #e2e8f0;
+        --bd: 1px solid var(--line);
+        --sh: 0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.06);
+        --sh-hover: 0 4px 14px rgba(15, 23, 42, 0.1);
+        --r: 12px;
       }
       * {
         box-sizing: border-box;
@@ -87,7 +92,7 @@
       h1,
       h2,
       h3 {
-        font-family: "Baloo 2", cursive;
+        font-family: "Inter", system-ui, sans-serif;
         font-weight: 800;
         line-height: 1.15;
         letter-spacing: -0.01em;
@@ -117,7 +122,7 @@
         border: var(--bd);
         border-radius: var(--r);
         background: var(--card);
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
       }
 
       /* icons */
@@ -135,7 +140,7 @@
       .tile {
         width: 34px;
         height: 34px;
-        border: 2.5px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 10px;
         display: grid;
         place-items: center;
@@ -150,7 +155,7 @@
         height: 46px;
         border: var(--bd);
         border-radius: 12px;
-        box-shadow: 3px 3px 0 var(--ink);
+        box-shadow: var(--sh);
       }
       .tile-lg .i {
         width: 24px;
@@ -178,7 +183,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-family: "Baloo 2";
+        font-family: "Inter";
         font-weight: 800;
         font-size: 18px;
         line-height: 1;
@@ -196,13 +201,13 @@
         line-height: 1;
         letter-spacing: 0.02em;
         padding-top: 1px;
-        box-shadow: 2px 2px 0 var(--ink);
+        box-shadow: var(--sh);
       }
       .ghost {
         border: var(--bd);
         border-radius: 999px;
         background: var(--card);
-        box-shadow: 3px 3px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 7px 14px;
         font: 600 13px "Inter";
         color: var(--ink);
@@ -212,7 +217,7 @@
         gap: 6px;
       }
       .ghost:active {
-        transform: translate(3px, 3px);
+        transform: none;
         box-shadow: 0 0 0 var(--ink);
       }
 
@@ -223,9 +228,9 @@
         gap: 8px;
         border: var(--bd);
         border-radius: 14px;
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 13px 20px;
-        font-family: "Baloo 2";
+        font-family: "Inter";
         font-weight: 700;
         font-size: 16.5px;
         cursor: pointer;
@@ -237,7 +242,7 @@
         text-align: center;
       }
       .btn:active {
-        transform: translate(6px, 6px);
+        transform: none;
         box-shadow: 0 0 0 var(--ink);
       }
       .btn-cta {
@@ -246,11 +251,11 @@
       .btn-sm {
         padding: 9px 15px;
         font-size: 14.5px;
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         border-radius: 11px;
       }
       .btn-sm:active {
-        transform: translate(4px, 4px);
+        transform: none;
       }
       .btn-row {
         display: flex;
@@ -266,7 +271,7 @@
         margin-top: 12px;
       }
       .tag {
-        border: 2px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 999px;
         padding: 3px 11px;
         font: 600 12.5px "Inter";
@@ -335,7 +340,7 @@
         background: var(--sky);
         display: grid;
         place-items: center;
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         margin-bottom: 18px;
         overflow: hidden;
       }
@@ -360,7 +365,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        border: 2px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 999px;
         background: var(--mint);
         padding: 5px 13px;
@@ -384,13 +389,13 @@
         border: var(--bd);
         border-radius: 12px;
         background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 12px 6px;
         text-align: center;
       }
       .stat b {
         display: block;
-        font-family: "Baloo 2";
+        font-family: "Inter";
         font-size: 25px;
         line-height: 1.1;
       }
@@ -402,12 +407,41 @@
         display: block;
       }
 
+      /* hero contact buttons and the core-stack strip under the stats */
+      .hero-cta {
+        margin-top: 18px;
+      }
+      .stack {
+        border: var(--bd);
+        border-radius: 12px;
+        background: var(--card);
+        box-shadow: var(--sh);
+        padding: 14px 16px;
+        margin-top: 18px;
+        display: grid;
+        gap: 12px;
+      }
+      .stack-row .tags {
+        margin-top: 6px;
+        align-items: center;
+      }
+      .stack-label {
+        font: 700 11.5px "Inter";
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+      }
+      .stack-more {
+        font: 600 13px "Inter";
+        margin-left: 4px;
+      }
+
       /* CV strip */
       .cvbox {
         border: var(--bd);
         border-radius: var(--r);
         background: var(--butter);
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 18px;
         margin-top: 24px;
       }
@@ -434,11 +468,11 @@
         width: 100%;
         padding: 11px 8px;
         font-size: 14.5px;
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         border-radius: 11px;
       }
       .cvrow .btn:active {
-        transform: translate(4px, 4px);
+        transform: none;
       }
 
       .kube {
@@ -446,7 +480,7 @@
         border-radius: var(--r);
         background: var(--grape);
         color: #fff;
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 20px;
         margin-top: 22px;
       }
@@ -472,7 +506,7 @@
         width: 100%;
         background: var(--butter);
         color: var(--ink);
-        box-shadow: 5px 5px 0 var(--ink);
+        box-shadow: var(--sh);
       }
 
       /* timeline */
@@ -533,7 +567,7 @@
         border: var(--bd);
         border-radius: 12px;
         background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 14px;
         margin-bottom: 13px;
       }
@@ -549,7 +583,7 @@
         border: var(--bd);
         border-radius: var(--r);
         background: var(--card);
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 17px;
         margin-top: 16px;
       }
@@ -561,7 +595,7 @@
       .pip {
         flex: 1;
         height: 15px;
-        border: 2.5px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 999px;
         background: var(--mint);
         display: grid;
@@ -582,7 +616,7 @@
         border: var(--bd);
         border-radius: 14px;
         background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 14px 11px;
         text-align: center;
         color: var(--ink);
@@ -592,7 +626,7 @@
           box-shadow 0.08s;
       }
       .cert:active {
-        transform: translate(4px, 4px);
+        transform: none;
         box-shadow: 0 0 0 var(--ink);
       }
       .hex {
@@ -603,7 +637,7 @@
       }
       .cert b {
         display: block;
-        font-family: "Baloo 2";
+        font-family: "Inter";
         font-size: 20px;
         line-height: 1.1;
       }
@@ -649,7 +683,7 @@
         border: var(--bd);
         border-radius: 999px;
         background: var(--card);
-        box-shadow: 3px 3px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 7px 14px;
         font: 600 13.5px "Inter";
         color: var(--ink);
@@ -672,7 +706,7 @@
         border: var(--bd);
         border-radius: 12px;
         background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         margin-bottom: 12px;
         overflow: hidden;
       }
@@ -684,7 +718,7 @@
         background: none;
         border: none;
         padding: 13px;
-        font: 700 15.5px "Baloo 2";
+        font: 700 15.5px "Inter";
         color: var(--ink);
         cursor: pointer;
         text-align: left;
@@ -692,7 +726,7 @@
       .acc .count {
         margin-left: auto;
         font: 600 11.5px "Inter";
-        border: 2px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 999px;
         padding: 1px 8px;
         background: var(--paper);
@@ -707,7 +741,7 @@
       .acc .body {
         display: none;
         padding: 0 13px 13px;
-        border-top: 3px solid var(--ink);
+        border-top: 1px solid var(--line);
       }
       .acc.open .body {
         display: block;
@@ -721,7 +755,7 @@
         font-size: 14.3px;
         font-weight: 500;
         color: var(--ink);
-        border-bottom: 2px dashed rgba(22, 22, 29, 0.15);
+        border-bottom: 1px solid var(--line);
       }
       .lk:last-child {
         border-bottom: none;
@@ -730,7 +764,7 @@
       .series {
         margin-top: 15px;
         padding-top: 12px;
-        border-top: 3px solid var(--ink);
+        border-top: 1px solid var(--line);
       }
       .series-title {
         font: 600 12px "Inter";
@@ -747,7 +781,7 @@
       }
       .kind {
         font: 600 10.5px "Inter";
-        border: 2px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 999px;
         padding: 1px 8px;
         flex: none;
@@ -768,7 +802,7 @@
         padding: 13px;
         font-size: 14px;
         font-weight: 500;
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         margin-bottom: 16px;
       }
 
@@ -796,7 +830,7 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        border: 2px solid var(--ink);
+        border: 1px solid var(--line);
         border-radius: 999px;
         background: var(--paper);
         padding: 2px 9px;
@@ -813,7 +847,7 @@
         border: var(--bd);
         border-radius: var(--r);
         background: #16161d;
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         overflow: hidden;
         margin-top: 18px;
       }
@@ -876,11 +910,11 @@
         border: var(--bd);
         border-radius: 12px;
         background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 13px;
       }
       .mini b {
-        font-family: "Baloo 2";
+        font-family: "Inter";
         font-size: 15px;
         display: flex;
         align-items: center;
@@ -898,7 +932,7 @@
         border: var(--bd);
         border-radius: var(--r);
         background: var(--butter);
-        box-shadow: 6px 6px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 20px;
       }
       .mailbox h3 {
@@ -934,13 +968,13 @@
         border: var(--bd);
         border-radius: 12px;
         background: var(--card);
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
         padding: 12px;
         font: 600 13.5px "Inter";
         color: var(--ink);
       }
       .soc:active {
-        transform: translate(4px, 4px);
+        transform: none;
         box-shadow: 0 0 0 var(--ink);
       }
       .note {
@@ -951,7 +985,7 @@
         font-weight: 500;
         font-size: 14.5px;
         margin-top: 18px;
-        box-shadow: 4px 4px 0 var(--ink);
+        box-shadow: var(--sh);
       }
 
       nav {
@@ -981,7 +1015,7 @@
         flex: none;
         background: var(--card);
         border: var(--bd);
-        box-shadow: 3px 3px 0 var(--ink);
+        box-shadow: var(--sh);
         border-radius: 999px;
         font: 600 13px "Inter";
         color: var(--ink);
@@ -1001,7 +1035,7 @@
         height: 16px;
       }
       .tab:active {
-        transform: translate(3px, 3px);
+        transform: none;
         box-shadow: 0 0 0 var(--ink);
       }
       .tab.on {
@@ -1181,6 +1215,160 @@
       :focus-visible {
         outline: 3px solid var(--grape);
         outline-offset: 3px;
+      }
+
+      /* ---- professional theme refinements --------------------------------
+         The rules above came from a playful template; these settle the parts
+         that tokens alone cannot. */
+      h1,
+      h2 {
+        letter-spacing: -0.02em;
+        font-weight: 700;
+      }
+      h3 {
+        font-weight: 650;
+      }
+      h1 mark {
+        background: none;
+        color: var(--grape);
+        padding: 0;
+      }
+      header {
+        background: rgba(248, 250, 252, 0.92);
+        backdrop-filter: saturate(1.4) blur(8px);
+        -webkit-backdrop-filter: saturate(1.4) blur(8px);
+      }
+      .blob {
+        background: var(--grape);
+        color: #fff;
+        border-color: var(--grape);
+      }
+      .btn {
+        font-weight: 600;
+        font-size: 15px;
+        border-radius: 10px;
+        transition:
+          background 0.15s,
+          box-shadow 0.15s,
+          border-color 0.15s;
+      }
+      .btn:hover {
+        border-color: #cbd5e1;
+        box-shadow: var(--sh-hover);
+      }
+      .btn-cta,
+      .tab-cv {
+        background: var(--grape);
+        border-color: var(--grape);
+        color: #fff;
+      }
+      .btn-cta:hover {
+        background: #1e40af;
+        border-color: #1e40af;
+      }
+      .btn-cta .i,
+      .tab-cv .i {
+        stroke: #fff;
+      }
+      .tag {
+        font-weight: 500;
+        color: #1e293b;
+      }
+      .t-grape {
+        background: #e0e7ff;
+        color: #1e3a8a;
+        border-color: #c7d2fe;
+      }
+      .status {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46;
+      }
+      .dot {
+        background: #10b981;
+      }
+      .stat b {
+        color: var(--grape);
+        font-weight: 700;
+      }
+      .cvbox,
+      .mailbox {
+        background: var(--card);
+      }
+      .kube {
+        background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+        border-color: #1e3a8a;
+      }
+      .kube .btn {
+        background: #fff;
+        border-color: #fff;
+      }
+      .tl::before {
+        width: 2px;
+        background: var(--line);
+      }
+      .job::before {
+        background: var(--card);
+        border: 2px solid #94a3b8;
+        width: 15px;
+        height: 15px;
+        left: -31px;
+      }
+      .job.now::before {
+        background: var(--grape);
+        border-color: var(--grape);
+      }
+      .divider {
+        height: 1px;
+        background: var(--line);
+      }
+      .tab {
+        box-shadow: none;
+        font-weight: 500;
+      }
+      .tab:hover {
+        border-color: #cbd5e1;
+      }
+      .tab.on {
+        border-color: var(--grape);
+      }
+      .chip.on {
+        border-color: var(--grape);
+      }
+      .cert,
+      .soc,
+      .pop.card,
+      .acc {
+        transition:
+          box-shadow 0.15s,
+          border-color 0.15s;
+      }
+      .cert:hover,
+      .soc:hover,
+      .pop.card:hover {
+        border-color: #cbd5e1;
+        box-shadow: var(--sh-hover);
+      }
+      /* terminal text keeps saturated colours, the tints are for light surfaces */
+      .term {
+        background: #0f172a;
+        border-color: #0f172a;
+      }
+      .term .top {
+        border-bottom: 1px solid #1e293b;
+      }
+      .term .top i {
+        border: none;
+      }
+      .term .p,
+      .cursor {
+        color: #34d399;
+      }
+      .cursor {
+        background: #34d399;
+      }
+      .term .c {
+        color: #fbbf24;
       }
     </style>
   <script src="/assets/analytics.js" defer></script>
@@ -1466,14 +1654,33 @@
                 <span class="dot"></span> Open to Platform &amp; DevOps roles
               </div>
               <h1>
-                I build Kubernetes platforms that stay
-                <mark>boring in production</mark>.
+                I build platforms and infrastructure that help teams
+                <mark>ship with confidence</mark>.
               </h1>
               <p class="lead" style="margin-top: 14px">
                 Platform/DevOps Engineer in Dubai. 9+ years across Telecoms,
                 FinTech, Healthcare and ISP — turning architectural standards
                 into repeatable, well-documented automation.
               </p>
+              <!-- recruiters who have already decided should not need a tab -->
+              <div class="btn-row hero-cta">
+                <a class="btn btn-cta btn-sm" href="mailto:kyawsithu@kst-devops.com"
+                  ><svg class="i" style="width: 16px; height: 16px">
+                    <use href="#i-mail" />
+                  </svg>
+                  Email me</a
+                >
+                <a
+                  class="btn btn-sm"
+                  href="https://www.linkedin.com/in/thereisnokst/"
+                  target="_blank"
+                  rel="noopener"
+                  ><svg class="i" style="width: 16px; height: 16px">
+                    <use href="#i-brief" />
+                  </svg>
+                  LinkedIn</a
+                >
+              </div>
             </div>
           </div>
 
@@ -1481,6 +1688,39 @@
             <div class="stat"><b>9+</b><span>years engineering</span></div>
             <div class="stat"><b>7</b><span>certifications</span></div>
             <div class="stat"><b>4</b><span>industries</span></div>
+          </div>
+
+          <!-- the keywords a recruiter is scanning for, without leaving this tab -->
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Core stack</span>
+              <div class="tags">
+                <span class="tag t-grape">Kubernetes</span
+                ><span class="tag t-grape">EKS · RKE2</span
+                ><span class="tag t-mint">Istio</span
+                ><span class="tag t-sky">AWS</span
+                ><span class="tag t-sky">Terraform</span
+                ><span class="tag t-sky">Ansible</span
+                ><span class="tag t-butter">Vault</span
+                ><span class="tag t-butter">Keycloak</span
+                ><span class="tag t-coral">GitOps</span
+                ><span class="tag t-coral">GitHub Actions</span
+                ><span class="tag">Prometheus · Grafana</span
+                ><span class="tag">Kafka</span>
+              </div>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Certified</span>
+              <div class="tags">
+                <span class="tag">CKA</span><span class="tag">CKAD</span
+                ><span class="tag">CKS</span><span class="tag">KCNA</span
+                ><span class="tag">KCSA</span><span class="tag">ICA</span
+                ><span class="tag">RHCSA</span>
+                <a class="stack-more" href="#skills" onclick="go('skills'); return false"
+                  >Verify all →</a
+                >
+              </div>
+            </div>
           </div>
 
           <div class="hero2">
@@ -3037,7 +3277,7 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             </p>
             <div
               class="warnbox"
-              style="margin: 14px 0 0; box-shadow: 3px 3px 0 var(--ink)"
+              style="margin: 14px 0 0; box-shadow: var(--sh)"
             >
               The app is paused for a while — but the Facebook page is still
               active, and still helping people every day.
