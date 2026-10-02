@@ -822,6 +822,49 @@
         color: var(--muted);
         margin-top: 9px;
       }
+      /* about & contact: one readable column, even rhythm */
+      #p-about section {
+        padding: 22px 0;
+      }
+      #p-about section:first-child {
+        padding-top: 30px;
+      }
+      #p-about h2 {
+        margin-bottom: 12px;
+      }
+      #p-about .lead {
+        max-width: 68ch;
+        margin: 0 0 12px;
+      }
+      #p-about .lead:last-child {
+        margin-bottom: 0;
+      }
+      #p-about .term {
+        max-width: 68ch;
+        margin-top: 0;
+      }
+      .pull {
+        max-width: 68ch;
+        margin: 6px 0 14px;
+        padding: 4px 0 4px 18px;
+        border-left: 3px solid var(--grape);
+        font-size: 21px;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+      .lookfor {
+        max-width: 68ch;
+        padding: 14px 16px;
+        margin-bottom: 14px;
+        display: grid;
+        gap: 10px;
+      }
+      .lf-row .tags {
+        margin-top: 6px;
+      }
+
       /* featured projects */
       .projgrid {
         display: grid;
@@ -1510,6 +1553,10 @@
           d="M18 14v5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10"
         />
       </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="11" height="11" rx="2" />
+        <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+      </symbol>
       <symbol id="i-check" viewBox="0 0 24 24">
         <path d="M5 12.5l4.5 4.5L19 7" />
       </symbol>
@@ -1607,7 +1654,7 @@
           <button class="tab" data-t="about" onclick="go('about')">
             <span class="ic"
               ><svg class="i"><use href="#i-people" /></svg></span
-            >About &amp; contact
+            >About me
           </button>
         </div>
       </nav>
@@ -1692,6 +1739,16 @@
                     <use href="#i-mail" />
                   </svg>
                   kyawsithu@kst-devops.com</a
+                >
+                <button
+                  class="btn btn-sm"
+                  type="button"
+                  onclick="copyEmail(this)"
+                  aria-label="Copy email address"
+                  ><svg class="i" style="width: 16px; height: 16px">
+                    <use href="#i-copy" />
+                  </svg>
+                  <span>Copy</span></button
                 >
                 <a
                   class="btn btn-sm"
@@ -3366,25 +3423,23 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
 
 <span class="p">➜</span> <span class="cursor"></span></pre>
           </div>
-
-
         </section>
 
         <section>
           <div class="eyebrow">How I work</div>
           <h2>I would rather show you</h2>
-          <p class="lead" style="margin: 10px 0 14px">
+          <p class="lead">
             An interview is forty minutes, maybe an hour. I always walk out
             wishing there had been more time. There is so much I would love to
             walk you through, and so little of it fits into one conversation.
           </p>
-          <p class="lead" style="margin: 0 0 14px">
+          <p class="lead">
             So rather than spend those minutes saying I am hardworking,
             passionate and flexible, I would love you to see it for yourself.
             Those words are easy to say. I would much rather hand you something
             you can actually look at.
           </p>
-          <p class="lead" style="margin: 0 0 14px">
+          <p class="lead">
             I have left the work somewhere you can take your time with it.
             <a href="#" onclick="go('portfolio'); return false;">Projects</a>
             has the things I actually built, with the code public, and the
@@ -3392,23 +3447,41 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             has the long write-ups, including the parts where I got it wrong and
             had to go back and understand it again.
           </p>
-          <p class="lead" style="margin: 0">
-            There is only one thing I can really guarantee you. Whatever I take
-            on, I put my heart into it. I think that shows in the work far more
-            honestly than it ever could in a sentence about myself, so please
-            have a look. I hope you can feel it.
+          <p class="lead">
+            There is only one thing I can really guarantee you.
+          </p>
+          <blockquote class="pull">
+            Whatever I take on, I put my heart into it.
+          </blockquote>
+          <p class="lead">
+            I think that shows in the work far more honestly than it ever could
+            in a sentence about myself, so please have a look. I hope you can
+            feel it.
           </p>
         </section>
 
         <section>
           <div class="eyebrow">What's next</div>
           <h2>What I am looking for</h2>
-          <p class="lead" style="margin: 10px 0 14px">
-            Platform Engineer, DevOps or Cloud-Native roles. I am in Dubai and
-            happy to stay here, and equally happy to talk about Singapore or
-            anywhere else that makes sense.
-          </p>
-          <p class="lead" style="margin: 0">
+          <div class="pop lookfor">
+            <div class="lf-row">
+              <span class="stack-label">Roles</span>
+              <div class="tags">
+                <span class="tag t-grape">Platform Engineer</span
+                ><span class="tag t-grape">DevOps Engineer</span
+                ><span class="tag t-grape">Cloud-Native</span>
+              </div>
+            </div>
+            <div class="lf-row">
+              <span class="stack-label">Where</span>
+              <div class="tags">
+                <span class="tag t-mint">Dubai · based here</span
+                ><span class="tag">Singapore</span
+                ><span class="tag">Open to relocation</span>
+              </div>
+            </div>
+          </div>
+          <p class="lead">
             The work I enjoy most is the platform underneath other people's
             work: infrastructure nobody has to think about, releases where
             promotion is a merge, and access tied to who someone is rather than
@@ -3647,6 +3720,21 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
         const box = btn.parentElement;
         const open = box.classList.toggle("open");
         btn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+
+      // webmail users get nothing from a mailto link, so let them copy it
+      function copyEmail(btn) {
+        const addr = "kyawsithu@kst-devops.com";
+        const label = btn.querySelector("span");
+        const done = () => {
+          label.textContent = "Copied";
+          setTimeout(() => (label.textContent = "Copy"), 1800);
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(addr).then(done, () => prompt("Email", addr));
+        } else {
+          prompt("Email", addr);
+        }
       }
 
       // accordion buttons start collapsed and announce it
