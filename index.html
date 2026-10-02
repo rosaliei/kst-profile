@@ -30,7 +30,7 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Kyaw Sithu — Platform/DevOps Engineer, Dubai. CNCF Kubestronaut. CKA, CKAD, CKS, KCNA, KCSA, ICA, RHCSA."
+      content="Kyaw Sithu — Platform/DevOps Engineer, Dubai. CNCF Kubestronaut. CKA, CKAD, CKS, KCNA, KCSA, ICA, AWS SAA, RHCSA."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta
@@ -561,6 +561,11 @@
       }
       .job li {
         margin-bottom: 6px;
+      }
+      .job .sum {
+        margin-top: 8px;
+        font-size: 14.5px;
+        color: var(--muted);
       }
 
       .skillbox {
@@ -1686,7 +1691,7 @@
 
           <div class="stats">
             <div class="stat"><b>9+</b><span>years engineering</span></div>
-            <div class="stat"><b>7</b><span>certifications</span></div>
+            <div class="stat"><b>8</b><span>certifications</span></div>
             <div class="stat"><b>4</b><span>industries</span></div>
           </div>
 
@@ -1715,7 +1720,7 @@
                 <span class="tag">CKA</span><span class="tag">CKAD</span
                 ><span class="tag">CKS</span><span class="tag">KCNA</span
                 ><span class="tag">KCSA</span><span class="tag">ICA</span
-                ><span class="tag">RHCSA</span>
+                ><span class="tag">AWS SAA</span><span class="tag">RHCSA</span>
                 <a class="stack-more" href="#skills" onclick="go('skills'); return false"
                   >Verify all →</a
                 >
@@ -1732,9 +1737,9 @@
                 Grab my CV
               </h3>
               <p>
-                One page of what I actually do — Kubernetes platforms, service
-                mesh, GitOps and the automation around them. PDF, updated
-                August 2026.
+                What I have delivered — releases cut from a day to under 30
+                minutes, AWS spend down 20%, and platforms running 40+
+                payment microservices. PDF, updated September 2026.
               </p>
               <div class="cvrow one">
                 <a class="btn btn-cta" href="/assets/kyaw-sithu-cv.pdf" download
@@ -1774,41 +1779,35 @@
               <div class="when">Apr 2022 — Present · Dubai, UAE</div>
               <h3>DevOps Engineer</h3>
               <div class="co">Peg B Technology</div>
+              <p class="sum">
+                Promoted from System Engineer in 2024. I now lead platform
+                engineering for regulated payment workloads.
+              </p>
               <ul>
                 <li>
-                  Design and operate production Kubernetes platforms on EKS and
-                  RKE2 for regulated fintech and telecom workloads.
+                  Cut release time from about a day to under 30 minutes with
+                  GitOps delivery.
                 </li>
                 <li>
-                  Run Istio service mesh in production — mTLS between services,
-                  ingress/egress policy, and an ambient mesh evaluation.
+                  Reduced AWS spend by 20% through EKS right-sizing, Spot and
+                  idle-environment shutdown.
                 </li>
                 <li>
-                  Built GitOps delivery with Jenkins, GitHub Actions and
-                  Kustomize so environment promotion is a merge, not a ticket.
+                  Run the platform behind 40+ payment microservices across 6 EKS
+                  and RKE2 clusters, with Istio mTLS and Vault-managed secrets.
                 </li>
                 <li>
-                  Standardised secrets on HashiCorp Vault and HCP, with Keycloak
-                  as the OIDC issuer behind Kong API Gateway.
-                </li>
-                <li>
-                  Engineered the observability stack — Prometheus, Grafana and
-                  ELK with Fleet and APM agents across clusters.
-                </li>
-                <li>
-                  Own Kafka reliability including documented primary ↔ DR
-                  switchover procedures.
-                </li>
-                <li>
-                  Automate AWS infrastructure with Terraform, Ansible and Packer
-                  — SSM, S3, KMS and cross-account IAM.
+                  Launched payment wallets in the UAE and Costa Rica, and keep
+                  Kafka disaster-recovery switchover under 30 minutes.
                 </li>
               </ul>
               <div class="tags">
                 <span class="tag t-grape">Kubernetes</span
                 ><span class="tag t-mint">Istio</span
                 ><span class="tag t-sky">AWS</span
-                ><span class="tag t-butter">Vault</span>
+                ><span class="tag t-sky">Terraform</span
+                ><span class="tag t-butter">Vault</span
+                ><span class="tag t-coral">GitOps</span>
               </div>
             </div>
 
@@ -1816,99 +1815,50 @@
               <div class="when">Jul 2020 — Apr 2022 · Myanmar</div>
               <h3>System Engineer</h3>
               <div class="co">GTMH Telecom</div>
-              <ul>
-                <li>
-                  Built and maintained private cloud infrastructure on VMware
-                  ESXi supporting telecom and fintech services.
-                </li>
-                <li>
-                  Introduced containerisation with Docker and early Kubernetes
-                  workloads to replace bare-metal deployments.
-                </li>
-                <li>
-                  Automated repetitive provisioning with Ansible and Bash,
-                  cutting manual build steps for new environments.
-                </li>
-                <li>
-                  Ran monitoring and alerting with Zabbix and the ELK stack
-                  across the server estate.
-                </li>
-                <li>
-                  Hardened Linux images and managed OS lifecycle for production
-                  hosts.
-                </li>
-              </ul>
-              <div class="tags">
-                <span class="tag t-butter">Private cloud</span
-                ><span class="tag t-mint">Ansible</span
-                ><span class="tag t-sky">VMware</span>
-              </div>
+              <p class="sum">
+                Moved 30+ bare-metal deployments onto Docker and early
+                Kubernetes, and cut server builds from days to hours with
+                Ansible across 80+ VMs.
+              </p>
             </div>
 
             <div class="job">
               <div class="when">Jul 2019 — Jul 2020 · Myanmar</div>
               <h3>System Engineer</h3>
               <div class="co">Fortune Broadband</div>
-              <ul>
-                <li>
-                  Operated ISP network and Linux server infrastructure serving
-                  broadband subscribers.
-                </li>
-                <li>
-                  Deployed LibreNMS and Zabbix for network-wide visibility and
-                  faster fault isolation.
-                </li>
-                <li>
-                  Handled escalated incidents across routing, DNS and service
-                  availability.
-                </li>
-              </ul>
-              <div class="tags">
-                <span class="tag t-sky">ISP</span
-                ><span class="tag t-coral">Networking</span>
-              </div>
+              <p class="sum">
+                Kept ISP network and Linux infrastructure running for 10,000+
+                broadband subscribers.
+              </p>
             </div>
 
             <div class="job">
               <div class="when">Jan 2018 — Jan 2019 · Myanmar</div>
               <h3>System Support Engineer</h3>
               <div class="co">Sysnet System PTE Ltd</div>
-              <ul>
-                <li>
-                  Deployed and supported healthcare systems on client sites as
-                  part of an SI team.
-                </li>
-                <li>
-                  Managed Windows and Linux servers, backups and user access for
-                  hospital deployments.
-                </li>
-              </ul>
-              <div class="tags">
-                <span class="tag t-coral">Healthcare</span
-                ><span class="tag t-butter">SI</span>
-              </div>
+              <p class="sum">
+                Deployed hospital systems for 5+ healthcare clients — servers,
+                backups and user access.
+              </p>
             </div>
 
             <div class="job">
               <div class="when">Dec 2016 — Jan 2018 · Myanmar</div>
               <h3>Junior System Administrator</h3>
               <div class="co">RITZ Public Company Limited</div>
-              <ul>
-                <li>
-                  Where it started — Linux administration, networking
-                  fundamentals and daily operations.
-                </li>
-                <li>
-                  Wrote the first shell scripts that made me realise automation
-                  was the actual job.
-                </li>
-              </ul>
-              <div class="tags">
-                <span class="tag t-mint">Linux</span
-                ><span class="tag t-sky">Networking</span>
-              </div>
+              <p class="sum">
+                Where it started — Linux and networking, and the first shell
+                scripts that showed me automation was the actual job.
+              </p>
             </div>
           </div>
+          <!-- the site gives the short version; the CV carries the detail -->
+          <a class="btn btn-sm" href="/assets/kyaw-sithu-cv.pdf" download
+            ><svg class="i" style="width: 16px; height: 16px">
+              <use href="#i-down" />
+            </svg>
+            Full details in my CV</a
+          >
         </section>
 
         <section>
@@ -2028,7 +1978,7 @@
           <div class="certs">
             <a
               class="cert"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
             >
@@ -2057,7 +2007,7 @@
 
             <a
               class="cert"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
             >
@@ -2088,7 +2038,7 @@
 
             <a
               class="cert"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
             >
@@ -2114,7 +2064,7 @@
 
             <a
               class="cert"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
             >
@@ -2144,7 +2094,7 @@
 
             <a
               class="cert"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
             >
@@ -2177,7 +2127,7 @@
 
             <a
               class="cert"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
             >
@@ -2205,7 +2155,6 @@
               href="https://rhtapps.redhat.com/verify?certId=210-230-223"
               target="_blank"
               rel="noopener"
-              style="grid-column: span 2"
             >
               <svg class="hex" viewBox="0 0 60 60">
                 <polygon
@@ -2231,12 +2180,44 @@
                 >Verify at Red Hat
                 <svg class="i"><use href="#i-ext" /></svg></span
             ></a>
+
+            <!-- no Credly badge for this one yet; swap in the badge or the
+                 validation-number link once there is one -->
+            <a
+              class="cert"
+              href="https://aws.amazon.com/verification"
+              target="_blank"
+              rel="noopener"
+            >
+              <svg class="hex" viewBox="0 0 60 60">
+                <polygon
+                  points="30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5"
+                  fill="#FF9900"
+                  stroke="#16161D"
+                  stroke-width="3.5"
+                />
+                <g
+                  stroke="#16161D"
+                  stroke-width="2.6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M22 35a6 6 0 0 1 1-12 8 8 0 0 1 15 2 5 5 0 0 1 0 10z" />
+                </g>
+              </svg>
+              <b>AWS SAA</b
+              ><span class="full">AWS Certified Solutions Architect – Associate</span>
+              <span class="vf"
+                >Verify at AWS
+                <svg class="i"><use href="#i-ext" /></svg></span
+            ></a>
           </div>
 
           <div class="btn-row">
             <a
               class="btn btn-sm"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
               ><svg class="i" style="width: 16px; height: 16px">
@@ -3401,7 +3382,7 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             >
             <a
               class="soc"
-              href="https://www.credly.com/users/kyaw-sithu.e3c688fe/badges#credly"
+              href="https://www.credly.com/users/kst1996/badges#credly"
               target="_blank"
               rel="noopener"
               ><span class="tile" style="background: var(--mint)"
