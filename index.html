@@ -1207,14 +1207,10 @@
           grid-template-columns: repeat(4, 1fr);
         }
         .socials {
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(4, 1fr);
         }
         .projgrid {
           grid-template-columns: 1fr 1fr;
-        }
-        /* the hackathon leads, full width */
-        .projgrid .proj:first-child {
-          grid-column: 1 / -1;
         }
         .grid2 {
           grid-template-columns: repeat(4, 1fr);
@@ -1611,12 +1607,7 @@
           <button class="tab" data-t="about" onclick="go('about')">
             <span class="ic"
               ><svg class="i"><use href="#i-people" /></svg></span
-            >About
-          </button>
-          <button class="tab" data-t="contact" onclick="go('contact')">
-            <span class="ic"
-              ><svg class="i"><use href="#i-mail" /></svg></span
-            >Say hello
+            >About &amp; contact
           </button>
         </div>
       </nav>
@@ -2441,11 +2432,10 @@
               >AWS Summit Dubai 2026 · Hackathon</span
             >
             <h3>Health Companion — an AI care navigator</h3>
-            <p>Built, submitted and presented as a team at the AWS Agentic AI Hackathon, Health Companion track. A patient describes how they feel; the agent works out how urgent it is, checks their record, and gets them to the right care — without ever diagnosing.</p>
+            <p>Patients describe how they feel and get to the right care — a specialist, a call to the clinic, or emergency services — without the agent ever diagnosing. Built, submitted and presented as a team at the AWS Agentic AI Hackathon.</p>
             <ul>
-              <li>Agent on Bedrock AgentCore (Runtime, Gateway, Memory) with Claude, calling five tools over MCP: patient profile, triage guidance, provider search, booking and visit summary.</li>
-              <li>Safety first: Bedrock Guardrails check every question before the model sees it, red-flag symptoms go straight to emergency services, and an 18-prompt safety suite tests the boundary.</li>
-              <li>A voice agent on Twilio phones the clinic or the insurer, and the web app works in English and Arabic.</li>
+              <li>Agent on Bedrock AgentCore with Claude, calling five tools over MCP: patient record, triage guidance, provider search, booking and visit summary.</li>
+              <li>Bedrock Guardrails check every question first, red flags go straight to emergency services, and a Twilio voice agent phones the clinic — in English and Arabic.</li>
             </ul>
             <div class="tags">
               <span class="tag t-grape">Bedrock AgentCore</span
@@ -3387,8 +3377,8 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
           <p class="lead" style="margin: 0 0 14px">
             I have left the work somewhere you can take your time with it.
             <a href="#" onclick="go('portfolio'); return false;">Projects</a>
-            has the diagrams and the notes from things I actually built and
-            broke. The <a href="#" onclick="go('blog'); return false;">Blog</a>
+            has the things I actually built, with the code public, and the
+            notes from what broke along the way. The <a href="#" onclick="go('blog'); return false;">Blog</a>
             has the long write-ups, including the parts where I got it wrong and
             had to go back and understand it again.
           </p>
@@ -3397,6 +3387,23 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             on, I put my heart into it. I think that shows in the work far more
             honestly than it ever could in a sentence about myself, so please
             have a look. I hope you can feel it.
+          </p>
+        </section>
+
+        <section>
+          <div class="eyebrow">What's next</div>
+          <h2>What I am looking for</h2>
+          <p class="lead" style="margin: 10px 0 14px">
+            Platform Engineer, DevOps or Cloud-Native roles. I am in Dubai and
+            happy to stay here, and equally happy to talk about Singapore or
+            anywhere else that makes sense.
+          </p>
+          <p class="lead" style="margin: 0">
+            The work I enjoy most is the platform underneath other people's
+            work: infrastructure nobody has to think about, releases where
+            promotion is a merge, and access tied to who someone is rather than
+            what they happen to hold. If that is the kind of problem on your
+            desk, I would like to hear about it.
           </p>
         </section>
 
@@ -3500,26 +3507,11 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             </div>
           </div>
         </section>
-      </div>
 
-      <!-- ============ CONTACT ============ -->
-      <div class="page" id="p-contact">
-        <section>
+        <section id="contact">
           <div class="eyebrow">Get in touch</div>
-          <h2>Say hello</h2>
-          <p class="lead" style="margin: 10px 0 14px">
-            I am looking for Platform Engineer, DevOps or Cloud-Native work. I
-            am in Dubai and happy to stay here, and equally happy to talk about
-            Singapore or anywhere else that makes sense.
-          </p>
-          <p class="lead" style="margin: 0 0 14px">
-            The work I enjoy most is the platform underneath other people's
-            work. Kubernetes that nobody has to think about, pipelines where
-            promotion is a merge, and access that is tied to who someone is
-            rather than what they happen to hold. If that is the kind of problem
-            on your desk, I would like to hear about it.
-          </p>
-          <p class="lead" style="margin: 0 0 20px">
+          <h2>Contact</h2>
+          <p class="lead" style="margin: 10px 0 20px">
             Recruiters and hiring managers are very welcome. So is anyone who
             read something here, disagreed with it, and wants to tell me why.
           </p>
@@ -3533,7 +3525,7 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             </h3>
             <p>
               No form to fill in — either of these reaches me directly, and I
-              read every message. Tell me about the team and the stack, and I
+              read every message. Tell me about the team and the role, and I
               will come back to you.
             </p>
             <div class="mailrow">
@@ -3556,32 +3548,23 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
             </div>
           </div>
 
+          <!-- everything else worth checking, once each -->
           <div class="socials">
-            <a class="soc" href="mailto:kyawsithu@kst-devops.com"
-              ><span class="tile" style="background: var(--coral)"
-                ><svg class="i"><use href="#i-mail" /></svg
-              ></span>
-              Email</a
-            >
             <a
               class="soc"
-              href="https://www.linkedin.com/in/thereisnokst/"
+              href="https://github.com/rosaliei"
               target="_blank"
               rel="noopener"
               ><span class="tile" style="background: var(--sky)"
-                ><svg class="i"><use href="#i-brief" /></svg
+                ><svg class="i"><use href="#i-code" /></svg
               ></span>
-              LinkedIn</a
+              GitHub</a
             >
-            <a
-              class="soc"
-              href="https://gitlab.com/users/kyawsithu96/projects"
-              target="_blank"
-              rel="noopener"
-              ><span class="tile" style="background: var(--butter)"
-                ><svg class="i"><use href="#i-fox" /></svg
+            <a class="soc" href="/assets/kyaw-sithu-cv.pdf" download
+              ><span class="tile" style="background: var(--coral)"
+                ><svg class="i"><use href="#i-doc" /></svg
               ></span>
-              GitLab</a
+              CV (PDF)</a
             >
             <a
               class="soc"
@@ -3603,7 +3586,6 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
               ></span>
               Kubestronaut</a
             >
-
           </div>
         </section>
       </div>
@@ -3616,9 +3598,12 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
     </footer>
 
     <script>
-      const PAGES = ["home", "skills", "portfolio", "blog", "about", "contact"];
+      const PAGES = ["home", "skills", "portfolio", "blog", "about"];
 
       function go(t, push) {
+        // Contact used to be its own tab; old /#contact links still land on it
+        const toContact = t === "contact";
+        if (toContact) t = "about";
         if (!PAGES.includes(t)) t = "home";
         document
           .querySelectorAll(".page")
@@ -3630,7 +3615,8 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
         });
         if (push !== false && location.hash.slice(1) !== t)
           history.pushState({ t }, "", "#" + t);
-        window.scrollTo(0, 0);
+        if (toContact) document.getElementById("contact").scrollIntoView();
+        else window.scrollTo(0, 0);
       }
 
       // Scoped to its own tab, so the Work filters and the Blog filters cannot
