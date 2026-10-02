@@ -822,6 +822,26 @@
         color: var(--muted);
         margin-top: 9px;
       }
+      /* featured projects */
+      .projgrid {
+        display: grid;
+        gap: 17px;
+      }
+      .projgrid .card {
+        margin-bottom: 0;
+      }
+      .proj ul {
+        margin: 10px 0 0 17px;
+        font-size: 14.3px;
+        color: var(--muted);
+      }
+      .proj li {
+        margin-bottom: 5px;
+      }
+      .proj-links {
+        margin-top: 14px;
+        gap: 10px;
+      }
       .meta {
         display: flex;
         gap: 9px;
@@ -1188,6 +1208,13 @@
         }
         .socials {
           grid-template-columns: repeat(3, 1fr);
+        }
+        .projgrid {
+          grid-template-columns: 1fr 1fr;
+        }
+        /* the hackathon leads, full width */
+        .projgrid .proj:first-child {
+          grid-column: 1 / -1;
         }
         .grid2 {
           grid-template-columns: repeat(4, 1fr);
@@ -2402,11 +2429,187 @@
       <!-- ============ PORTFOLIO ============ -->
       <div class="page" id="p-portfolio">
         <section>
-          <div class="eyebrow">Projects &amp; research</div>
-          <h2>Portfolio &amp; diagrams</h2>
+          <div class="eyebrow">Projects</div>
+          <h2>Things I have built</h2>
+          <p class="lead" style="margin: 10px 0 18px">
+            Real, working projects with the code public. Each one says what it
+            does for the people using it, then how.
+          </p>
+          <div class="projgrid">
+          <div class="pop card proj">
+            <span class="tag t-butter" style="display: inline-block; margin-bottom: 9px"
+              >AWS Summit Dubai 2026 · Hackathon</span
+            >
+            <h3>Health Companion — an AI care navigator</h3>
+            <p>Built, submitted and presented as a team at the AWS Agentic AI Hackathon, Health Companion track. A patient describes how they feel; the agent works out how urgent it is, checks their record, and gets them to the right care — without ever diagnosing.</p>
+            <ul>
+              <li>Agent on Bedrock AgentCore (Runtime, Gateway, Memory) with Claude, calling five tools over MCP: patient profile, triage guidance, provider search, booking and visit summary.</li>
+              <li>Safety first: Bedrock Guardrails check every question before the model sees it, red-flag symptoms go straight to emergency services, and an 18-prompt safety suite tests the boundary.</li>
+              <li>A voice agent on Twilio phones the clinic or the insurer, and the web app works in English and Arabic.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag t-grape">Bedrock AgentCore</span
+              ><span class="tag t-grape">Claude</span
+              ><span class="tag t-mint">Guardrails</span
+              ><span class="tag t-sky">Lambda</span
+              ><span class="tag t-sky">DynamoDB</span
+              ><span class="tag ">Twilio</span
+              ><span class="tag ">Next.js</span>
+            </div>
+            <div class="btn-row proj-links">
+              <a class="btn btn-sm" href="https://github.com/manav2701/Team9Aws" target="_blank" rel="noopener"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-code" />
+                </svg>
+                Code on GitHub</a
+              >
+            </div>
+          </div>
+
+          <div class="pop card proj">
+            <span class="tag t-mint" style="display: inline-block; margin-bottom: 9px"
+              >Zero trust</span
+            >
+            <h3>Zero-trust access to a private EKS cluster</h3>
+            <p>Engineers reach a private Kubernetes API with no VPN, no kubeconfig files and no standing credentials.</p>
+            <ul>
+              <li>Okta SSO → HCP Boundary → Vault-issued 15-minute Kubernetes credentials mapped to RBAC.</li>
+              <li>Fully automated with Terraform, Packer and Ansible; GitHub Actions deploys to AWS through OIDC with no static keys, and Boundary workers autoscale on session load.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag t-mint">Boundary</span
+              ><span class="tag t-butter">Vault</span
+              ><span class="tag ">Okta</span
+              ><span class="tag t-grape">EKS</span
+              ><span class="tag t-sky">Terraform</span>
+            </div>
+            <div class="btn-row proj-links">
+              <a class="btn btn-sm" href="https://github.com/rosaliei/boundary-eks-vault-okta" target="_blank" rel="noopener"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-code" />
+                </svg>
+                Code on GitHub</a
+              >
+              <a class="btn btn-sm" href="/blog/what-is-boundary.html"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-pen" />
+                </svg>
+                Read the write-up</a
+              >
+            </div>
+          </div>
+
+          <div class="pop card proj">
+            <span class="tag t-grape" style="display: inline-block; margin-bottom: 9px"
+              >AI × Kubernetes</span
+            >
+            <h3>MCP server for Kubernetes</h3>
+            <p>Lets AI agents investigate a Kubernetes cluster safely — they can look, but never change anything.</p>
+            <ul>
+              <li>Python Model Context Protocol server exposing workloads, resources, logs and events.</li>
+              <li>Read-only by design: a dedicated service account scoped by Kubernetes RBAC.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag t-grape">MCP</span
+              ><span class="tag t-sky">Python</span
+              ><span class="tag t-grape">Kubernetes API</span>
+            </div>
+            <div class="btn-row proj-links">
+              <a class="btn btn-sm" href="https://github.com/rosaliei/mcp-k8s" target="_blank" rel="noopener"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-code" />
+                </svg>
+                Code on GitHub</a
+              >
+            </div>
+          </div>
+
+          <div class="pop card proj">
+            <span class="tag t-coral" style="display: inline-block; margin-bottom: 9px"
+              >GitOps</span
+            >
+            <h3>GitOps platform monorepo</h3>
+            <p>One repository where a pull request is how applications and platform add-ons reach EKS.</p>
+            <ul>
+              <li>Argo CD deploys apps and add-ons, with environment promotion by pull request.</li>
+              <li>Karpenter Spot and node consolidation to cut compute cost; Prometheus and Grafana for health and cost; everything provisioned with Terraform.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag t-coral">Argo CD</span
+              ><span class="tag t-grape">EKS</span
+              ><span class="tag ">Karpenter</span
+              ><span class="tag t-sky">Terraform</span
+              ><span class="tag ">Prometheus</span>
+            </div>
+            <div class="btn-row proj-links">
+              <a class="btn btn-sm" href="https://github.com/rosaliei/gitops-monorepo" target="_blank" rel="noopener"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-code" />
+                </svg>
+                Code on GitHub</a
+              >
+            </div>
+          </div>
+
+          <div class="pop card proj">
+            <span class="tag t-sky" style="display: inline-block; margin-bottom: 9px"
+              >Identity</span
+            >
+            <h3>Keycloak SSO federation gateway</h3>
+            <p>A web app keeps its own custom login screen while Keycloak owns identity and credentials.</p>
+            <ul>
+              <li>JavaScript (njs) API gateway on NGINX in front of Keycloak.</li>
+              <li>Seven authentication flows traced end to end and documented with architecture diagrams.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag t-butter">Keycloak</span
+              ><span class="tag ">NGINX / njs</span
+              ><span class="tag t-mint">OIDC</span
+              ><span class="tag t-sky">JavaScript</span>
+            </div>
+            <div class="btn-row proj-links">
+              <a class="btn btn-sm" href="https://github.com/rosaliei/keycloak-sso-federation-gateway" target="_blank" rel="noopener"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-code" />
+                </svg>
+                Code on GitHub</a
+              >
+              <a class="btn btn-sm" href="/blog/keycloak-sso-gateway.html"
+                ><svg class="i" style="width: 16px; height: 16px">
+                  <use href="#i-pen" />
+                </svg>
+                Read the write-up</a
+              >
+            </div>
+          </div>
+          </div>
+
+          <h3 style="margin-top: 26px">More on GitHub</h3>
+          <div class="pop" style="padding: 6px 16px; margin-top: 12px">
+            <a class="lk" href="https://github.com/rosaliei/ambient-mesh-deepdive" target="_blank" rel="noopener"
+              ><span class="kind k-git">GitHub</span> Istio ambient mesh — a sidecarless service mesh deep dive</a
+            >
+            <a class="lk" href="https://github.com/rosaliei/hcp-vault-cluster" target="_blank" rel="noopener"
+              ><span class="kind k-git">GitHub</span> HashiCorp Cloud Platform Vault, set up end to end</a
+            >
+            <a class="lk" href="https://github.com/rosaliei/eks-auth-oidc-iam" target="_blank" rel="noopener"
+              ><span class="kind k-git">GitHub</span> EKS authentication: Keycloak OIDC and IAM roles mapped to Kubernetes RBAC</a
+            >
+            <a class="lk" href="https://github.com/rosaliei/aws-ssm-patterns" target="_blank" rel="noopener"
+              ><span class="kind k-git">GitHub</span> Private EC2 access three ways with SSM Session Manager, in Terraform</a
+            >
+            <a class="lk" href="https://github.com/rosaliei/kong-api-gateway-architecture" target="_blank" rel="noopener"
+              ><span class="kind k-git">GitHub</span> Kong API Gateway with Keycloak OIDC — architecture research</a
+            >
+          </div>
+        </section>
+
+        <section>
+          <div class="eyebrow">Notes</div>
+          <h2>Research notes &amp; diagrams</h2>
           <p class="lead" style="margin: 10px 0 14px">
-            Documented research, architecture diagrams and hands-on
-            implementations. Filter by domain, then tap a topic.
+            The working notes and architecture diagrams behind the projects.
+            Filter by domain, then tap a topic.
           </p>
 
           <div class="filters">
