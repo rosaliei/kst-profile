@@ -1553,10 +1553,6 @@
           d="M18 14v5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10"
         />
       </symbol>
-      <symbol id="i-copy" viewBox="0 0 24 24">
-        <rect x="9" y="9" width="11" height="11" rx="2" />
-        <path d="M5 15V6a2 2 0 0 1 2-2h9" />
-      </symbol>
       <symbol id="i-check" viewBox="0 0 24 24">
         <path d="M5 12.5l4.5 4.5L19 7" />
       </symbol>
@@ -1734,21 +1730,17 @@
               </p>
               <!-- recruiters who have already decided should not need a tab -->
               <div class="btn-row hero-cta">
-                <a class="btn btn-cta btn-sm" href="mailto:kyawsithu@kst-devops.com"
+                <!-- click copies the address: a mailto link does nothing for webmail users -->
+                <button
+                  class="btn btn-cta btn-sm"
+                  type="button"
+                  onclick="copyEmail(this)"
+                  title="Click to copy"
+                  aria-label="Copy email address kyawsithu@kst-devops.com"
                   ><svg class="i" style="width: 16px; height: 16px">
                     <use href="#i-mail" />
                   </svg>
-                  kyawsithu@kst-devops.com</a
-                >
-                <button
-                  class="btn btn-sm"
-                  type="button"
-                  onclick="copyEmail(this)"
-                  aria-label="Copy email address"
-                  ><svg class="i" style="width: 16px; height: 16px">
-                    <use href="#i-copy" />
-                  </svg>
-                  <span>Copy</span></button
+                  <span>kyawsithu@kst-devops.com</span></button
                 >
                 <a
                   class="btn btn-sm"
@@ -3722,13 +3714,13 @@ Kyaw Sithu — Platform/DevOps Engineer, Dubai UAE
         btn.setAttribute("aria-expanded", open ? "true" : "false");
       }
 
-      // webmail users get nothing from a mailto link, so let them copy it
+      // the hero email copies itself; the label confirms, then shows the address again
       function copyEmail(btn) {
         const addr = "kyawsithu@kst-devops.com";
         const label = btn.querySelector("span");
         const done = () => {
-          label.textContent = "Copied";
-          setTimeout(() => (label.textContent = "Copy"), 1800);
+          label.textContent = "Copied to clipboard ✓";
+          setTimeout(() => (label.textContent = addr), 1800);
         };
         if (navigator.clipboard && window.isSecureContext) {
           navigator.clipboard.writeText(addr).then(done, () => prompt("Email", addr));
